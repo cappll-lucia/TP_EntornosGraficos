@@ -1,0 +1,51 @@
+.footer{
+    background-color: lightsteelblue;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    position: relative;
+    height: 20rem;
+    bottom:0px;
+}
+.footer .left, 
+.footer .right{
+    color: aliceblue;
+    width: 30%;
+    display: flex ;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.login-art, .alta-alumnos-art{
+    width: 100%;
+    height: 35rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login, .alta-alumnos{
+    width: 30%;
+}
+.login h3, .alta-alumnos h3{
+    width: 50%;
+    margin-left: 25%;
+}
+.login form, .alta-alumnos form{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.listado-solicitudes{
+    width: 100%;
+    height: 35rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+.listado-solicitudes table{
+    width: 80%;
+}
