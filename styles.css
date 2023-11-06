@@ -16,7 +16,8 @@
     flex-direction: column;
 }
 
-.login-art, .alta-alumnos-art, .solicitud-inicio-art, .seguimiento-art, .listado-solicitudes, .perfil-art, .informe-art{
+.login-art, .alta-alumnos-art, .solicitud-inicio-art, .seguimiento-art, .listado-solicitudes, 
+.perfil-art, .informe-art, .ddiponibles-art{
     width: 100%;
     height: 25rem;
     display: flex;
@@ -37,7 +38,7 @@
     flex-direction: column;
 }
 
-.listado-solicitudes table, .seguimiento-art table{
+.listado-solicitudes table, .seguimiento-art table, .ddiponibles-art table{
     width: 60%;
 }
 
