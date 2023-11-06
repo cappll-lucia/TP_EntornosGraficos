@@ -26,7 +26,7 @@
     flex-direction: column;
 }
 
-.login, .alta-alumnos {
+.login, .alta-alumnos{
     width: 30%;
 }
 .login h3, .alta-alumnos h3{
@@ -83,4 +83,9 @@
 
 .form-control{
     width: 100%;
+}
+
+.titulo{
+    font-weight: bold;
+    font-size: large;
 }
