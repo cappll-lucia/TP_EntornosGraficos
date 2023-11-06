@@ -26,7 +26,7 @@
 }
 
 .login, .alta-alumnos{
-    width: 30%;
+    width: 40%;
 }
 .login h3, .alta-alumnos h3{
     width: 50%;
@@ -48,4 +48,9 @@
 }
 .listado-solicitudes table{
     width: 80%;
+}
+
+.titulo{
+    font-weight: bold;
+    font-size: large;
 }
