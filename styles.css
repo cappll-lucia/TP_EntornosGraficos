@@ -16,7 +16,7 @@
     flex-direction: column;
 }
 
-.login-art, .alta-alumnos-art, .solicitud-inicio-art, .seguimiento-art{
+.login-art, .alta-alumnos-art, .solicitud-inicio-art, .seguimiento-art, .listado-solicitudes, .perfil-art, .informe-art{
     width: 100%;
     height: 25rem;
     display: flex;
@@ -38,42 +38,18 @@
     flex-direction: column;
 }
 
-.listado-solicitudes{
-    width: 100%;
-    height: 35rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-}
 .listado-solicitudes table, .seguimiento-art table{
     width: 100%;
 }
 
-.perfil-art{
-    width: 100%;
-    height: 20rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-}
+
 
 .perfil-art table{
     width: 50%;
 }
 
-.informe-art {
-    width: 100%;
-    height: 25rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-}
-
 .informe-art table{
-    width: 60%;
+    width: 40%;
 }
 
 .solicitud-inicio{
