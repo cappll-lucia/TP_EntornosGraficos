@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('nombre');
             $table->string('apellido');
-            $table->foreingId('id_usuario')--> constrained('usuario');
+            $table->foreign('id_usuario')->references('id_usuario')->on('usuario');
         });
     }
 
