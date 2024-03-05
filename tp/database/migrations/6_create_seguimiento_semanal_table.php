@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('seguimiento_semanal', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_pps')->constrained('pps')->onDelete('restrict')->onUpdate('cascade');
-            $table->blob('archivo_seguimiento');
+            $table->string('archivo_seguimiento');
             $table->boolean('aprobado')->default(false);
             $table->timestamps();
         });

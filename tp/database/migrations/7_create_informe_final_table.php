@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId('id_pps')->constrained('pps')->onDelete('restrict')->onUpdate('cascade');
-            $table->blob('informe');
+            $table->string('informe');
             $table->boolean('aprobado')->default(false);
             $table->string('observacion')->nulleable();
         });
