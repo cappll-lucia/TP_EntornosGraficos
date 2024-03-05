@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('table_informe_final', function (Blueprint $table) {
+        Schema::create('informe_final', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->foreing('id_pps')->references('id_pps')->on('pps');
