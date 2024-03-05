@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('plan_trabajo', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreing('id_pps')->references('id_pps')->on('pps');
+            $table->foreignId('id_pps')->constrained('pps')->onDelete('restrict')->onUpdate('cascade');
             $table->blob('archivo_plan');
-            $table->integer('aprobado');
+            $table->boolean('aprobado')->default(false);
         });
     }
 

@@ -16,14 +16,14 @@ return new class extends Migration
             $table->timestamps();
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
-            $table->integer('terminada');
-            $table->string('observacion');
+            $table->boolean('terminada')->default(false);
+            $table->string('observacion')->nulleable();
             $table->string('descripcion');
-            $table->integer('aprobada');
+            $table->boolean('aprobada')->default(false);
             //id_alumno id_docente id_responsable
-            $table->foreing('id_alumno')->references('id_persona')->on('persona');
-            $table->foreing('id_docente')->references('id_persona')->on('persona');
-            $table->foreing('id_responsable')->references('id_persona')->on('persona');
+            $table->foreignId('id_alumno')->constrained('persona')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreignId('id_docente')->constrained('persona')->onDelete('restrict')->onUpdate('cascade')->nulleable();
+            $table->foreignId('id_responsable')->constrained('persona')->onDelete('restrict')->onUpdate('cascade')->nulleable();
         });
     }
 

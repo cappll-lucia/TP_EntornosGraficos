@@ -16,12 +16,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-           # $table->foreign('id_rol')->references('id_rol')->on('rol');
+            $table->foreignId('id_rol')->constrained('rol')->onDelete('restrict')->onUpdate('cascade');
             $table->rememberToken();
             $table->timestamps();
         });
     }
-
+    
     /**
      * Reverse the migrations.
      */
