@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('seguimiento_semanal', function (Blueprint $table) {
+        Schema::create('informe_final', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_pps')->references('id_pps')->on('pps');
-            $table->blob('archivo_seguimiento');
-            $table->int('aprobado')->default(0);
             $table->timestamps();
+            $table->foreignId('id_pps')->constrained('pps')->onDelete('restrict')->onUpdate('cascade');
+            $table->blob('informe');
+            $table->boolean('aprobado')->default(false);
+            $table->string('observacion')->nulleable();
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('seguimiento_semanal');
+        Schema::dropIfExists('table_informe_final');
     }
 };

@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('informe_final', function (Blueprint $table) {
+        Schema::create('plan_trabajo', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreing('id_pps')->references('id_pps')->on('pps');
-            $table->blob('informe');
-            $table->integer('aprobado');
-            $table->string('observacion');
+            $table->foreignId('id_pps')->constrained('pps')->onDelete('restrict')->onUpdate('cascade');
+            $table->blob('archivo_plan');
+            $table->boolean('aprobado')->default(false);
         });
     }
 
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('table_informe_final');
+        Schema::dropIfExists('plan_trabajo');
     }
 };
