@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('persona', function (Blueprint $table) {
+        Schema::create('plan_trabajo', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('nombre');
-            $table->string('apellido');
-            $table->foreingId('id_usuario')--> constrained('usuario');
+            $table->foreing('id_pps')->references('id_pps')->on('pps');
+            $table->blob('archivo_plan');
+            $table->integer('aprobado');
         });
     }
 
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('persona');
+        Schema::dropIfExists('plan_trabajo');
     }
 };
