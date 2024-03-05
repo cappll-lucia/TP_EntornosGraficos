@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('persona', function (Blueprint $table) {
+        Schema::create('seguimiento_semanal', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('id_pps')->references('id_pps')->on('pps');
+            $table->blob('archivo_seguimiento');
+            $table->int('aprobado')->default(0);
             $table->timestamps();
-            $table->string('nombre');
-            $table->string('apellido');
-           // $table->foreingId('id_usuario')--> constrained('usuario');
         });
     }
 
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('persona');
+        Schema::dropIfExists('seguimiento_semanal');
     }
 };
