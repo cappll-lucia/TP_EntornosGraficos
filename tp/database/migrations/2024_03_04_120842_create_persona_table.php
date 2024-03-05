@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreingId('id_usuario')-> references('id_usuario')->on('usuario');
         });
     }
-    #putoo el que lee esto 
+    
     /**
      * Reverse the migrations.
      */
