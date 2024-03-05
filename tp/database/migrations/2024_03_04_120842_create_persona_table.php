@@ -16,10 +16,10 @@ return new class extends Migration
             $table->timestamps();
             $table->string('nombre');
             $table->string('apellido');
-           // $table->foreingId('id_usuario')--> constrained('usuario');
+            $table->foreingId('id_usuario')-> references('id_usuario')->on('usuario');
         });
     }
-
+    #putoo el que lee esto 
     /**
      * Reverse the migrations.
      */
