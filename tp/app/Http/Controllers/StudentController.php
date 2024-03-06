@@ -7,6 +7,7 @@ use App\Http\Requests;
 use Illuminate\Http\Support\Facades\Redirect;
 use DB;
 use App\Models\User;
+use App\Models\Persona;
 use App\Http\Requests\PersonaCreateReq;
 use Illuminate\Support\Facades\Log;
 
@@ -25,7 +26,7 @@ class StudentController extends Controller
 
     public function show($id)
     {
-        $student = Person::findOrFail($id);
+        $student = Persona::findOrFail($id);
         return view('students.show', ['student'=>$student]);
     }
     
@@ -48,7 +49,7 @@ public function store(PersonaCreateReq $req)
         $newUser = User::create([
             'email' => $req->input('email'),
             'clave' => $req->input('clave'),
-            'name' => $req->input('name'),
+            'name' => $req->input('nombre'),
             'id_rol' => 1,
         ]);
 

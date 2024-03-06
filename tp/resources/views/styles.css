@@ -1,0 +1,66 @@
+.footer{
+    background-color: lightsteelblue;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    position: relative; 
+    bottom:0px;
+    padding-top: 20px;
+}
+.footer .left, 
+.footer .right{
+    width: 30%;
+    display: flex ;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.login-art, .alta-alumnos-art, .solicitud-inicio-art, .seguimiento-art, .listado-solicitudes, 
+.perfil-art, .informe-art, .ddiponibles-art{
+    width: 100%;
+    height: 25rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.login, .alta-alumnos{
+    width: 30%;
+}
+.login h3, .alta-alumnos h3{
+    width: 50%;
+    margin-left: 25%;
+}
+.login form, .alta-alumnos form{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.listado-solicitudes table, .seguimiento-art table, .ddiponibles-art table{
+    width: 60%;
+}
+
+
+
+.perfil-art table{
+    width: 50%;
+}
+
+.informe-art table{
+    width: 40%;
+}
+
+.solicitud-inicio{
+    width: 40%;
+}
+
+.form-control{
+    width: 100%;
+}
+
+.titulo{
+    font-weight: bold;
+    font-size: large;
+}
