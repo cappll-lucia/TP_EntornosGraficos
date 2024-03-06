@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StudentController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +18,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+//STUDENTS
+Route::get('/users/students', [StudentController::class, 'index']);
+Route::get('/users/students/create', [StudentController::class, 'create']);
+Route::post('/users/students/create', [StudentController::class, 'store']);
+Route::get('/users/students/edit/{id}', [StudentController::class, 'edit']);
+
 
 
 Route::resource('pps', 'App\Http\Controllers\PpsController');
