@@ -22,7 +22,7 @@
 					<td>{{ $st->email}}</td>
 					<td>{{ $st->username}}</td>
 					<td>
-						<a href="{{URL::action('StudentController@edit',$st->id)}}"><button class="btn btn-info">Editar</button></a>
+						 <a href="{{URL::action('StudentController@edit',$st->id)}}"><button class="btn btn-info">Editar</button></a> 
                          <a href="" data-target="#modal-delete-{{$st->id}}" data-toggle="modal"><button class="btn btn-danger">Eliminar</button></a>
 					</td>
 				</tr>

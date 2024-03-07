@@ -20,8 +20,8 @@ class StudentController extends Controller
     }
 
     public function index(){
-        $students = User::where('id_rol', 1)->with('Person')->get();
-        return view('users.students.index', ['students'=>[]]);
+        $students = User::where('id_rol', 1)->with('persona')->paginate(10);
+        return view('users.students.index', ['students' => $students]);
     }
 
     public function show($id)
@@ -38,7 +38,7 @@ class StudentController extends Controller
     public function edit($id)
     {
         return view("users.students.edit");
-        // return view("users.students.edit",["user"=>User::findOrFail($id)]);
+        return view("users.students.edit",["user"=>User::findOrFail($id)]);
     }
 
 public function store(PersonaCreateReq $req)
@@ -54,13 +54,17 @@ public function store(PersonaCreateReq $req)
         ]);
 
 
-        Persona::create([
+        $newPersona = Persona::create([
             'nombre' => $req->input('nombre'),
             'apellido' => $req->input('apellido'),
             'id_usuario' => $newUser->id
         ]);
+        
+        $newUser = User::where('email', $req->input('email'))->with('persona')->first();
 
-        $newUser = User::where('email', $req->input('email'))->with('Persona')->first();
+        if ($newUser) {
+            $persona = $newUser->persona;
+        }
 
         DB::commit();
         return view("users.students.create");
