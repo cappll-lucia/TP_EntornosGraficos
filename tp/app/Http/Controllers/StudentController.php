@@ -37,7 +37,6 @@ class StudentController extends Controller
 
     public function edit($id)
     {
-        return view("users.students.edit");
         return view("users.students.edit",["user"=>User::findOrFail($id)]);
     }
 
