@@ -1,5 +1,5 @@
 @extends ('layout.admin')
-@section ('contenido')
+@section ('content')
 
 
 <div class="row">
@@ -17,10 +17,10 @@
                @foreach ($students as $st)
 				<tr>
 					<td>{{ $st->id}}</td>
-					<td>{{ $st->nombre}}</td>
-					<td>{{ $st->apellido}}</td>
+					<td>{{ $st->persona->nombre}}</td>
+					<td>{{ $st->persona->apellido}}</td>
 					<td>{{ $st->email}}</td>
-					<td>{{ $st->username}}</td>
+					<td>{{ $st->name}}</td>
 					<td>
 						 <a href="{{URL::action('App\Http\Controllers\StudentController@edit',$st->id)}}"><button class="btn btn-info">Editar</button></a> 
             <a href="" data-target="#modal-delete-{{$st->id}}" data-toggle="modal"><button class="btn btn-danger">Eliminar</button></a>
