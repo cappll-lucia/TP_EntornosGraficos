@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Http\Support\Facades\Redirect;
-use DB;
+use  Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Persona;
 use App\Http\Requests\PersonaCreateReq;
@@ -87,13 +87,14 @@ public function store(PersonaCreateReq $req)
     {
         try{
             DB::beginTransaction();
-            $student = Person::findOrFail($req->input('id'));
+            $student = Persona::findOrFail($req->input('id'));
             $user = $student->User;
             $user->delete();
             $student->delete();
-            return Redirect::to('users/students');
+            DB::commit();
+            return redirect('users/students');
 
-        DB::commit();
+        
         }catch(\Exception $exep){
              DB::rollBack();
         }
