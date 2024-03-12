@@ -19,7 +19,9 @@ class StudentController extends Controller
 
     }
 
-    public function index(){
+    public function index()
+    {
+
         $students = User::where('id_rol', 1)->with('persona')->paginate(10);
         return view('users.students.index', ['students' => $students]);
     }
@@ -70,7 +72,7 @@ public function store(PersonaCreateReq $req)
 
     } catch (\Exception $exep) {
         DB::rollBack();
-        dd($exep->getMessage()); // Agregar esta línea para imprimir el mensaje de error
+        dd($exep->getMessage());
         Log::error('Error al crear el estudiante: ' . $exep->getMessage());
         return view("error.index");
     }

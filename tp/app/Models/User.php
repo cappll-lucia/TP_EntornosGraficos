@@ -17,6 +17,11 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    protected  $table='users';
+    protected $primaryKey ='id';
+
+
     protected $fillable = [ 'email',
                             'clave',
                             'id_rol',
@@ -45,7 +50,7 @@ class User extends Authenticatable
 
     public function persona()
     {
-        return $this->belongsTo(Persona::class, 'id_persona');
+        return $this->hasOne(Persona::class, 'id');
     }
 
 }
