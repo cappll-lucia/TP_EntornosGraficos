@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\StudentController;
+use App\Http\Controllers\AlumnoController;
 use App\Http\Controllers\TeacherController;
 
 
@@ -19,17 +19,17 @@ use App\Http\Controllers\TeacherController;
 Route::get('/welcome', function () { return view('welcome');});
 
 
-//STUDENTS
-Route::get('/users/students', [StudentController::class, 'index']);
-Route::get('/users/students/create', [StudentController::class, 'create']);
-Route::post('/users/students/create', [StudentController::class, 'store']);
-Route::get('/users/students/edit/{id}', [StudentController::class, 'edit']);
-Route::delete('/users/students/{id}', [StudentController::class, 'destroy']);
-Route::patch('/users/students/edit/{id}', [StudentController::class, 'edit']);
+//alumnos
+Route::get('/usuarios/alumnos', [AlumnoController::class, 'index']);
+Route::get('/usuarios/alumnos/create', [AlumnoController::class, 'create']);
+Route::post('/usuarios/alumnos/create', [AlumnoController::class, 'store']);
+Route::get('/usuarios/alumnos/edit/{id}', [AlumnoController::class, 'edit']);
+Route::delete('/usuarios/alumnos/{id}', [AlumnoController::class, 'destroy']);
+Route::patch('/usuarios/alumnos/edit/{id}', [AlumnoController::class, 'edit']);
 
 //TEACHERS 
-Route::get('/users/teachers/create', [TeacherController::class, 'create']);
-Route::post('/users/teachers/create', [TeacherController::class, 'store']);
+Route::get('/usuarios/teachers/create', [TeacherController::class, 'create']);
+Route::post('/usuarios/teachers/create', [TeacherController::class, 'store']);
 
 
 Route::resource('pps', 'App\Http\Controllers\PpsController');

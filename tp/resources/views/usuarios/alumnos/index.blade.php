@@ -4,7 +4,7 @@
 <div class="flex-row mt-4 row d-flex">
 	<h3 class="col-lg-4">Listado de estudiantes</h3>
 	<button class="col-lg-2 btn btn-primary">
-			<a href="{{URL::action('App\Http\Controllers\StudentController@create')}}">
+			<a href="{{URL::action('App\Http\Controllers\AlumnoController@create')}}">
 				Nuevo estudiante
 			</a>
 	</button>
@@ -19,26 +19,26 @@
 					<th>Nombre</th>
 					<th>Apellido</th>
 					<th>Email</th>
-					<th>UserName</th>
+					<th>Nombre Usuario</th>
 					<th class="col-lg-2">Opciones</th>
 				</thead>
-               @foreach ($students as $st)
+               @foreach ($alumnos as $al)
 				<tr>
-					<td>{{ $st->id}}</td>
-					<td>{{ $st->persona->nombre}}</td>
-					<td>{{ $st->persona->apellido}}</td>
-					<td>{{ $st->email}}</td>
-					<td>{{ $st->name}}</td>
+					<td>{{ $al->id}}</td>
+					<td>{{ $al->persona->nombre}}</td>
+					<td>{{ $al->persona->apellido}}</td>
+					<td>{{ $al->email}}</td>
+					<td>{{ $al->nombre_usuario}}</td>
 					<td>
-						<a href="{{URL::action('App\Http\Controllers\StudentController@edit',$st->id)}}"><button class="btn btn-info">Editar</button></a> 
-            			<a href="" data-target="#modal-delete-{{$st->id}}" data-toggle="modal"><button class="btn btn-danger">Eliminar</button></a>
+						<a href="{{URL::action('App\Http\Controllers\AlumnoController@edit',$al->id)}}"><button class="btn btn-info">Editar</button></a> 
+            			<a href="" data-target="#modal-delete-{{$al->id}}" data-toggle="modal"><button class="btn btn-danger">Eliminar</button></a>
 					</td>
 				</tr>
-				@include('users.students.modal')
+				@include('usuarios.alumnos.modal')
 				@endforeach
 			</table>
 		</div>
-		{{$students->render()}}
+		{{$alumnos->render()}}
 	</div>
 </div>
 

@@ -4,11 +4,11 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Foundation\Auth\Usuario as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class Usuario extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -18,14 +18,14 @@ class User extends Authenticatable
      * @var array<int, string>
      */
 
-    protected  $table='users';
+    protected  $table='usuario';
     protected $primaryKey ='id';
 
 
     protected $fillable = [ 'email',
                             'clave',
                             'id_rol',
-                            'name'
+                            'nombre_usuario'
     ];
 
     /**
@@ -50,7 +50,7 @@ class User extends Authenticatable
 
     public function persona()
     {
-        return $this->hasOne(Persona::class, 'id');
+        return $this->belongsTo(Persona::class, 'id');
     }
 
 }

@@ -6,13 +6,13 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Http\Support\Facades\Redirect;
 use  Illuminate\Support\Facades\DB;
-use App\Models\User;
+use App\Models\Usuario;
 use App\Models\Persona;
 use App\Http\Requests\PersonaCreateReq;
 use Illuminate\Support\Facades\Log;
 
 
-class StudentController extends Controller
+class AlumnoController extends Controller
 {
     public function __construct()
     {
@@ -22,24 +22,25 @@ class StudentController extends Controller
     public function index()
     {
 
-        $students = User::where('id_rol', 1)->with('persona')->paginate(10);
-        return view('users.students.index', ['students' => $students]);
+        $alumnos = Usuario::where('id_rol', 1)->with('persona')->paginate(10);
+        return view('usuarios.alumnos.index', ['alumnos' => $alumnos]);
     }
 
     public function show($id)
     {
         $student = Persona::findOrFail($id);
-        return view('students.show', ['student'=>$student]);
+        return view('alumnos.show', ['alumno'=>$alumno]);
     }
     
     public function create()
     {
-        return view("users.students.create");
+        return view("usuarios.alumnos.create");
     }
 
     public function edit($id)
     {
-        return view("users.students.edit",["user"=>User::findOrFail($id)]);
+        $alumno=Usuario::with('persona')->findOrFail($id);
+        return view("usuarios.alumnos.edit",["alumno"=>$alumno]);
     }
 
 public function store(PersonaCreateReq $req)
@@ -47,10 +48,10 @@ public function store(PersonaCreateReq $req)
     try {
         DB::beginTransaction();
 
-        $newUser = User::create([
+        $newUsuario = Usuario::create([
             'email' => $req->input('email'),
             'clave' => $req->input('clave'),
-            'name' => $req->input('nombre'),
+            'nombre_usuario' => $req->input('nombre_usuario'),
             'id_rol' => 1,
         ]);
 
@@ -60,15 +61,14 @@ public function store(PersonaCreateReq $req)
             'apellido' => $req->input('apellido'),
             'id_usuario' => $newUser->id
         ]);
-        
-        $newUser = User::where('email', $req->input('email'))->with('persona')->first();
 
-        if ($newUser) {
-            $persona = $newUser->persona;
+        
+        if ($newUsuario) {
+            $persona = $newUsuario->persona;
         }
 
         DB::commit();
-        return view("users.students.create");
+        return view("usuarios.alumnos.create");
 
     } catch (\Exception $exep) {
         DB::rollBack();
@@ -94,7 +94,7 @@ public function store(PersonaCreateReq $req)
             $user->delete();
             $student->delete();
             DB::commit();
-            return redirect('users/students');
+            return redirect('usuario/alumnos');
 
         
         }catch(\Exception $exep){

@@ -13,7 +13,7 @@
       </div>
       @endif
 
-      {!!Form::open(array('url'=>'users/students/create','method'=>'POST'))!!}
+      {!!Form::open(array('url'=>'usuarios/alumnos/create','method'=>'POST'))!!}
     <div class="justify-content-center">
       <div class="row px-5 pt-3 justify-content-center">
         <label for="nombre" class="text-sm-end col-form-label col-sm-2">Nombre</label>
@@ -34,9 +34,9 @@
         </div>
       </div>
       <div class="row  px-5   pt-3 justify-content-center">
-        <label for="name" class="text-sm-end col-form-label col-sm-2">UserName</label>
+        <label for="nombre_usuario" class="text-sm-end col-form-label col-sm-2">Nombre Usuario</label>
         <div class="col-sm-3">
-          <input type="text" class="form-control" id="name" name="name">
+          <input type="text" class="form-control" id="nombre_usuario" name="nombre_usuario">
         </div>
       </div>
       <div class="row  px-5   pt-3 justify-content-center">
@@ -57,7 +57,7 @@
 
 <script>
   function cancelar(){
-    window.location.href = '/users/students';
+    window.location.href = '/usuarios/alumnos';
   }
 </script>
 
