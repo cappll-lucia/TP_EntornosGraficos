@@ -15,7 +15,7 @@
     <nav class="bg-body-tertiary navbar">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
-                <img src="" alt="Logo" width="100" height="100    " class="d-inline-block align-text-top">
+                <img src="/public/UTN_logo.png" alt="Logo" width="100" height="100    " class="d-inline-block align-text-top">
             </a>
             <span class="titulo">UTN FRRo</span>
             <button class="btn btn-outline-primary" type="submit">Cuenta</button>
