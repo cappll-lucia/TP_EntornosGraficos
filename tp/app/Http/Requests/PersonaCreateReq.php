@@ -17,7 +17,7 @@ class PersonaCreateReq extends FormRequest
         return [
             'nombre'=>'required|max:225',
             'apellido'=>'required|max:225',
-            'name'=>'required|max:225',
+            'nombre_usuario'=>'required|max:225',
             'email'=>'required|max:225',
             'clave'=>'required',
         ];
@@ -30,8 +30,8 @@ class PersonaCreateReq extends FormRequest
             'nombre.max' => 'El nombre no puede tener más de 225 caracteres.',
             'apellido.required' => 'El apellido es obligatorio.',
             'apellido.max' => 'El apellido no puede tener más de 225 caracteres.',
-            'name.required' => 'El nombre de usuario es obligatorio.',
-            'name.max' => 'El nombre de usuario no puede tener más de 225 caracteres.',
+            'nombre_usuario.required' => 'El nombre de usuario es obligatorio.',
+            'nombre_usuario.max' => 'El nombre de usuario no puede tener más de 225 caracteres.',
             'email.required' => 'El correo electrónico es obligatorio.',
             'email.max' => 'El correo electrónico no puede tener más de 225 caracteres.',
             'clave.required' => 'La contraseña es obligatoria.',

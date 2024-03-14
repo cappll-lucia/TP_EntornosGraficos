@@ -59,7 +59,7 @@ public function store(PersonaCreateReq $req)
         $newPersona = Persona::create([
             'nombre' => $req->input('nombre'),
             'apellido' => $req->input('apellido'),
-            'id_usuario' => $newUser->id
+            'id_usuario' => $newUsuario->id
         ]);
 
         
