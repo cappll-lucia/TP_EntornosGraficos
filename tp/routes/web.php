@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TeacherController;
 
 
 /*
@@ -28,6 +29,9 @@ Route::get('/users/students/edit/{id}', [StudentController::class, 'edit']);
 Route::delete('/users/students/{id}', [StudentController::class, 'destroy']);
 Route::patch('/users/students/edit/{id}', [StudentController::class, 'edit']);
 
+//TEACHERS 
+Route::get('/users/teachers/create', [TeacherController::class, 'create']);
+Route::post('/users/teachers/create', [TeacherController::class, 'store']);
 
 
 Route::resource('pps', 'App\Http\Controllers\PpsController');
