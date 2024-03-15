@@ -13,7 +13,7 @@
             </div>
       @endif
 
-      {!!Form::open(array('url'=>'usuarios/alumnos/edit/'.$alumno->id.'','method'=>'PATCH'))!!}
+      {!!Form::open(array('url'=>'usuarios/alumnos/edit/{{$alumno->id}}','method'=>'PATCH'))!!}
 
       <div class="row px-5  pt-3">
         <label for="nombre" class="col-form-label col-sm-1">Nombre</label>
@@ -46,7 +46,7 @@
         </div>
       </div>
       <div class="  pt-3 col-xl-4 col-lg-4 col-sm-4 col-sm-12 col-xs-12 d-flex justify-content-end">
-          <button class="btn btn-outline-primary" onclick="cancelar()">Cancelar</button>
+          <button class="btn btn-outline-primary" type="button" onclick="cancelar()">Cancelar</button>
           <button class="btn btn-primary ms-2" type="submit">Registrar</button>
       </div>
       {!!Form::close()!!}
@@ -57,5 +57,5 @@
     window.location.href = '/usuarios/alumnos';
   }
 </script>
- 
-@stop
+
+@endsection

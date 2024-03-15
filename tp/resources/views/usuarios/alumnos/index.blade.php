@@ -1,13 +1,11 @@
 @extends ('layout.admin')
 @section ('content')
 
-<div class="flex-row mt-4 row d-flex">
+<div class="flex-row mt-4 row d-flex justify-content-center">
 	<h3 class="col-lg-4">Listado de estudiantes</h3>
-	<button class="col-lg-2 btn btn-primary">
-			<a href="{{URL::action('App\Http\Controllers\AlumnoController@create')}}">
-				Nuevo estudiante
-			</a>
-	</button>
+	<a href="{{URL::action('App\Http\Controllers\AlumnoController@create')}}" class="col-lg-2 btn btn-primary">
+		Nuevo estudiante
+	</a>
 </div>
 
 <div class="row d-flex justify-content-center">
