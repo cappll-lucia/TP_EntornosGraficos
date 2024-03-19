@@ -18,14 +18,16 @@ use App\Http\Controllers\TeacherController;
 
 Route::get('/welcome', function () { return view('welcome');});
 
-
+Route::put('/usuarios/alumnos/edit/{id}',function(){
+    return 'hola';
+});
 //alumnos
 Route::get('/usuarios/alumnos', [AlumnoController::class, 'index']);
 Route::get('/usuarios/alumnos/create', [AlumnoController::class, 'create']);
 Route::post('/usuarios/alumnos/create', [AlumnoController::class, 'store']);
 Route::get('/usuarios/alumnos/edit/{id}', [AlumnoController::class, 'edit']);
 Route::delete('/usuarios/alumnos/{id}', [AlumnoController::class, 'destroy']);
-Route::patch('/usuarios/alumnos/edit/{id}', [AlumnoController::class, 'update']);
+
 
 //TEACHERS 
 Route::get('/usuarios/teachers/create', [TeacherController::class, 'create']);

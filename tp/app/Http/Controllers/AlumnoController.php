@@ -39,8 +39,8 @@ class AlumnoController extends Controller
 
     public function edit($id)
     {
-        $alumno=Usuario::with('persona')->findOrFail($id);
-        return view("usuarios.alumnos.edit",["alumno"=>$alumno]);
+        $alumno=Persona::with('usuario')->findOrFail($id);
+        return view("usuarios.alumnos.edit",['alumno'=>$alumno]);
     }
 
 
@@ -66,7 +66,7 @@ class AlumnoController extends Controller
 
             
             if ($newUsuario) {
-                $persona = $newUsuario->persona;
+                $newPersona = $newUsuario->persona;
             }
 
             DB::commit();
@@ -85,17 +85,14 @@ class AlumnoController extends Controller
         {
             try{
                 DB::beginTransaction();
-                $alumno = Usuario::where('id', $id)->with('persona');
-
-                $alumno->nombre = $req->input('nombre');
-                $alumno->apellido = $req->input('apellido');
-                $alumno->email = $req->input('email');
-                $alumno->nombre_usuario = $req->input('nombre_usuario');
-                $alumno->clave = $req->input('clave');
+                $alumno = Persona::where('id', $id)->with('usuario');
+                $alumno->update(['nombre' => $req->input('nombre'),
+                                'apellido' => $req->input('apellido')]);
+                
  
                 DB::commit();
 
-                return view('usuarios.alumnos.edit');
+                return view("usuarios.alumnos.edit",["alumno"=>$alumno]);
             }
             catch (\Exception $exep) {
                 DB::rollBack();
