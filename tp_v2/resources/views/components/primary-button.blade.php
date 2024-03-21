@@ -1,4 +1,4 @@
-<button type="submit" class="btn btn-primary{{ $attributes->get('class') }}">
+<button type="submit" class="btn btn-primary">
     {{ $slot }}
 </button>
 
