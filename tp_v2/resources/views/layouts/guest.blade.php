@@ -12,12 +12,10 @@
     </head>
 
     <body>
-        <div class="d-flex justify-content-center align-items-center vh-100 bg-primary" style="--bs-bg-opacity: .5">
-            <div class="container">
+        <div class="d-flex justify-content-center align-items-center vh-70 bg-primary" style="--bs-bg-opacity: .5">
+            <div class="container mb-5">
                 <div class="text-center mb-2">
-                    <a href="/">
-                        <img src="" alt="{{ config('app.name', 'ImagenPPS') }}" class="img-fluid" style="max-width: 200px;">
-                    </a>
+                    <p>Registrarse</p>
                 </div>
 
                 <div class="card mx-auto bg-light" style="width: 25rem; ">

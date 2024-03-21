@@ -1,10 +1,21 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@extends('layouts.base')
+@section('content')
+   
+<!-- Session Status -->
+ 
+<x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+<form method="POST" action="{{ route('login') }}">
+    @csrf
 
+<div class="d-flex justify-content-center align-items-center vh-70 bg-primary" style="--bs-bg-opacity: .5">
+            <div class="container">
+                <div class="text-center mb-2 mt-3">
+                        <p>Iniciar sesión</p>
+                </div>
+
+        <div class="card mx-auto bg-light mb-5" style="width: 25rem; ">
+            <div class="card-body">
         <!-- Email Address -->
         <div class="mb-2 mt-2">
             <x-input-label for="email" :value="__('Email')" />
@@ -41,6 +52,13 @@
             </button>
         </div>
 
-    </form>
-</x-guest-layout>
+                    </div>
+                </div>
+            </div>
+</div>
 
+
+</form>
+
+
+@endsection
