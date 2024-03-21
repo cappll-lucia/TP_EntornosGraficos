@@ -5,13 +5,14 @@
         @csrf
 
 <div class="d-flex justify-content-center align-items-center vh-70 bg-primary" style="--bs-bg-opacity: .5">
-            <div class="container mb-5">
-                <div class="text-center mb-2 mt-3">
-                    <p>Registrarse</p>
-                </div>
-
-                <div class="card mx-auto bg-light" style="width: 25rem; ">
+            <div class="container">
+                <div class="card mx-auto bg-light mb-5 mt-5" style="width: 25rem; ">
                     <div class="card-body">
+                        <div class="text-center mb-2 mt-3">
+                            <h3>Registrarse</h3>
+                        </div>
+
+                        <hr class="my-4" style="border-top: 1px solid rgba(0, 0, 0, 0.5);">
                         
         <!-- First Name -->
         <div>
@@ -60,12 +61,12 @@
         <div class="d-flex justify-content-end align-items-center mt-3 ">
             <div class="me-4">
             <a class="underline text-sm text-gray-600" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
+                {{ __('¿Ya estás registrado?') }}
             </a>
             </div>
 
             <button type="submit ml-3" class="btn btn-primary">
-                {{ __('Register') }}
+                {{ __('Registrar') }}
             </button>
         </div>
                     </div>

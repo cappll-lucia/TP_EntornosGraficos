@@ -7,15 +7,17 @@
 
 <form method="POST" action="{{ route('login') }}">
     @csrf
-
-<div class="d-flex justify-content-center align-items-center vh-70 bg-primary" style="--bs-bg-opacity: .5">
-            <div class="container">
+            
+<div class="d-flex justify-content-center align-items-center bg-primary" style="--bs-bg-opacity: .5">
+    <div class="container">
+        <div class="card mx-auto bg-light mb-5 mt-5" style="width: 25rem; ">
+            <div class="card-body">
                 <div class="text-center mb-2 mt-3">
-                        <p>Iniciar sesión</p>
+                        <h3>Iniciar sesión</h3>
                 </div>
 
-        <div class="card mx-auto bg-light mb-5" style="width: 25rem; ">
-            <div class="card-body">
+                <hr class="my-4" style="border-top: 1px solid rgba(0, 0, 0, 0.5);">
+
         <!-- Email Address -->
         <div class="mb-2 mt-2">
             <x-input-label for="email" :value="__('Email')" />
@@ -54,7 +56,7 @@
 
                     </div>
                 </div>
-            </div>
+    </div>
 </div>
 
 
