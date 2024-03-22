@@ -1,3 +1,5 @@
+<!-- no se usa mas -->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,14 +16,10 @@
 <body>
     <nav class="bg-body-tertiary navbar">
         <div class="container-fluid ">
-            <a class="navbar-brand" href="#">
-                <div class="container ml-1 mr-100">
-                <img src="/public/UTN_logo.png" alt="Logo" width="50" height="50" class="d-inline-block align-text-top">
-                </div>
-            </a>
+          
                 <h2 class="justify-content-center">UTN FRRo</h2>
             
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <div class="gap-2 d-grid d-md-flex justify-content-md-end">
                 <a
                     href="{{ route('login') }}"
                     type="button" class="btn btn-outline-primary"
@@ -73,7 +71,7 @@
         @yield('content')
     </article>
 
-    <footer class="footer d-flex justify-content-between p-3">
+    <footer class="p-3 footer d-flex justify-content-between">
       <div class="left">
         <h2>Sobre Nosotros</h2>
         <p>UTN: Universidad Tecnológica Nacional</p>

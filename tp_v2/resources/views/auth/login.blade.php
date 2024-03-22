@@ -1,4 +1,4 @@
-@extends('layouts.base')
+@extends('layouts.app')
 @section('content')
    
 <!-- Session Status -->
@@ -8,32 +8,32 @@
 <form method="POST" action="{{ route('login') }}">
     @csrf
             
-<div class="d-flex justify-content-center align-items-center bg-primary" style="--bs-bg-opacity: .5">
+<div class="bg-primary d-flex justify-content-center align-items-center" style="--bs-bg-opacity: .5">
     <div class="container">
-        <div class="card mx-auto bg-light mb-5 mt-5" style="width: 25rem; ">
+        <div class="bg-light mx-auto mt-5 mb-5 card" style="width: 25rem; ">
             <div class="card-body">
-                <div class="text-center mb-2 mt-3">
+                <div class="mt-3 text-center mb-2">
                         <h3>Iniciar sesión</h3>
                 </div>
 
                 <hr class="my-4" style="border-top: 1px solid rgba(0, 0, 0, 0.5);">
 
         <!-- Email Address -->
-        <div class="mb-2 mt-2">
+        <div class="mt-2 mb-2">
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" class="form-control" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" style="width: 100%;"/>
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
         <!-- Password -->
-        <div class="mb-3 mt-3">
+        <div class="mt-3 mb-3">
             <x-input-label for="password" :value="__('Password')" />
             <x-text-input id="password" class="form-control" type="password" name="password" required autocomplete="current-password" style="width: 100%;"/>
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
         <!-- Remember Me -->
-        <div class="mb-3 mt-3">
+        <div class="mt-3 mb-3">
             <div class="form-check">
                 <input id="remember_me" class="form-check-input" type="checkbox" name="remember">
                 <label class="form-check-label" for="remember_me">{{ __('Remember me') }}</label>
@@ -43,7 +43,7 @@
         <div class="d-flex justify-content-end align-items-center">
             @if (Route::has('password.request'))
                 <div class="me-4">
-                    <a class="underline text-sm text-gray-600" href="{{ route('password.request') }}">
+                    <a class="text-sm text-gray-600 underline" href="{{ route('password.request') }}">
                         {{ __('Forgot your password?') }}
                     </a>
                 </div>
