@@ -18,10 +18,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->unsignedBigInteger('role_id')->nullable();
+            $table->unsignedInteger('legajo')->nullable();
             $table->foreign('role_id')->references('id')->on('role')->onDelete('restrict')->onUpdate('cascade');
             $table->string('password');
             $table->rememberToken();
-            $table->timestamps();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

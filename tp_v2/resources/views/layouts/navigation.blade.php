@@ -22,7 +22,7 @@
             <div class="d-grid gap-2 d-md-flex justify-content-md-end container-fluid">
 
                 <button class="">
-                    <div>{{ Auth::user()->name }}</div>
+                    <div>Hola, {{ Auth::user()->first_name }}!</div>
                 </button>
 
                 <a type="button" class="btn btn-outline-primary" href="{{ route('profile.edit') }}">

@@ -18,7 +18,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-        @include('layouts.navigation')
+        @include('layouts.navegation')
     <article>
       @yield('content')
     </article>

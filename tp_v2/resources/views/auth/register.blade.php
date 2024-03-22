@@ -35,6 +35,13 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
+        <!-- Legajo -->
+        <div class="mt-4">
+            <x-input-label for="legajo" :value="__('Legajo')" />
+            <x-text-input id="legajo" class="block mt-1 w-full" type="number" name="legajo" :value="old('legajo')" required autocomplete="legajo" />
+            <x-input-error :messages="$errors->get('legajo')" class="mt-2" />
+        </div>
+
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Contraseña')" />

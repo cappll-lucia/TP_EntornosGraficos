@@ -15,15 +15,18 @@
                             <table class="table stylish-table">
                                 <thead>
                                     <tr>
+                                        <th>Apellido</th>
                                         <th>Nombre</th>
-                                        <th>Email</th>
                                         <th>Legajo</th>
+                                        <th>Email</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($teachers_available as $teacher)
                                     <tr>
-                                        <td>{{ $teacher->name }}</td>
+                                        <td>{{ $teacher->last_name }}</td>
+                                        <td>{{ $teacher->first_name }}</td>
+                                        <td>{{ $teacher->legajo }}</td>
                                         <td>{{ $teacher->email }}</td>
                                     </tr>                                      
                                     @endforeach
