@@ -4,15 +4,31 @@
 @import "@fortawesome/fontawesome-free/scss/solid";
 
 .footer {
-    background-color: rebeccapurple;
+    width: 100%;
+    position: relative;
+    bottom: 0;
+    background-color: #c2bfbf;
+}
+
+.page-body {
+    min-height: 70vh;
+    background-color: #f1f1f1;
+}
+
+.navbar {
+    background-color: blue;
 }
 
 .usr-menu-btn {
     color: blue;
 }
 
-.header{
-  padding: 0.5rem;
+.header {
+    padding-top: 0.5rem;
+}
+
+.modal-content {
+    color: black;
 }
 
 .usr-menu ul {
