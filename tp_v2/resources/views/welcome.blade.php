@@ -19,6 +19,9 @@
                                         <th>Nombre</th>
                                         <th>Legajo</th>
                                         <th>Email</th>
+                                        @if(Auth::check() && Auth::user()->role_id===4)
+                                        <th></th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -28,6 +31,13 @@
                                         <td>{{ $teacher->first_name }}</td>
                                         <td>{{ $teacher->legajo }}</td>
                                         <td>{{ $teacher->email }}</td>
+                                        @if(Auth::check() && Auth::user()->role_id===4)
+                                        <td class="d-flex justify-content-between mx-2">
+                                            <button><i class="fa-solid fa-pen"></i></button>
+                                            <button><i class="fa-solid fa-trash"></i></button>
+                                        </td>
+                                        
+                                        @endif
                                     </tr>                                      
                                     @endforeach
                                 </tbody>

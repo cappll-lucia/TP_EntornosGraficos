@@ -33,7 +33,7 @@
         </div>
 
         <!-- Remember Me -->
-        <div class="mt-3 mb-3">
+        <div class="mt-3 mb-3 d-none">
             <div class="form-check">
                 <input id="remember_me" class="form-check-input" type="checkbox" name="remember">
                 <label class="form-check-label" for="remember_me">{{ __('Remember me') }}</label>
@@ -49,7 +49,7 @@
                 </div>
             @endif
 
-            <button type="submit" class="btn btn-primary">
+            <button type="button submit" class="btn btn-primary">
                 {{ __('Log in') }}
             </button>
         </div>

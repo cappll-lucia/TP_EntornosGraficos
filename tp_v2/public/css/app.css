@@ -1,0 +1,28 @@
+@import "~@fortawesome/fontawesome-free/webfonts";
+@import "@fortawesome/fontawesome-free/scss/fontawesome";
+@import "@fortawesome/fontawesome-free/scss/regular";
+@import "@fortawesome/fontawesome-free/scss/solid";
+
+.footer {
+    background-color: rebeccapurple;
+}
+
+.usr-menu-btn {
+    color: blue;
+}
+
+.header{
+  padding: 0.5rem;
+}
+
+.usr-menu ul {
+    padding: 0;
+    overflow: hidden;
+}
+.usr-menu ul li {
+    padding: 0.5rem;
+}
+
+.usr-menu ul li:hover {
+    background-color: rgb(219, 218, 218);
+}
