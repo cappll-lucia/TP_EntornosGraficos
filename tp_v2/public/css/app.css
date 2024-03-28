@@ -7,16 +7,15 @@
     width: 100%;
     position: relative;
     bottom: 0;
-    background-color: #c2bfbf;
+    background-color: #cfcccc;
 }
 
 .page-body {
-    min-height: 70vh;
-    background-color: #f1f1f1;
+    min-height: 70vh;;
 }
 
 .navbar {
-    background-color: blue;
+    background-color: rgb(34, 167, 211);
 }
 
 .usr-menu-btn {

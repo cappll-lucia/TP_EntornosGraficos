@@ -4,7 +4,7 @@
 <form method="POST" action="{{ route('register') }}">
         @csrf
 
-<div class="bg-primary d-flex justify-content-center align-items-center vh-70" style="--bs-bg-opacity: .5">
+<div class="d-flex justify-content-center align-items-center vh-70" >
             <div class="container">
                 <div class="bg-light mx-auto mt-5 mb-5 card" style="width: 25rem; ">
                     <div class="card-body">
