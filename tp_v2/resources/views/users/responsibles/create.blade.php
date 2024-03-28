@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-<form method="POST" action="{{ route('storeNewStudent') }}">
+<form method="POST" action="{{ route('storeNewResponsible') }}">
         @csrf
 
 <div class=" page-body d-flex justify-content-center align-items-center vh-70" style="--bs-bg-opacity: .5">
@@ -9,7 +9,7 @@
                 <div class="bg-light mx-auto mt-5 mb-5 card" style="width: 25rem; ">
                     <div class="card-body">
                         <div class="mt-3 text-center mb-2">
-                            <h3 class="h3">Nuevo Alumno</h3>
+                            <h3 class="h3">Nuevo Responsable</h3>
                         </div>
 
                         <hr class="my-4" style="border-top: 1px solid rgba(0, 0, 0, 0.5);">
@@ -67,7 +67,7 @@
 
         <div class="mt-3 d-flex justify-content-end align-items-center ">
             <div class="me-4">
-            <a class="text-sm text-gray-600 underline" href="{{ route('storeNewStudent') }}">
+            <a class="text-sm text-gray-600 underline" href="{{ route('storeNewResponsible') }}">
             </a>
             </div>
 

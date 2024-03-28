@@ -76,10 +76,10 @@
                 <a class="nav-link" href="{{ route('getTeachers') }}">Docentes</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="3">Alumnos</a>
+                <a class="nav-link" href="{{ route('getStudents') }}">Alumnos</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="3">Responsables</a>
+                <a class="nav-link" href="{{ route('getResponsibles') }}">Responsables</a>
               </li>
               @endif
               @endif

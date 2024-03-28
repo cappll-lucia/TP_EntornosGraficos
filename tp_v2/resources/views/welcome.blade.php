@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <div class=" page font-sans antialiased " >
+    <div class=" font-sans page antialiased " >
         <div class=" text-black/50 ">
             <div class="">
                 <div class="">
@@ -10,8 +10,8 @@
 
 
         <div class="bg-light mx-auto mb-3 card">
-                     <div class="card-header d-flex justify-content-between flex-row align-items-center ">
-            <h3 class=" h3 mt-2 text-center card-title">Docentes disponibles para PPS</h3>
+                     <div class="flex-row card-header d-flex justify-content-between align-items-center ">
+            <h3 class=" mt-2 text-center card-title h3">Docentes disponibles para PPS</h3>
                      </div>
             <div class="card-body">
                         <div class="m-t-20 table-responsive">
@@ -22,9 +22,6 @@
                                         <th>Nombre</th>
                                         <th>Legajo</th>
                                         <th>Email</th>
-                                        @if(Auth::check() && Auth::user()->role_id === 4)
-                                        <th></th>
-                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -34,14 +31,6 @@
                                         <td>{{ $teacher->first_name }}</td>
                                         <td>{{ $teacher->legajo }}</td>
                                         <td>{{ $teacher->email }}</td>
-                                        @if(Auth::check() && Auth::user()->role_id === 4)
-                                        <td class="d-flex justify-content-between pe-4">
-                                            <a href="{{route('editTeacher', ['id' => $teacher->id])}}"><i class="fa-solid fa-pen"></i></a>
-                                            <button><i class="fa-solid fa-trash"></i></button>
-                                        </td>
-                                        
-                                        
-                                        @endif
                                     </tr>                                      
                                     @endforeach
                                 </tbody>
