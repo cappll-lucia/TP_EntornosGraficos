@@ -18,6 +18,7 @@ Route::middleware('auth')->group(function () {
 });
 
 
+Route::middleware(['auth', 'admin'])->group(function () {
 //teachers
 Route::get('/users/teachers', [TeachersController::class, 'index'])->name('getTeachers');
 Route::get('/users/teachers/create', [TeachersController::class, 'create'])->name('createTeacher');
@@ -26,7 +27,15 @@ Route::get('/users/teachers/edit/{id}', [TeachersController::class, 'edit'])->na
 Route::post('/users/teachers/edit/{id}', [TeachersController::class, 'update'])->name('updateTeacher');
 Route::delete('/users/teachers/delete/{id}', [TeachersController::class, 'destroy'])->name('deleteTeacher');
 
+Route::get('/users/students', [StudentsController::class, 'index'])->name('getStudent');
+Route::get('/users/students/create', [StudentsController::class, 'create'])->name('createStudent');
+Route::post('/users/students/create', [StudentsController::class, 'store'])->name('storeNewStudent');
+Route::get('/users/students/edit/{id}', [StudentsController::class, 'edit'])->name('editStudent');
+Route::post('/users/students/edit/{id}', [StudentsController::class, 'update'])->name('updateStudent');
+Route::delete('/users/students/delete/{id}', [StudentsController::class, 'destroy'])->name('deleteStudent');
 
+
+});
 
 
 

@@ -12,13 +12,13 @@
     </head>
 
     <body>
-        <div class="d-flex justify-content-center align-items-center vh-70 bg-primary" style="--bs-bg-opacity: .5">
+        <div class="bg-primary d-flex justify-content-center align-items-center vh-70" style="--bs-bg-opacity: .5">
             <div class="container mb-5">
                 <div class="text-center mb-2">
                     <p>Registrarse</p>
                 </div>
 
-                <div class="card mx-auto bg-light" style="width: 25rem; ">
+                <div class="bg-light mx-auto card" style="width: 25rem; ">
                     <div class="card-body">
                         {{ $slot }}
                     </div>

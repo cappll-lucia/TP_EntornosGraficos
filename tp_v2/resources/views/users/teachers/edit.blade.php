@@ -11,7 +11,6 @@
                         <div class="mt-3 text-center mb-2">
                             <h3 class="h3">Editar Docente</h3>
                         </div>
-                        <span>{{$teacher}}</span>
 
                         <hr class="my-4" style="border-top: 1px solid rgba(0, 0, 0, 0.5);">
                         
@@ -45,11 +44,11 @@
 
         <div class="mt-5 d-flex justify-content-end align-items-center ">
 
-          <div class="d-flex justify-content-between w-100">
-            <a type="button" class="btn btn-outline-primary w-50 me-1" href="{{ route('getTeachers') }}">
+          <div class="w-100 d-flex justify-content-between">
+            <a type="button" class="w-50 btn btn-outline-primary me-1" href="{{ route('getTeachers') }}">
                 Cancelar
             </a>
-            <button type="submit ml-3" class="btn btn-primary w-50 ms-1">
+            <button type="submit ml-3" class="w-50 btn btn-primary ms-1">
             <a class="text-sm text-gray-600 underline" href="{{ route('storeNewTeacher') }}">
             </a>
               Guardar Cambios

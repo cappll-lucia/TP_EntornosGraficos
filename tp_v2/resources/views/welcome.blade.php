@@ -9,7 +9,7 @@
 
 
 
-        <div class=" mx-auto mb-3 card">
+        <div class="bg-light mx-auto mb-3 card">
                      <div class="card-header d-flex justify-content-between flex-row align-items-center ">
             <h3 class=" h3 mt-2 text-center card-title">Docentes disponibles para PPS</h3>
                      </div>
