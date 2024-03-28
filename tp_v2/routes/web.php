@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TeachersController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\ResponsiblesController;
+use App\Http\Middleware\AdminRoutes;
 
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('welcome');
@@ -21,13 +22,6 @@ Route::middleware('auth')->group(function () {
 
 
 Route::middleware(['auth'])->group(function () {
-//teachers
-Route::get('/users/teachers', [TeachersController::class, 'index'])->name('getTeachers');
-Route::get('/users/teachers/create', [TeachersController::class, 'create'])->name('createTeacher');
-Route::post('/users/teachers/create', [TeachersController::class, 'store'])->name('storeNewTeacher');
-Route::get('/users/teachers/edit/{id}', [TeachersController::class, 'edit'])->name('editTeacher');
-Route::post('/users/teachers/edit/{id}', [TeachersController::class, 'update'])->name('updateTeacher');
-Route::delete('/users/teachers/delete/{id}', [TeachersController::class, 'destroy'])->name('deleteTeacher');
 
 //students
 Route::get('/users/students', [StudentsController::class, 'index'])->name('getStudents');
@@ -47,6 +41,17 @@ Route::delete('/users/responsibles/delete/{id}', [ResponsiblesController::class,
 
 
 });
+
+Route::group(['middleware' => ['auth', AdminRoutes::class]], function (){
+    //teachers
+    Route::get('/users/teachers', [TeachersController::class, 'index'])->name('getTeachers');
+    Route::get('/users/teachers/create', [TeachersController::class, 'create'])->name('createTeacher');
+    Route::post('/users/teachers/create', [TeachersController::class, 'store'])->name('storeNewTeacher');
+    Route::get('/users/teachers/edit/{id}', [TeachersController::class, 'edit'])->name('editTeacher');
+    Route::post('/users/teachers/edit/{id}', [TeachersController::class, 'update'])->name('updateTeacher');
+    Route::delete('/users/teachers/delete/{id}', [TeachersController::class, 'destroy'])->name('deleteTeacher');
+});
+
 
 
 
