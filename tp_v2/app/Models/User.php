@@ -47,4 +47,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function ppsAsTeacher()
+    {
+        return $this->hasOne(PPS::class, 'teacher_id');
+    }
+
+    public function ppsAsResponsible()
+    {
+        return $this->hasOne(PPS::class, 'responsible_id');
+    }
+
 }

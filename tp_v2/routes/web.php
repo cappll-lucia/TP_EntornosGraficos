@@ -6,6 +6,8 @@ use App\Http\Controllers\TeachersController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\ResponsiblesController;
 use App\Http\Middleware\AdminRoutes;
+use App\Http\Middleware\StudentsRoutes;
+use App\Http\Controllers\PPSController;
 
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('welcome');
@@ -21,7 +23,7 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::middleware(['auth'])->group(function () {
+Route::group(['middleware' => ['auth', AdminRoutes::class]], function () {
 
 //students
 Route::get('/users/students', [StudentsController::class, 'index'])->name('getStudents');
@@ -39,19 +41,23 @@ Route::get('/users/responsibles/edit/{id}', [ResponsiblesController::class, 'edi
 Route::post('/users/responsibles/edit/{id}', [ResponsiblesController::class, 'update'])->name('updateResponsible');
 Route::delete('/users/responsibles/delete/{id}', [ResponsiblesController::class, 'destroy'])->name('deleteResponsible');
 
-
+//teachers
+Route::get('/users/teachers', [TeachersController::class, 'index'])->name('getTeachers');
+Route::get('/users/teachers/create', [TeachersController::class, 'create'])->name('createTeacher');
+Route::post('/users/teachers/create', [TeachersController::class, 'store'])->name('storeNewTeacher');
+Route::get('/users/teachers/edit/{id}', [TeachersController::class, 'edit'])->name('editTeacher');
+Route::post('/users/teachers/edit/{id}', [TeachersController::class, 'update'])->name('updateTeacher');
+Route::delete('/users/teachers/delete/{id}', [TeachersController::class, 'destroy'])->name('deleteTeacher');
 });
 
-Route::group(['middleware' => ['auth', AdminRoutes::class]], function (){
-    //teachers
-    Route::get('/users/teachers', [TeachersController::class, 'index'])->name('getTeachers');
-    Route::get('/users/teachers/create', [TeachersController::class, 'create'])->name('createTeacher');
-    Route::post('/users/teachers/create', [TeachersController::class, 'store'])->name('storeNewTeacher');
-    Route::get('/users/teachers/edit/{id}', [TeachersController::class, 'edit'])->name('editTeacher');
-    Route::post('/users/teachers/edit/{id}', [TeachersController::class, 'update'])->name('updateTeacher');
-    Route::delete('/users/teachers/delete/{id}', [TeachersController::class, 'destroy'])->name('deleteTeacher');
+Route::group(['middleware' => ['auth', StudentsRoutes::class]], function () {
+    Route::get('/pps', [PPSController::class, 'index'])->name('getPps');
+    Route::get('/pps/create', [PPSController::class, 'create'])->name('createPps');
+    Route::post('/pps/create', [PPSController::class, 'store'])->name('storeNewPps');
+    Route::get('/pps/edit/{id}', [PPSController::class, 'edit'])->name('editPps');
+    Route::post('/pps/edit/{id}', [PPSController::class, 'update'])->name('updatePps');
+    Route::delete('/pps/delete/{id}', [PPSController::class, 'destroy'])->name('deletePps');
 });
-
 
 
 

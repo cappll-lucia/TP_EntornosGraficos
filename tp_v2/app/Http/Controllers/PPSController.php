@@ -12,7 +12,10 @@ class PPSController extends Controller
      */
     public function index()
     {
-        //
+        $pps = PPS::with('teacher', 'responsible')
+            ->where('student_id', auth()->user()->id)
+            ->get();
+        return view('pps.index', ['pps' => $pps]);
     }
 
     /**

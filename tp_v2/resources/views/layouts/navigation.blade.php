@@ -76,7 +76,7 @@
               
               @if(Auth::check())
               <li class="nav-item">
-                <a class="nav-link" href="">Solicitudes</a>
+                <a class="nav-link" href="{{ route('getPps') }}">Solicitudes</a>
               </li>
               @if(Auth::user()->role_id == 4)
               <li class="nav-item">
