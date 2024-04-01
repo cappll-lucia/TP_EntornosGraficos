@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
-    <div class=" font-sans page antialiased dark:bg-black dark:text-white/50" style="--bs-bg-opacity:.5">
-        <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
+    <div class=" font-sans page antialiased " style="--bs-bg-opacity:.5">
+        <div class="bg-gray-50 text-black/50 ">
             <div class="">
                 <div class="">
                 <div class=" d-flex justify-content-center align-items-start page-body" style="--bs-bg-opacity: .5">
@@ -10,7 +10,7 @@
         <div class="bg-light mx-auto mb-3 card">
           <div class="flex-row card-header d-flex justify-content-between align-items-center ">
             <h3 class=" mt-2 text-center card-title h3">Alumnos</h3>
-            @if(Auth::check() && Auth::user()->role_id===4)
+            @if(Auth::check() && Auth::user()->role_id === 4)
             <button type="button submit" class="right-0 btn btn-success d-block"> <a href="{{ route('createStudent') }}">
             <i class="fa-solid fa-plus"></i></a></button>
             @endif
@@ -26,7 +26,7 @@
                                         <th>Nombre</th>
                                         <th>Legajo</th>
                                         <th>Email</th>
-                                        @if(Auth::check() && Auth::user()->role_id===4)
+                                        @if(Auth::check() && Auth::user()->role_id === 4)
                                         <th></th>
                                         @endif
                                     </tr>
@@ -39,7 +39,7 @@
                                         <td>{{ $student->first_name }}</td>
                                         <td>{{ $student->legajo }}</td>
                                         <td>{{ $student->email }}</td>
-                                        @if(Auth::check() && Auth::user()->role_id===4)
+                                        @if(Auth::check() && Auth::user()->role_id === 4)
                                         <td class="d-flex justify-content-between align-items-center pe-4">
                                             <a href="{{route('editStudent', ['id' => $student->id])}}"><i class="fa-solid fa-pen"></i></a>
                                             <a class="btn" data-bs-toggle="modal" data-bs-target="#deleteStudentModal{{ $student->id }}"><i class="fa-solid fa-trash"></i></a>
