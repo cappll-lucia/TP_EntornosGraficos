@@ -4,12 +4,14 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -50,12 +52,17 @@ class User extends Authenticatable
 
     public function ppsAsTeacher()
     {
-        return $this->hasOne(PPS::class, 'teacher_id');
+        return $this->hasMany(PPS::class, 'teacher_id');
     }
 
     public function ppsAsResponsible()
     {
-        return $this->hasOne(PPS::class, 'responsible_id');
+        return $this->hasMany(PPS::class, 'responsible_id');
+    }
+
+    public function ppsAsStudent()
+    {
+        return $this->hasMany(PPS::class, 'student_id');
     }
 
 }

@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\User;
-use  Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Hash;
 
@@ -15,7 +16,7 @@ class StudentsController extends Controller
      */
     public function index()
     {
-        $students= User::where('role_id', 1)->get();
+        $students = User::where('role_id', 1)->get();
         return view('users.students.index', ['students' => $students]);
     }
 
@@ -24,7 +25,7 @@ class StudentsController extends Controller
      */
     public function create()
     {
-         return view('users.students.create');
+        return view('users.students.create');
     }
 
     /**
@@ -32,14 +33,14 @@ class StudentsController extends Controller
      */
     public function store(Request $request)
     {
-        try{
+        try {
             DB::beginTransaction();
 
             $request->validate([
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
                 'legajo' => ['required', 'numeric'],
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
             ]);
 
@@ -47,14 +48,14 @@ class StudentsController extends Controller
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
-                'legajo'=>  $request->legajo,
+                'legajo' => $request->legajo,
                 'password' => Hash::make($request->password),
-                'role_id' => 1, 
+                'role_id' => 1,
             ]);
             DB::commit();
-            $students= User::where('role_id', 1)->get();
+            $students = User::where('role_id', 1)->get();
             return view('users.students.index', ['students' => $students]);
-        }  catch (\Exception $exep) {
+        } catch (\Exception $exep) {
             DB::rollBack();
             dd($exep->getMessage());
             Log::error('Error al crear el alumno: ' . $exep->getMessage());
@@ -83,7 +84,7 @@ class StudentsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        try{
+        try {
             DB::beginTransaction();
             $user = User::findOrFail($id);
             $request->validate([
@@ -96,12 +97,12 @@ class StudentsController extends Controller
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
-                'legajo'=>  $request->legajo,
+                'legajo' => $request->legajo,
             ]);
             DB::commit();
-            $students= User::where('role_id', 1)->get();
+            $students = User::where('role_id', 1)->get();
             return view('users.students.index', ['students' => $students]);
-        }  catch (\Exception $exep) {
+        } catch (\Exception $exep) {
             DB::rollBack();
             dd($exep->getMessage());
             Log::error('Error al crear el alumno: ' . $exep->getMessage());
@@ -114,15 +115,15 @@ class StudentsController extends Controller
      */
     public function destroy(string $id)
     {
-        try{
+        try {
             DB::beginTransaction();
             $user = User::findOrFail($id);
             $user->delete();
             DB::commit();
-            $students= User::where('role_id', 1)->get();
+            $students = User::where('role_id', 1)->get();
             return view('users.students.index', ['students' => $students]);
-        }catch(\Exception $exep){
-                        DB::rollBack();
+        } catch (\Exception $exep) {
+            DB::rollBack();
             dd($exep->getMessage());
             Log::error('Error al eliminar el alumno: ' . $exep->getMessage());
             return view("error.index");

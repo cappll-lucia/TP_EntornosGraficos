@@ -11,8 +11,9 @@
           <div class="flex-row card-header d-flex justify-content-between align-items-center ">
             <h3 class=" mt-2 text-center card-title h3">Docentes</h3>
             @if(Auth::check() && Auth::user()->role_id === 4)
-            <button type="button submit" class="right-0 btn btn-success d-block"> <a href="{{ route('createTeacher') }}">
-            <i class="fa-solid fa-plus"></i></a></button>
+              <a href="{{ route('createTeacher') }}" class="right-0 btn btn-success d-block">
+            <i class="fa-solid fa-plus"></i>
+          </a>
             @endif
 
           </div>

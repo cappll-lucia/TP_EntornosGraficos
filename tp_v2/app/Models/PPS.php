@@ -4,15 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PPS extends Model
 {
     use HasFactory;
-
-    protected $table = 'pps'; 
-    protected $primaryKey = 'id'; 
-    public $timestamps = false;
-
+    use SoftDeletes;
+    protected $table = 'pps';
     protected $fillable = [
         'student_id',
         'responsible_id',
@@ -20,19 +18,38 @@ class PPS extends Model
         'start_date',
         'finish_date',
         'is_finished',
-        'is_approved',
-        'description',
         'observation',
+        'description',
+        'is_approved',
     ];
 
-    public function teacher()
+    public function Student()
     {
-        return $this->belongsTo(User::class, 'teacher_id');
+        return $this->belongsTo(User::class, 'student_id');
     }
 
-    public function responsible()
+    public function Responsible()
     {
         return $this->belongsTo(User::class, 'responsible_id');
     }
 
+    public function Teacher()
+    {
+        return $this->belongsTo(User::class, 'teacher_id');
+    }
+
+    public function FinalReport()
+    {
+        return $this->hasOne(FinalReport::class);
+    }
+
+    public function WeeklyTrackings()
+    {
+        return $this->hasMany(WeeklyTracking::class, 'application_id');
+    }
+
+    public function WorkPlan()
+    {
+        return $this->hasOne(WorkPlan::class);
+    }
 }
