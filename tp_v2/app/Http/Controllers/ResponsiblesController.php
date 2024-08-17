@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
-use  Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
 class ResponsiblesController extends Controller
@@ -15,7 +15,7 @@ class ResponsiblesController extends Controller
      */
     public function index()
     {
-        $responsibles= User::where('role_id', 3)->get();
+        $responsibles = User::where('role_id', 3)->get();
         return view('users.responsibles.index', ['responsibles' => $responsibles]);
     }
 
@@ -24,7 +24,7 @@ class ResponsiblesController extends Controller
      */
     public function create()
     {
-         return view('users.responsibles.create');
+        return view('users.responsibles.create');
     }
 
     /**
@@ -32,14 +32,14 @@ class ResponsiblesController extends Controller
      */
     public function store(Request $request)
     {
-        try{
+        try {
             DB::beginTransaction();
 
             $request->validate([
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
                 'legajo' => ['required', 'numeric'],
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
             ]);
 
@@ -47,14 +47,14 @@ class ResponsiblesController extends Controller
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
-                'legajo'=>  $request->legajo,
+                'legajo' => $request->legajo,
                 'password' => Hash::make($request->password),
-                'role_id' => 3, 
+                'role_id' => 3,
             ]);
             DB::commit();
-            $responsibles= User::where('role_id', 3)->get();
+            $responsibles = User::where('role_id', 3)->get();
             return view('users.responsibles.index', ['responsibles' => $responsibles]);
-        }  catch (\Exception $exep) {
+        } catch (\Exception $exep) {
             DB::rollBack();
             dd($exep->getMessage());
             Log::error('Error al crear el responsable: ' . $exep->getMessage());
@@ -83,7 +83,7 @@ class ResponsiblesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        try{
+        try {
             DB::beginTransaction();
             $user = User::findOrFail($id);
             $request->validate([
@@ -96,36 +96,17 @@ class ResponsiblesController extends Controller
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
-                'legajo'=>  $request->legajo,
+                'legajo' => $request->legajo,
             ]);
             DB::commit();
-            $responsibles= User::where('role_id', 3)->get();
+            $responsibles = User::where('role_id', 3)->get();
             return view('users.responsibles.index', ['responsibles' => $responsibles]);
-        }  catch (\Exception $exep) {
+        } catch (\Exception $exep) {
             DB::rollBack();
             dd($exep->getMessage());
-            Log::error('Error al crear el responsable: ' . $exep->getMessage());
+            Log::error('Error al crear el alumno: ' . $exep->getMessage());
             return view("error.index");
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        try{
-            DB::beginTransaction();
-            $user = User::findOrFail($id);
-            $user->delete();
-            DB::commit();
-            $responsibles= User::where('role_id', 3)->get();
-            return view('users.responsibles.index', ['responsibles' => $responsibles]);
-        }catch(\Exception $exep){
-                        DB::rollBack();
-            dd($exep->getMessage());
-            Log::error('Error al eliminar el responsable: ' . $exep->getMessage());
-            return view("error.index");
-        }
-    }
 }

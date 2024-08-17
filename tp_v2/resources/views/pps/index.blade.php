@@ -1,48 +1,132 @@
 @extends('layouts.app')
+
 @section('content')
-<div class=" font-sans page antialiased dark:bg-black dark:text-white/50" style="--bs-bg-opacity:.5">
-        <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
-            <div class="">
-                <div class="">
-                <div class=" d-flex justify-content-center align-items-start page-body" style="--bs-bg-opacity: .5">
-            <div class="container mt-3">
+<!-- Data table -->
+<link href="{{ asset('plugins/datatables/media/css/dataTables.bootstrap4.css') }}" rel="stylesheet">
 
-        <div class="bg-light mx-auto mb-3 card">
-          <div class="flex-row card-header d-flex justify-content-between align-items-center ">
-            <h3 class=" mt-2 text-center card-title h3">Solicitudes de PPS de {{Auth::user()->first_name}} {{Auth::user()->last_name}}</h3>
-            <button type="button submit" class="right-0 btn btn-success d-block"> <a href="{{ route('createPps') }}">
-            <i class="fa-solid fa-plus"></i></a></button>
+<!-- This is data table -->
+<script src="{{ asset('plugins/datatables/datatables.min.js') }}"></script>
 
-          </div>
-            <div class="card-body">
-                        <div class="m-t-20 table-responsive">
-                            <table class="table stylish-table">
-                                <thead>
-                                    <tr>
-                                        <th>Fecha de inicio</th>
-                                        <th>Fecha de fin</th>
-                                        <th>Responsable</th>
-                                        <th>Docente</th>
-                                        <th></th>
+<div class="container-fluid">
+    <!-- ============================================================== -->
+    <!-- Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <div class="row page-titles">
+        <div class="col-md-5 col-8 align-self-center">
+            <h3 class="text-themecolor m-b-0 m-t-0">Solicitudes</h3>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Inicio</a></li>
+                <li class="breadcrumb-item active">Solicitudes</li>
+            </ol>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Start Page Content -->
+    <!-- ============================================================== -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="card-title mb-0 fw-bold fs-4">Listado de solicitudes</h2>
+                        @if(auth()->user()->role_id == '1')
+                            <a href="{{ route('pps.new') }}" class="btn btn-info btn-rounded waves-effect waves-light">Nueva
+                                solicitud</a>
+                        @endif
+                    </div>
+                    <div class="table-responsive mt-1">
+                        <table id="DataTable" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Estudiante</th>
+                                    <th>Responsable</th>
+                                    <th>Profesor</th>
+                                    <th>PPS</th>
+                                    <th>Fecha fin</th>
+                                    <th>Observación</th>
+                                    <th>Finalizada</th>
+                                    <th>Aprobada</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table_body">
+                                @foreach ($pps as $app)
+                                    <tr data-id="{{ $app->id }}" class="clickable" data-url="/pps/details">
+                                        <td>{{ $app->Student->last_name }}, {{ $app->Student->name }}</td>
+                                        @if ($app->Responsible == null)
+                                            <td>-</td>
+                                        @else
+                                            <td>{{ $app->Responsible->last_name }}, {{ $app->Responsible->name }}</td>
+                                        @endif
+                                        @if ($app->Teacher == null)
+                                            <td>-</td>
+                                        @else
+                                            <td>{{ $app->Teacher->last_name }}, {{ $app->Teacher->name }}</td>
+                                        @endif
+                                        <td>{{ $app->description }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($app->finish_date)->format('d/m/Y') }}</td>
+                                        <td>{{ $app->observation != null ? $app->observation : "-" }}</td>
+                                        <td class="text-center">
+                                            @if ($app->is_finished == true)
+                                                <i class="bi bi-check2" style="font-size: 1.5rem"></i>
+                                            @else
+                                                <i class="bi bi-x-lg" style="font-size: 1.3rem"></i>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            @if ($app->is_approved == true)
+                                                <i class="bi bi-check2" style="font-size: 1.5rem"></i>
+                                            @else
+                                                <i class="bi bi-x-lg" style="font-size: 1.3rem"></i>
+                                            @endif
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($pps as $p)
-                                    <tr>
-                                        <td>{{ $p->start_date }}</td>
-                                        <td>{{ $p->finish_date }}</td>
-                                        <td>{{ $p->responsible->first_name }} {{ $p->responsible->last_name }}</td>
-                                        <td>{{ $p->teacher->first_name }} {{ $p->teacher->last_name }}</td>
-                                        <!-- falta un boton de ver progreso -->
-                                    </tr>                                      
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-</div>
+    </div>
 </div>
 
+<script>
+    $('#DataTable').DataTable({
+        "language": {
+            "sInfo": "Mostrando _START_ a _END_ de _TOTAL_ solicitudes",
+            "sInfoEmpty": "Mostrando 0 a 0 de 0 solicitudes",
+            "sInfoFiltered": "(filtrado de _MAX_ solicitudes en total)",
+            "emptyTable": 'No hay solicitudes que coincidan con la búsqueda',
+            "sLengthMenu": "Mostrar _MENU_ solicitudes",
+            "sSearch": "Buscar:",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior",
+            },
+        },
+    });
 
+    $(document).on("click", ".clickable", function () {
+        let url = $(this).data('url');
+        let id = $(this).data('id');
+        window.location.href = url + "/" + id;
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+    .clickable {
+        cursor: pointer;
+    }
+
+    .clickable:hover {
+        background-color: #dce5ff !important;
+    }
+</style>
 @endsection

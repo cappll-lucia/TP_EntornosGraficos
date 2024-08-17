@@ -24,15 +24,16 @@ class PPSController extends Controller
             $rol = auth()->user()->rol_id;
             switch ($rol) {
                 case 1:
-                    $pps = PPS::all();
-                    break;
-
-                case 2:
                     $pps = PPS::where('student_id', auth()->user()->Person->id)->get();
                     break;
 
-                case 3:
+
+                case 2:
                     $pps = PPS::where('teacher_id', auth()->user()->Person->id)->get();
+                    break;
+
+                case 3:
+                    $pps = PPS::all();
                     break;
 
                 case 4:
@@ -47,7 +48,7 @@ class PPSController extends Controller
         } catch (\Exception $e) {
             $error = new \stdClass();
             $error->code = 500;
-            $error->message = 'Error al cargar la página';
+            $error->message = 'Error al cargssar la página';
             return view('error', compact('error'));
         }
     }
@@ -56,18 +57,18 @@ class PPSController extends Controller
     {
         try {
             $user = User::where('id', auth()->user()->id)->first();
-            if ($user->rol_id != 2) {
+            if ($user->role_id != 1) {
                 $error = new \stdClass();
                 $error->code = 403;
                 $error->message = 'Para poder crear una solicitud deber ser un estudiante';
                 return view('error', compact('error'));
             }
-            $student = User::where('email', $user->email)->with('Person')->first();
+            $student = User::where('email', $user->email)->first();
             return view('pps.new', compact('student'));
         } catch (\Exception $e) {
             $error = new \stdClass();
             $error->code = 500;
-            $error->message = 'Error al cargar la página';
+            $error->message = 'Error al caagar la página';
             return view('error', compact('error'));
         }
     }
@@ -83,7 +84,7 @@ class PPSController extends Controller
                 $error->message = 'No está autorizado a ver esta solicitud';
                 return view('error', compact('error'));
             }
-            $all_professors = User::where('rol_id', 3)->with('Person')->get();
+            $all_professors = User::where('rol_id', 2)->with('Person')->get();
             $professors = [];
             foreach ($all_professors as $prof) {
                 $cant_pps = PPS::where('teacher_id', $prof->Person->id)->where('is_finished', false)->count();
@@ -92,7 +93,7 @@ class PPSController extends Controller
                 }
             }
 
-            return view('pps.details', compact('pp', 'professors'));
+            return view('pps.details', compact('pps', 'professors'));
         } catch (\Exception $e) {
             $error = new \stdClass();
             $error->code = 500;
@@ -115,6 +116,7 @@ class PPSController extends Controller
                 ], 400);
             }
             // Crear una fecha de inicio y finalización
+
             $dateFrom = Carbon::createFromFormat('Y-m-d', $request->input('start_date'));
             $dateTo = Carbon::createFromFormat('Y-m-d', $request->input('finish_date'));
 
