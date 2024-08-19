@@ -53,9 +53,9 @@ Route::group(['middleware' => ['auth', AdminRoutes::class]], function () {
 Route::group(['middleware' => ['auth', StudentsRoutes::class]], function () {
     Route::get('/pps', [PPSController::class, 'index'])->name('getPps');
     Route::get('/pps/new', [PPSController::class, 'new'])->name('pps.new');
-    Route::get('/pps/create', [PPSController::class, 'create']);
+    // Route::get('/pps/create', [PPSController::class, 'create']);
 
-    Route::post('/pps/create', [PPSController::class, 'store'])->name('storeNewPps');
+    Route::post('/pps/create', [PPSController::class, 'create']);
 
     Route::get('/pps/edit/{id}', [PPSController::class, 'edit'])->name('editPps');
 

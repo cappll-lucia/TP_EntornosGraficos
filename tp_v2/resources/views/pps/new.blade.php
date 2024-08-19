@@ -126,15 +126,15 @@
                                 <!-- Date from -->
                                 <div class="col-12 col-md-2 mb-3">
                                     <label for="DatePickerFrom" class="mb-0">Fecha de inicio</label>
-                                    <input type="date" id="DatePickerFrom" class="form-control"
+                                    <input type="date" id="DatePickerFrom" class="form-control" name="DatePickerFrom"
                                         placeholder="dd/mm/aaaa" />
                                 </div>
 
                                 <!-- Date to -->
                                 <div class="col-12 col-md-2 mb-3">
                                     <label for="DatePickerTo" class="mb-0">Fecha de finalización</label>
-                                    <input type="date" id="DatePickerTo" class="form-control" placeholder="dd/mm/aaaa"
-                                        disabled />
+                                    <input type="date" id="DatePickerTo" name="DatePickerTo" class="form-control"
+                                        placeholder="dd/mm/aaaa" disabled />
                                 </div>
                             </div>
                             <div class="row col-12 m-0 p-0">
