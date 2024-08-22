@@ -48,7 +48,7 @@ class PPSController extends Controller
         } catch (\Exception $e) {
             $error = new \stdClass();
             $error->code = 500;
-            $error->message = 'Error al cargssar la página';
+            $error->message = 'Error al cargar la página';
             return view('error', compact('error'));
         }
     }
@@ -68,7 +68,7 @@ class PPSController extends Controller
         } catch (\Exception $e) {
             $error = new \stdClass();
             $error->code = 500;
-            $error->message = 'Error al caagar la página';
+            $error->message = 'Error al cargar la página';
             return view('error', compact('error'));
         }
     }

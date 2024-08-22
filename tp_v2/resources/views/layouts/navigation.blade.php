@@ -80,7 +80,7 @@
           </li>
 
 
-          @if(Auth::check())
+        @if(Auth::check())
         <li class="nav-item">
         <a class="nav-link" href="{{ route('getPps') }}">Solicitudes</a>
         </li>

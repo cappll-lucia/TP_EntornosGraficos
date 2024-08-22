@@ -20,11 +20,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/pps', [PPSController::class, 'index'])->name('getPps');
+    
 });
 
 
 Route::group(['middleware' => ['auth', AdminRoutes::class]], function () {
 
+    
     //students
     Route::get('/users/students', [StudentsController::class, 'index'])->name('getStudents');
     Route::get('/users/students/create', [StudentsController::class, 'create'])->name('createStudent');
@@ -51,7 +54,7 @@ Route::group(['middleware' => ['auth', AdminRoutes::class]], function () {
 });
 
 Route::group(['middleware' => ['auth', StudentsRoutes::class]], function () {
-    Route::get('/pps', [PPSController::class, 'index'])->name('getPps');
+   // Route::get('/pps', [PPSController::class, 'index'])->name('getPps');
     Route::get('/pps/new', [PPSController::class, 'new'])->name('pps.new');
     // Route::get('/pps/create', [PPSController::class, 'create']);
 

@@ -90,11 +90,13 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                @if(isset($teacher))  
                   <span>
 
                     ¿Está seguro de eliminar el docente <b style="font-style: italic">{{$teacher->last_name}},
                       {{$teacher->first_name}}</b>?
                   </span>
+                @endif  
                 </div>
                 <div class="modal-footer">
                   <a type="button" class="w-50 btn btn-outline-secondary me-1" href="{{ route('getTeachers') }}">
