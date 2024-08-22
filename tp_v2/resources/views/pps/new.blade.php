@@ -39,7 +39,7 @@
     <!-- ============================================================== -->
     <div class="row page-titles">
         <div class="col-md-5 col-8 align-self-center">
-            <h3 class="text-themecolor m-b-0 m-t-0">Solicitudes</h3>
+            <h3 class="m-b-0 m-t-0 text-themecolor">Solicitudes</h3>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Inicio</a></li>
                 <li class="breadcrumb-item"><a href="{{ url('/pps/index') }}">Solicitudes</a></li>
@@ -56,9 +56,9 @@
     <div class="row">
         <div class="col-12">
             <div class="card justify-content ">
-                <div class="card-body wizard-content m-b-2">
+                <div class="m-b-2 card-body wizard-content">
                     <h3 class="card-title">Nueva solicitud</h3>
-                    <h6 class="card-subtitle mt-3 mb-3">{{ $today->format('d/m/Y') }}</h6>
+                    <h6 class="mt-3 mb-3 card-subtitle">{{ $today->format('d/m/Y') }}</h6>
                     <form action="/pps/create" class="tab-wizard wizard-circle" id="form_data" method="POST">
                         @csrf
                         <!-- Step 1 -->
@@ -71,18 +71,18 @@
                                         <hr class="m-t-0 m-b-20" style="width: 70%">
                                         <div class="row col-md-15">
                                             <div class="col-md-4">
-                                                <div class="form-group row">
-                                                    <label class="control-label text-md-right col-3">Nombre:</label>
-                                                    <div class="col-7 pr-0">
+                                                <div class="row form-group">
+                                                    <label class="text-md-right col-3 control-label">Nombre:</label>
+                                                    <div class="pr-0 col-7">
                                                         <p class="form-control-static">{{ $student->first_name }}</p>
                                                     </div>
                                                 </div>
                                             </div>
                                             <!--/span-->
                                             <div class="col-md-4">
-                                                <div class="form-group row">
-                                                    <label class="control-label text-md-right col-3">Apellido:</label>
-                                                    <div class="col-7 pr-0">
+                                                <div class="row form-group">
+                                                    <label class="text-md-right col-3 control-label">Apellido:</label>
+                                                    <div class="pr-0 col-7">
                                                         <p class="form-control-static">{{ $student->last_name }}
                                                         </p>
                                                     </div>
@@ -93,9 +93,9 @@
                                         <!--/row-->
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <div class="form-group row">
-                                                    <label class="control-label text-md-right col-3">Legajo:</label>
-                                                    <div class="col-7 pr-0">
+                                                <div class="row form-group">
+                                                    <label class="text-md-right col-3 control-label">Legajo:</label>
+                                                    <div class="pr-0 col-7">
                                                         <p class="form-control-static">
                                                             {{ $student->legajo }}
                                                         </p>
@@ -104,9 +104,9 @@
                                             </div>
                                             <!--/span-->
                                             <div class="col-md-4">
-                                                <div class="form-group row">
-                                                    <label class="control-label text-md-right col-3">Email:</label>
-                                                    <div class="col-7 pr-0">
+                                                <div class="row form-group">
+                                                    <label class="text-md-right col-3 control-label">Email:</label>
+                                                    <div class="pr-0 col-7">
                                                         <p class="form-control-static">{{ $student->email }}</p>
                                                     </div>
                                                 </div>
@@ -122,36 +122,36 @@
                         <section>
                             <h4 class="box-title">Datos de la PPS</h4>
                             <hr class="m-t-0 m-b-20" style="width: 70%">
-                            <div class="row col-12 m-0 p-0">
+                            <div class="m-0 p-0 row col-12">
                                 <!-- Date from -->
-                                <div class="col-12 col-md-2 mb-3">
+                                <div class="mb-3 col-12 col-md-2">
                                     <label for="DatePickerFrom" class="mb-0">Fecha de inicio</label>
                                     <input type="date" id="DatePickerFrom" class="form-control" name="DatePickerFrom"
                                         placeholder="dd/mm/aaaa" />
                                 </div>
 
                                 <!-- Date to -->
-                                <div class="col-12 col-md-2 mb-3">
+                                <div class="mb-3 col-12 col-md-2">
                                     <label for="DatePickerTo" class="mb-0">Fecha de finalización</label>
                                     <input type="date" id="DatePickerTo" name="DatePickerTo" class="form-control"
-                                        placeholder="dd/mm/aaaa" disabled />
+                                        placeholder="dd/mm/aaaa" />
                                 </div>
                             </div>
-                            <div class="row col-12 m-0 p-0">
+                            <div class="m-0 p-0 row col-12">
                                 <!-- Description  -->
-                                <div class="col-12 col-md-6 mb-3">
+                                <div class="mb-3 col-12 col-md-6">
                                     <label for="description" class="mb-0">Descripción</label>
                                     <textarea id="description" name="description" class="form-control"
                                         style="height: 100px;"></textarea>
                                 </div>
                             </div>
                         </section>
-                        <!-- Step 3 -->
+                        <!-- Step 3 --> 
                         <h6>Planes de trabajo</h6>
                         <section>
                             <h4 class="box-title">Archivos</h4>
                             <hr class="m-t-0 m-b-20" style="width: 70%">
-                            <div class="row col-12 m-0 p-0" style="width: 70%">
+                            <div class="m-0 p-0 row col-12" style="width: 70%">
                                 <div class="card ">
                                     <div class="card-body">
                                         <h5 class="card-title">Subir plan de trabajo</h5>

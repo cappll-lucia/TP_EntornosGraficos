@@ -130,24 +130,25 @@ class PPSController extends Controller
             DB::beginTransaction();
             $pp = PPS::create([
                 'student_id' => $student->id,
-                'start_date' => $request->input('start_date'),
-                'finish_date' => $request->input('finish_date'),
+                'start_date' => '2024-08-31',//$request->input('start_date'),
+                'finish_date' => '2024-09-30', //$request->input('finish_date'),
                 'description' => $request->input('description'),
-                'is_finished' => false,
-                'is_approved' => false,
-                'created_at' => $today,
-                'updated_at' => $today
+                'is_finished' => 0,
+                'is_approved' => 0,
+                'created_at' => now(),
+                'observation' => '',
+                'updated_at' => now()
             ]);
 
-            $file = $request->file('file');
-            if ($file->isValid()) {
-                $path = $file->store('public/work_plans');
-                WorkPlan::create([
-                    'pp_id' => $pp->id,
-                    'file_path' => $path,
-                    'is_accepted' => false
-                ]);
-            }
+              $file = $request->file('file');
+              if ($file->isValid()) {
+                  $path = $file->store('public/work_plan');
+                  WorkPlan::create([
+                      'pps_id' => $pp->id,
+                      'file_path' => $path,
+                      'is_accepted' => 0
+                  ]);
+             }
             DB::commit();
 
             return response()->json([
