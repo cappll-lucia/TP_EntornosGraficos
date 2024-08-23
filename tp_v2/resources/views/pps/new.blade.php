@@ -69,7 +69,7 @@
                                 <div class="col-lg-12">
                                     <div class="form-body">
                                         <h4 class="box-title">Tus datos</h4>
-                                        <hr class="m-t-0 m-b-20" style="width: 70%">
+                                        <hr class="m-t-0 m-b-20" style="width: 100%">
                                         <div class="row col-md-15">
                                             <div class="col-md-4">
                                                 <div class="row form-group">
@@ -127,7 +127,7 @@
                         <h6>Datos</h6>
                         <section>
                             <h4 class="box-title">Datos de la PPS</h4>
-                            <hr class="m-t-0 m-b-20" style="width: 70%">
+                            <hr class="m-t-0 m-b-20" style="width: 100%">
                             <div class="m-0 p-0 row col-12">
                                 <!-- Date from -->
                                 <div class="mb-3 col-12 col-md-2">
@@ -142,6 +142,19 @@
                                     <input type="date" id="DatePickerTo" name="DatePickerTo" class="form-control"
                                         placeholder="dd/mm/aaaa" />
                                 </div>
+                                
+                                <div class="mb-3 col-12 col-md-2">
+                                    <label for="TeacherSelect" class="mb-0">Docente de tu preferencia</label>
+                                    <select id="TeacherSelect" name="TeacherSelect" class="form-control">
+                                        @foreach($teachers as $teach)
+                                        <option value="{{ $teach->id }}">{{ $teach->first_name }} {{ $teach->last_name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <small class="text-muted form-text">
+                                    Nota: Que este sea tu docente elegido no quiere decir que sea el asignado. Eso es decisión del responsable de las PPS.
+                                    </small>
+                                </div>
+
                             </div>
                             <div class="m-0 p-0 row col-12">
                                 <!-- Description  -->
@@ -156,7 +169,7 @@
                         <h6>Planes de trabajo</h6>
                         <section>
                             <h4 class="box-title">Archivos</h4>
-                            <hr class="m-t-0 m-b-20" style="width: 70%">
+                            <hr class="m-t-0 m-b-20" style="width: 100%">
                             <div class="m-0 p-0 row col-12" style="width: 70%">
                                 <div class="card ">
                                     <div class="card-body">
@@ -245,6 +258,7 @@
         formData.append('start_date', $('#DatePickerFrom').val());
         formData.append('finish_date', $('#DatePickerTo').val());
         formData.append('description', $("#description").val());
+        formData.append('teacher_id', $("#TeacherSelect").val());
         formData.append('_token', $("input[name='_token']").val());
         formData.append('file', file);
 

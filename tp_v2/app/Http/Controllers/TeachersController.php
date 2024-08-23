@@ -128,4 +128,6 @@ class TeachersController extends Controller
             return view("error.index");
         }
     }
+
+
 }

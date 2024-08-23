@@ -4,6 +4,8 @@
 <!-- Data table -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link href="{{ asset('plugins/datatables/media/css/dataTables.bootstrap4.css') }}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
 
 <!-- This is data table -->
 <script src="{{ asset('plugins/datatables/datatables.min.js') }}"></script>
@@ -14,7 +16,7 @@
     <!-- ============================================================== -->
     <div class="row page-titles">
         <div class="col-md-5 col-8 align-self-center">
-            <h3 class="text-themecolor m-b-0 m-t-0">Solicitudes</h3>
+            <h3 class="m-b-0 m-t-0 text-themecolor">Solicitudes</h3>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Inicio</a></li>
                 <li class="breadcrumb-item active">Solicitudes</li>
@@ -29,16 +31,16 @@
     <!-- ============================================================== -->
     <div class="row">
         <div class="col-lg-12">
-            <div class="card shadow">
+            <div class="shadow card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h2 class="card-title mb-0 fw-bold fs-4">Listado de solicitudes</h2>
+                        <h2 class="mb-0 card-title fw-bold fs-4">Listado de solicitudes</h2>
                         @if(auth()->user()->role_id == '1')
                             <a href="{{ route('pps.new') }}" class="btn btn-info btn-rounded waves-effect waves-light">Nueva
                                 solicitud</a>
                         @endif
                     </div>
-                    <div class="table-responsive mt-1">
+                    <div class="mt-1 table-responsive">
                         <table id="DataTable" class="table table-bordered table-striped">
                             <thead>
                                 <tr>

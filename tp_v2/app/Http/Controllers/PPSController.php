@@ -63,7 +63,16 @@ class PPSController extends Controller
                 return view('error', compact('error'));
             }
             $student = User::where('email', $user->email)->first();
-            return view('pps.new', compact('student'));
+            
+            $all_teachers = User::where('role_id', 2)->get();
+            $teachers = [];
+            foreach ($all_teachers as $teach) {
+                $cant_pps = PPS::where('teacher_id', $teach->id)->where('is_finished', 0)->count();
+                if ($cant_pps <= 10) {
+                    $teachers[] = $teach;
+                }
+            }
+            return view('pps.new', ['student' => $user,'teachers' => $teachers]);
         } catch (\Exception $e) {
             $error = new \stdClass();
             $error->code = 500;
@@ -83,16 +92,8 @@ class PPSController extends Controller
                 $error->message = 'No está autorizado a ver esta solicitud';
                 return view('error', compact('error'));
             }
-            $all_professors = User::where('rol_id', 2)->with('User')->get();
-            $professors = [];
-            foreach ($all_professors as $prof) {
-                $cant_pps = PPS::where('teacher_id', $prof->User->id)->where('is_finished', false)->count();
-                if ($cant_pps <= 10) {
-                    $professors[] = $prof;
-                }
-            }
 
-            return view('pps.details', compact('pps', 'professors'));
+            return view('pps.details', compact('pps'));
         } catch (\Exception $e) {
             $error = new \stdClass();
             $error->code = 500;
@@ -134,6 +135,7 @@ class PPSController extends Controller
                 'description' => $request->input('description'),
                 'is_finished' => 0,
                 'is_approved' => 0,
+                'teacher_id' => $request->input('teacher_id'),
                 // 'created_at' => $today,
                 // 'updated_at' => ''
             ]);
