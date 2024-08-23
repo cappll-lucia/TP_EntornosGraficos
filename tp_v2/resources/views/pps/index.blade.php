@@ -2,6 +2,7 @@
 
 @section('content')
 <!-- Data table -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link href="{{ asset('plugins/datatables/media/css/dataTables.bootstrap4.css') }}" rel="stylesheet">
 
 <!-- This is data table -->
@@ -54,16 +55,16 @@
                             <tbody id="table_body">
                                 @foreach ($pps as $app)
                                     <tr data-id="{{ $app->id }}" class="clickable" data-url="/pps/details">
-                                        <td>{{ $app->Student->last_name }}, {{ $app->Student->name }}</td>
+                                        <td>{{ $app->Student->last_name }}, {{ $app->Student->first_name }}</td>
                                         @if ($app->Responsible == null)
                                             <td>-</td>
                                         @else
-                                            <td>{{ $app->Responsible->last_name }}, {{ $app->Responsible->name }}</td>
+                                            <td>{{ $app->Responsible->last_name }}, {{ $app->Responsible->first_name }}</td>
                                         @endif
                                         @if ($app->Teacher == null)
                                             <td>-</td>
                                         @else
-                                            <td>{{ $app->Teacher->last_name }}, {{ $app->Teacher->name }}</td>
+                                            <td>{{ $app->Teacher->last_name }}, {{ $app->Teacher->first_name }}</td>
                                         @endif
                                         <td>{{ $app->description }}</td>
                                         <td>{{ \Carbon\Carbon::parse($app->finish_date)->format('d/m/Y') }}</td>

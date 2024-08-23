@@ -20,10 +20,10 @@ class PPSController extends Controller
     public function index()
     {
         try {
-            $rol = auth()->user()->rol_id;
+            $rol = auth()->user()->role_id;
             switch ($rol) {
                 case 1:
-                    $pps = PPS::where('student_id', auth()->user()->User->id)->get();
+                    $pps = PPS::where('student_id', auth()->user()->id)->get();
                     break;
 
 
