@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PPS\PPSCreateRequest;
 use App\Http\Requests\PPS\PPSUpdateRequest;
 use App\Models\PPS;
-use App\Models\Person;
 use App\Models\User;
 use App\Models\WeeklyTracking;
 use App\Models\WorkPlan;
@@ -24,12 +23,12 @@ class PPSController extends Controller
             $rol = auth()->user()->rol_id;
             switch ($rol) {
                 case 1:
-                    $pps = PPS::where('student_id', auth()->user()->Person->id)->get();
+                    $pps = PPS::where('student_id', auth()->user()->User->id)->get();
                     break;
 
 
                 case 2:
-                    $pps = PPS::where('teacher_id', auth()->user()->Person->id)->get();
+                    $pps = PPS::where('teacher_id', auth()->user()->User->id)->get();
                     break;
 
                 case 3:
@@ -78,16 +77,16 @@ class PPSController extends Controller
         try {
             $pp = PPS::findOrFail($id)->load('Student', 'Teacher', 'Responsible', 'WorkPlan', 'WeeklyTrackings', 'FinalReport');
             $user = User::where('id', auth()->user()->id)->first();
-            if (($user->rol_id == 2 && $user->Person->id != $pp->student_id) || ($user->rol_id == 3 && $user->Person->id != $pp->teacher_id)) {
+            if (($user->rol_id == 2 && $user->User->id != $pp->student_id) || ($user->rol_id == 3 && $user->User->id != $pp->teacher_id)) {
                 $error = new \stdClass();
                 $error->code = 403;
                 $error->message = 'No está autorizado a ver esta solicitud';
                 return view('error', compact('error'));
             }
-            $all_professors = User::where('rol_id', 2)->with('Person')->get();
+            $all_professors = User::where('rol_id', 2)->with('User')->get();
             $professors = [];
             foreach ($all_professors as $prof) {
-                $cant_pps = PPS::where('teacher_id', $prof->Person->id)->where('is_finished', false)->count();
+                $cant_pps = PPS::where('teacher_id', $prof->User->id)->where('is_finished', false)->count();
                 if ($cant_pps <= 10) {
                     $professors[] = $prof;
                 }
@@ -139,16 +138,18 @@ class PPSController extends Controller
                 // 'updated_at' => ''
             ]);
 
-            $file = $request->input('file');
+            $file = $request->file('file');
 
-            if ($file->isValid()) {
+            if ($file && $file->isValid()) {
                 $content = file_get_contents($file->getRealPath());
-                // $path = $file->store('public/work_plan');
+                $path = $file->storeAs('public/work_plan',  $file->getClientOriginalName());
                 WorkPlan::create([
                     'pps_id' => $pps->id,
-                    'file_path' => $content,
+                    'file_path' => $path,
                     'is_accepted' => 0
                 ]);
+            } else {
+                
             }
             DB::commit();
 
@@ -224,14 +225,14 @@ class PPSController extends Controller
     {
         try {
             $pp = PPS::find($id);
-            $person = User::where('id', auth()->user()->id)->first();
-            if ($pp->student_id != $person->id && auth()->user()->rol_id == 2) {
+            $user = User::where('id', auth()->user()->id)->first();
+            if ($pp->student_id != $user->id && auth()->user()->rol_id == 2) {
                 return response()->json([
                     'success' => false,
                     'title' => 'Error al descargar el plan de trabajo',
                     'message' => 'No está autorizado a realizar esta descarga'
                 ], 400);
-            } else if ($pp->teacher_id != $person->id && auth()->user()->rol_id == 3) {
+            } else if ($pp->teacher_id != $user->id && auth()->user()->rol_id == 3) {
                 return response()->json([
                     'success' => false,
                     'title' => 'Error al descargar el plan de trabajo',

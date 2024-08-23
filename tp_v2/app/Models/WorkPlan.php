@@ -11,6 +11,8 @@ class WorkPlan extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $table = 'work_plan';
+
     protected $fillable = [
         'pps_id',
         'file_path',

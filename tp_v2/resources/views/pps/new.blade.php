@@ -222,7 +222,7 @@
     };
 
     // No se usa porque ya trae la fecha bien
-    function formatDate(dateString) {
+    /* function formatDate(dateString) {
 
         console.log('Fecha Original:', dateString);
         if (!dateString) return null;
@@ -236,7 +236,7 @@
         let formattedDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
         console.log('Fecha Formateada:', formattedDate);
         return formattedDate;
-    }
+    }*/
 
     function sendForm() {
         let form = $("#form_data");
