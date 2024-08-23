@@ -1,6 +1,5 @@
 <head>
   <!-- Bootstrap CSS -->
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <nav x-data="{ open: false }" class="bg-light border-b border-gray-100 header">
@@ -80,7 +79,7 @@
           </li>
 
 
-        @if(Auth::check())
+          @if(Auth::check())
         <li class="nav-item">
         <a class="nav-link" href="{{ route('getPps') }}">Solicitudes</a>
         </li>

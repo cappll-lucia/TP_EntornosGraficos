@@ -128,33 +128,34 @@ class PPSController extends Controller
                 ], 400);
             }
             DB::beginTransaction();
-            $pp = PPS::create([
+            $pps = PPS::create([
                 'student_id' => $student->id,
                 'start_date' => $request->input('start_date'),
                 'finish_date' => $request->input('finish_date'),
                 'description' => $request->input('description'),
                 'is_finished' => 0,
                 'is_approved' => 0,
-                'created_at' => $today,
-                'observation' => '',
-                'updated_at' => ''
+                // 'created_at' => $today,
+                // 'updated_at' => ''
             ]);
 
-              $file = $request->file('file');
-              if ($file->isValid()) {
-                  $path = $file->store('public/work_plan');
-                  WorkPlan::create([
-                      'pps_id' => $pp->id,
-                      'file_path' => $path,
-                      'is_accepted' => 0
-                  ]);
-             }
+            $file = $request->input('file');
+
+            if ($file->isValid()) {
+                $content = file_get_contents($file->getRealPath());
+                // $path = $file->store('public/work_plan');
+                WorkPlan::create([
+                    'pps_id' => $pps->id,
+                    'file_path' => $content,
+                    'is_accepted' => 0
+                ]);
+            }
             DB::commit();
 
             return response()->json([
                 'success' => true,
                 'message' => 'Solicitud creada correctamente',
-                'data' => $pp
+                'data' => $pps
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();

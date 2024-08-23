@@ -59,7 +59,8 @@
                 <div class="m-b-2 card-body wizard-content">
                     <h3 class="card-title">Nueva solicitud</h3>
                     <h6 class="mt-3 mb-3 card-subtitle">{{ $today->format('d/m/Y') }}</h6>
-                    <form action={{ route('pps.create' ) }} class="tab-wizard wizard-circle" id="form_data" method="POST">
+                    <form action={{ route('pps.create') }} class="tab-wizard wizard-circle" id="form_data"
+                        method="POST">
                         @csrf
                         <!-- Step 1 -->
                         <h6>Alumno</h6>
@@ -74,7 +75,9 @@
                                                 <div class="row form-group">
                                                     <label class="text-md-right col-3 control-label">Nombre:</label>
                                                     <div class="pr-0 col-7">
-                                                        <p class="form-control-static">{{ $student->first_name }}</p>
+                                                        <p class="form-control-static">
+                                                            {{ $student->first_name }}
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -83,7 +86,8 @@
                                                 <div class="row form-group">
                                                     <label class="text-md-right col-3 control-label">Apellido:</label>
                                                     <div class="pr-0 col-7">
-                                                        <p class="form-control-static">{{ $student->last_name }}
+                                                        <p class="form-control-static">
+                                                            {{ $student->last_name }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -107,7 +111,9 @@
                                                 <div class="row form-group">
                                                     <label class="text-md-right col-3 control-label">Email:</label>
                                                     <div class="pr-0 col-7">
-                                                        <p class="form-control-static">{{ $student->email }}</p>
+                                                        <p class="form-control-static">
+                                                            {{ $student->email }}
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -146,7 +152,7 @@
                                 </div>
                             </div>
                         </section>
-                        <!-- Step 3 --> 
+                        <!-- Step 3 -->
                         <h6>Planes de trabajo</h6>
                         <section>
                             <h4 class="box-title">Archivos</h4>
