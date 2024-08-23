@@ -59,7 +59,7 @@
                 <div class="m-b-2 card-body wizard-content">
                     <h3 class="card-title">Nueva solicitud</h3>
                     <h6 class="mt-3 mb-3 card-subtitle">{{ $today->format('d/m/Y') }}</h6>
-                    <form action="/pps/create" class="tab-wizard wizard-circle" id="form_data" method="POST">
+                    <form action={{ route('pps.create' ) }} class="tab-wizard wizard-circle" id="form_data" method="POST">
                         @csrf
                         <!-- Step 1 -->
                         <h6>Alumno</h6>
@@ -177,6 +177,103 @@
 
 
 <script>
+    function validatePPS() {
+        let dateFrom = $("input[name='DatePickerFrom']").val();
+        let dateTo = $("input[name='DatePickerTo']").val();
+        let description = $("textarea[name='description']").val();
+
+        if (dateFrom == "") return fireAlert("Debes ingresar una fecha de inicio");
+        if (dateTo == "") return fireAlert("Debes ingresar una fecha de finalización");
+        if (description == "") return fireAlert("Debes ingresar una descripción");
+        if (dateFrom > dateTo) return fireAlert("La fecha de inicio no puede ser mayor a la fecha de finalización");
+
+        return true;
+    }
+
+    function validateFile() {
+        let file = $("input[name='file']").val();
+        if (!file) return fireAlert("Debes subir un plan de trabajo");
+        return true;
+    }
+
+    function validateData() {
+        if (!validatePPS()) return false;
+        if (!validateFile()) return false;
+        return true;
+    }
+
+    const fireAlert = (text) => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'ALERTA',
+            text: text,
+            showCancelButton: false,
+            confirmButtonColor: '#1e88e5',
+            confirmButtonText: 'OK',
+            allowOutsideClick: false,
+        });
+        return false;
+    };
+
+    // No se usa porque ya trae la fecha bien
+    function formatDate(dateString) {
+
+        console.log('Fecha Original:', dateString);
+        if (!dateString) return null;
+
+        let dateParts = dateString.split("/");
+        if (dateParts.length !== 3) {
+            console.error('Formato de fecha incorrecto:', dateString);
+            return null;
+        }
+
+        let formattedDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
+        console.log('Fecha Formateada:', formattedDate);
+        return formattedDate;
+    }
+
+    function sendForm() {
+        let form = $("#form_data");
+        let formData = new FormData();
+        let file = $("input[name='file']")[0].files[0];
+        formData.append('start_date', $('#DatePickerFrom').val());
+        formData.append('finish_date', $('#DatePickerTo').val());
+        formData.append('description', $("#description").val());
+        formData.append('_token', $("input[name='_token']").val());
+        formData.append('file', file);
+
+        // Enviar solicitud AJAX
+        $.ajax({
+            url: $(form).attr('action'),
+            method: $(form).attr('method'),
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                Swal.fire({
+                    title: response.message,
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#1e88e5',
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = window.location.origin;
+                    }
+                });
+            },
+            error: function (errorThrown) {
+                Swal.fire({
+                    icon: 'error',
+                    title: errorThrown.responseJSON.title,
+                    text: errorThrown.responseJSON.message,
+                    confirmButtonColor: '#1e88e5',
+                });
+            }
+        });
+    }
+
     $(".tab-wizard").steps({
         headerTag: "h6",
         bodyTag: "section",
@@ -217,92 +314,6 @@
 </script>
 
 <script>
-    const fireAlert = (text) => {
-        Swal.fire({
-            icon: 'warning',
-            title: 'ALERTA',
-            text: text,
-            showCancelButton: false,
-            confirmButtonColor: '#1e88e5',
-            confirmButtonText: 'OK',
-            allowOutsideClick: false,
-        });
-        return false;
-    };
-
-    function validatePPS() {
-        let dateFrom = $("input[name='DatePickerFrom']").val();
-        let dateTo = $("input[name='DatePickerTo']").val();
-        let description = $("textarea[name='description']").val();
-
-        if (dateFrom == "") return fireAlert("Debes ingresar una fecha de inicio");
-        if (dateTo == "") return fireAlert("Debes ingresar una fecha de finalización");
-        if (description == "") return fireAlert("Debes ingresar una descripción");
-        if (dateFrom > dateTo) return fireAlert("La fecha de inicio no puede ser mayor a la fecha de finalización");
-
-        return true;
-    }
-
-    function validateFile() {
-        let file = $("input[name='file']").val();
-        if (!file) return fireAlert("Debes subir un plan de trabajo");
-        return true;
-    }
-
-    function validateData() {
-        if (!validatePPS()) return false;
-        if (!validateFile()) return false;
-        return true;
-    }
-
-    function formatDate(dateString) {
-        // La fecha llega como dd/mm/yyyy y se convierte a yyyy-mm-dd
-        let dateParts = dateString.split("/");
-        let formattedDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
-        return formattedDate;
-    }
-
-    function sendForm() {
-        let form = $("#form_data");
-        let formData = new FormData();
-        let file = $("input[name='file']")[0].files[0];
-        formData.append('start_date', formatDate($('#DatePickerFrom').val()));
-        formData.append('finish_date', formatDate($('#DatePickerTo').val()));
-        formData.append('description', $("#description").val());
-        formData.append('_token', $("input[name='_token']").val());
-        formData.append('file', file);
-
-        // Enviar solicitud AJAX
-        $.ajax({
-            url: $(form).attr('action'),
-            method: $(form).attr('method'),
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                Swal.fire({
-                    title: response.message,
-                    icon: 'success',
-                    showCancelButton: false,
-                    confirmButtonColor: '#1e88e5',
-                    confirmButtonText: 'OK',
-                    allowOutsideClick: false,
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = window.location.origin;
-                    }
-                });
-            },
-            error: function (errorThrown) {
-                Swal.fire({
-                    icon: 'error',
-                    title: errorThrown.responseJSON.title,
-                    text: errorThrown.responseJSON.message,
-                    confirmButtonColor: '#1e88e5',
-                });
-            }
-        });
-    }
 </script>
 
 <!-- jQuery file upload -->

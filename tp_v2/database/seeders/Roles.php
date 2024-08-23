@@ -14,19 +14,19 @@ class Roles extends Seeder
     public function run(): void
     {
         Role::create([
-            'name' => 'admin',
+            'name' => 'Estudiante',
         ]);
 
         Role::create([
-            'name' => 'student',
+            'name' => 'Profesor',
         ]);
 
         Role::create([
-            'name' => 'teacher',
+            'name' => 'Responsable',
         ]);
 
         Role::create([
-            'name' => 'responsible',
+            'name' => 'Admin',
         ]);
     }
 }

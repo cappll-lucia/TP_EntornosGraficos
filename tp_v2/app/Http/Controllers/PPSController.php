@@ -130,14 +130,14 @@ class PPSController extends Controller
             DB::beginTransaction();
             $pp = PPS::create([
                 'student_id' => $student->id,
-                'start_date' => '2024-08-31',//$request->input('start_date'),
-                'finish_date' => '2024-09-30', //$request->input('finish_date'),
+                'start_date' => $request->input('start_date'),
+                'finish_date' => $request->input('finish_date'),
                 'description' => $request->input('description'),
                 'is_finished' => 0,
                 'is_approved' => 0,
-                'created_at' => now(),
+                'created_at' => $today,
                 'observation' => '',
-                'updated_at' => now()
+                'updated_at' => ''
             ]);
 
               $file = $request->file('file');

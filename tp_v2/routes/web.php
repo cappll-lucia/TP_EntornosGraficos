@@ -58,7 +58,7 @@ Route::group(['middleware' => ['auth', StudentsRoutes::class]], function () {
     Route::get('/pps/new', [PPSController::class, 'new'])->name('pps.new');
     // Route::get('/pps/create', [PPSController::class, 'create']);
 
-    Route::post('/pps/create', [PPSController::class, 'create']);
+    Route::post('/pps/create', [PPSController::class, 'create'])->name('pps.create');
 
     Route::get('/pps/edit/{id}', [PPSController::class, 'edit'])->name('editPps');
 
