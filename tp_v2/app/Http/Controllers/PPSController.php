@@ -75,24 +75,16 @@ class PPSController extends Controller
     public function details($id)
     {
         try {
-            $pp = PPS::findOrFail($id)->load('Student', 'Teacher', 'Responsible', 'WorkPlan', 'WeeklyTrackings', 'FinalReport');
+            $pps = PPS::findOrFail($id)->load('Student', 'Teacher', 'Responsible', 'WorkPlan', 'WeeklyTrackings', 'FinalReport');
             $user = User::where('id', auth()->user()->id)->first();
-            if (($user->rol_id == 2 && $user->User->id != $pp->student_id) || ($user->rol_id == 3 && $user->User->id != $pp->teacher_id)) {
+            if (($user->role_id == 1 && $user->User->id != $pp->student_id) || ($user->role_id == 2 && $user->User->id != $pp->teacher_id) 
+            || ($user->role_id == 3 && $user->User->id != $pp->responsible_id)) {
                 $error = new \stdClass();
                 $error->code = 403;
                 $error->message = 'No está autorizado a ver esta solicitud';
                 return view('error', compact('error'));
             }
-            $all_professors = User::where('rol_id', 2)->with('User')->get();
-            $professors = [];
-            foreach ($all_professors as $prof) {
-                $cant_pps = PPS::where('teacher_id', $prof->User->id)->where('is_finished', false)->count();
-                if ($cant_pps <= 10) {
-                    $professors[] = $prof;
-                }
-            }
-
-            return view('pps.details', compact('pps', 'professors'));
+            return view('ppsDetails', compact('pps'));
         } catch (\Exception $e) {
             $error = new \stdClass();
             $error->code = 500;

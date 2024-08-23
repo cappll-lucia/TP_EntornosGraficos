@@ -1,13 +1,14 @@
 @php
     use Carbon\Carbon;
     $today = Carbon::now(new \DateTimeZone('America/Argentina/Buenos_Aires'));
-    $application_end_date = Carbon::parse($application->finish_date);
+    $pps_end_date = Carbon::parse($pps->finish_date);
 @endphp
 @extends('layouts.app')
 
 @section('content')
 
 <!-- Styles -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link href="{{ asset('plugins/datatables/media/css/dataTables.bootstrap4.css') }}" rel="stylesheet" />
 <link href="{{ asset('plugins/icheck/skins/all.css') }}" rel="stylesheet" />
 <link href="{{ asset('plugins/wizard/steps.css') }}" rel="stylesheet" />
@@ -58,10 +59,10 @@
     <div id="modalObservation" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
         aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
-            <form role="form" class="needs-validation" method="POST" action="{{ url('/application/editObservation') }}"
+            <form role="form" class="needs-validation" method="POST" action="{{ url('/pps/editObservation') }}"
                 id="form-observation" autocomplete="off" novalidate>
                 @csrf
-                <input type="hidden" name="application_id" value="{{ $application->id }}">
+                <input type="hidden" name="application_id" value="{{ $pps->id }}">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Editar observaciones</h4>
@@ -74,7 +75,7 @@
                                 <div class="form-column">
                                     <div class="col-12 mb-3">
                                         <textarea class="form-control" name="observation" style="height: 300px"
-                                            required>{{ $application->observation }}</textarea>
+                                            required>{{ $pps->observation }}</textarea>
                                         <div class="invalid-feedback">
                                             Por favor, ingrese una observación
                                         </div>
@@ -99,74 +100,54 @@
             <div class="card">
                 <div class="card-body">
                     <div class="form-body">
-                        <h2 class="box-title">Detalles de la solicitud #{{ $application->id }}</h2>
-                        <p class="box-subtitle">{{ $application->created_at->format('d/m/Y') }}</p>
+                        <h2 class="box-title">Detalles de la solicitud #{{ $pps->id }}</h2>
+                        <p class="box-subtitle">{{ $pps->created_at->format('d/m/Y') }}</p>
                         <hr class="m-t-0 m-b-20">
                         {{-- Table con 4 columnas que contenga los datos de la application --}}
                         <table class="table no-border">
                             <tbody>
                                 <tr>
                                     <td class="col-4"><b class="font-weight-bold">Estudiante:</b></td>
-                                    <td>{{ $application->Student->lastname }}, {{ $application->Student->name }} -
-                                        Legajo: {{ $application->Student->file_number }}</td>
+                                    <td>{{ $pps->Student->last_name }}, {{ $pps->Student->first_name }} -
+                                        Legajo: {{ $pps->Student->file_number }}</td>
                                 </tr>
                                 <tr>
                                     <td class="col-4"><b class="font-weight-bold">Responsable:</b></td>
-                                    @if ($application->responsible_id != null)
-                                        <td>{{ $application->Responsible->last_name }},
-                                            {{ $application->Responsible->name }}</td>
+                                    @if ($pps->responsible_id != null)
+                                        <td>{{ $pps->Responsible->last_name }},
+                                            {{ $pps->Responsible->first_name }}</td>
                                     @else
                                         <td>Sin asignar</td>
                                     @endif
                                 </tr>
                                 <tr>
                                     <td class="col-4"><b class="font-weight-bold">Profesor a cargo:</b></td>
-                                    @if ($application->teacher_id != null)
-                                        <td>
-                                            <div class="d-flex flex-row justify-content-start align-items-center">
-                                                {{ $application->Teacher->lastname }}, {{ $application->Teacher->name }}
-                                                @if (auth()->user()->rol_id == 4 && $application->is_finished === false)
-                                                    <form id="form-deleteTeacher" action="/application/deleteTeacher"
-                                                        method="post">
-                                                        @csrf
-                                                        <input type="hidden" name="application_id"
-                                                            value="{{ $application->id }}">
-                                                        <button id="btnDeleteTeacher"
-                                                            class="btn btn-sm waves-effect waves-light" type="button"
-                                                            data-name="{{ $application->Teacher->lastname }}, {{ $application->Teacher->name }}"><i
-                                                                class="bi bi-trash3" style="color: red;"></i></button>
-                                                    </form>
-                                                @endif
-                                            </div>
-                                        </td>
-                                    @else
-                                        <td>Sin asignar</td>
-                                    @endif
+                                    <td>{{ $pps->Teacher->last_name }}, {{ $pps->Teacher->first_name }}</td>
                                 </tr>
                                 <tr>
                                     <td class="col-4"><b class="font-weight-bold">Fecha de inicio/fin:</b></td>
-                                    <td>{{ \Carbon\Carbon::parse($application->start_date)->format('d/m/Y') }} -
-                                        {{ \Carbon\Carbon::parse($application->finish_date)->format('d/m/Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($pps->start_date)->format('d/m/Y') }} -
+                                        {{ \Carbon\Carbon::parse($pps->finish_date)->format('d/m/Y') }}</td>
                                 </tr>
                                 <tr>
                                     <td class="col-4"><b class="font-weight-bold">Descripción:</b></td>
-                                    <td>{{ $application->description }}</td>
+                                    <td>{{ $pps->description }}</td>
                                 </tr>
                                 <tr>
                                     <td class="col-4">
                                         <b class="font-weight-bold">Observaciones:</b>
-                                        @if (auth()->user()->rol_id == 3)
+                                        @if (auth()->user()->role_id == 2)
                                             <button class="btn btn-sm waves-effect waves-light" type="button"
                                                 data-toggle="modal" data-target="#modalObservation"><i
                                                     class="bi bi-pencil-square"></i></button>
                                         @endif
                                     </td>
-                                    <td>{{ $application->observation != null ? $application->observation : "-" }}</td>
+                                    <td>{{ $pps->observation != null ? $pps->observation : "-" }}</td>
                                 </tr>
                                 <tr>
                                     <td class="col-4"><b class="font-weight-bold">Estado:</b></td>
-                                    @if ($application->is_approved == true)
-                                        @if ($application->is_finished == true)
+                                    @if ($pps->is_approved == true)
+                                        @if ($pps->is_finished == true)
                                             <td><span class="label label-success">Finalizada</span> - <span
                                                     class="label label-success">Aprobada</span></td>
                                         @else
@@ -174,7 +155,7 @@
                                                     class="label label-success">Aprobada</span></td>
                                         @endif
                                     @else
-                                        @if ($application->is_finished == true)
+                                        @if ($pps->is_finished == true)
                                             <td><span class="label label-success">Finalizada</span> - <span
                                                     class="label label-danger">Pendiente de aprobación</span></td>
                                         @else
@@ -182,40 +163,40 @@
                                                     class="label label-danger">Pendiente de aprobación</span></td>
                                         @endif
                                     @endif
-                                    <td>{{ $application->status }}</td>
+                                    <td>{{ $pps->status }}</td>
                                 </tr>
                             </tbody>
                         </table>
                         <hr class="m-t-0 m-b-20">
                         <div class="d-flex flex-row justify-content-between">
-                            <form action="/application/downloadWorkPlan/{{ $application->id }}" method="GET">
+                            <form action="/pps/downloadWorkPlan/{{ $pps->id }}" method="GET">
                                 <button class="btn btn-secondary waves-effect waves-light" type="submit"><span
                                         class="btn-label"><i class="bi bi-file-earmark-arrow-down"></i></span>Plan de
                                     trabajo</button>
                             </form>
-
-                            @if ($application->FinalReport != null)
-                                <form action="/application/downloadFinalReport/{{ $application->id }}" method="GET">
+                            <!-- 
+                            if($pps->FinalReport != null)
+                                <form action="/pps/downloadFinalReport/ $pps->id }}" method="GET">
                                     <button class="btn btn-secondary waves-effect waves-light" type="submit"><span
                                             class="btn-label"><i class="bi bi-file-earmark-arrow-down"></i></span>Reporte
                                         final</button>
                                 </form>
-                            @endif
+                            endif
 
-                            @if ($application->responsible_id === null && auth()->user()->rol_id == 4 && $application->is_finished === false)
-                                <form id="form-takeApplication" action="/application/takeApplication/{{ $application->id }}"
+                            ($pps->responsible_id === null && auth()->user()->rol_id == 3 && $pps->is_finished === false)
+                                <form id="form-takeApplication" action="/application/takeApplication/ $pps->id }}"
                                     method="post">
-                                    @csrf
+                                    csrf
                                     <button id="btnResponsable" class="btn btn-info waves-effect waves-light"
                                         type="button">Tomar solicitud</button>
                                 </form>
-                            @endif
+                            endif-->
 
                         </div>
-                        @if (auth()->user()->rol_id == 3 && $application->is_finished === true && $application->is_approved === false)
+                        @if (auth()->user()->role_id == 2 && $pps->is_finished === true && $pps->is_approved === false)
                             <hr>
                             <div class="d-flex justify-content-end">
-                                <form id="form-approve" action="/application/approve/{{ $application->id }}" method="post">
+                                <form id="form-approve" action="/application/approve/{{ $pps->id }}" method="post">
                                     @csrf
                                     <button id="btnFinish" class="btn btn-success waves-effect waves-light"
                                         type="button">Aprobar solicitud</button>
@@ -227,19 +208,19 @@
             </div>
         </div>
 
-        @if (auth()->user()->rol_id == 2)
+        @if (auth()->user()->role_id == 1)
             <div class="col-12 col-lg-6">
                 <div class="row">
                     <div class="col-12 col-sm-6">
                         <div class="card">
                             <div class="card-body">
                                 <h2 class="card-title"
-                                    style="@if ($today >= $application_end_date) text-decoration: line-through; @endif">
+                                    style="@if ($today >= $pps_end_date) text-decoration: line-through; @endif">
                                     Subir seguimiento semanal</h2>
                                 <form id="form-uploadWT" action="/application/uploadWeeklyTracking" method="post">
                                     @csrf
-                                    <input name="file" type="file" class="dropify" accept=".pdf" data-max-file-size="2M" @if ($today >= $application_end_date) disabled @endif />
-                                    <input type="hidden" name="application_id" value="{{ $application->id }}">
+                                    <input name="file" type="file" class="dropify" accept=".pdf" data-max-file-size="2M" @if ($today >= $pps_end_date) disabled @endif />
+                                    <input type="hidden" name="application_id" value="{{ $pps->id }}">
                                     <div class="d-flex justify-content-end mt-2">
                                         <button id="btn-uploadWT" onclick="uploadWT()"
                                             class="btn btn-secondary waves-effect waves-light" type="button"
@@ -254,13 +235,13 @@
                         <div class="card">
                             <div class="card-body">
                                 <h2 class="card-title"
-                                    style="@if ($today < $application_end_date || $application->FinalReport != null) text-decoration: line-through; @endif">
+                                    style="@if ($today < $pps_end_date || $pps->FinalReport != null) text-decoration: line-through; @endif">
                                     Subir reporte final</h2>
                                 <form id="form-uploadFR" action="/application/uploadFinalReport" method="post">
                                     @csrf
-                                    <input name="file" type="file" class="dropify" accept=".pdf" data-max-file-size="2M" @if ($today < $application_end_date || $application->FinalReport != null) disabled
+                                    <input name="file" type="file" class="dropify" accept=".pdf" data-max-file-size="2M" @if ($today < $pps_end_date || $pps->FinalReport != null) disabled
                                     @endif />
-                                    <input type="hidden" name="application_id" value="{{ $application->id }}">
+                                    <input type="hidden" name="application_id" value="{{ $pps->id }}">
                                     <div class="d-flex justify-content-end mt-2">
                                         <button id="btn-uploadFR" onclick="uploadFR()"
                                             class="btn btn-secondary waves-effect waves-light btn-upload" type="button"
@@ -273,51 +254,6 @@
                     </div>
                 </div>
             </div>
-        @elseif (auth()->user()->rol_id == 4 && $application->teacher_id === null)
-            <div class="col-12 col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title">Asignar profesor</h2>
-                        <form id="form-teacher" action="/application/assignTeacher" method="POST">
-                            @csrf
-                            <input type="hidden" name="application_id" value="{{ $application->id }}">
-                            <hr class="m-0">
-                            <div class="table-responsive">
-                                <table id="DataTable" class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>Teléfono</th>
-                                            <th>Email</th>
-                                            <th>Seleccionar</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="table_body">
-                                        @foreach ($professors as $professor)
-                                            <tr data-id="{{ $professor->Person->id }}">
-                                                <td>{{ $professor->Person->lastname }}, {{ $professor->Person->name }}</td>
-                                                <td>{{ $professor->Person->phone }}</td>
-                                                <td>{{ $professor->email }}</td>
-                                                <td class="text-center">
-                                                    <input type="radio" name="teacher_id" value="{{ $professor->Person->id }}"
-                                                        id="professor_{{ $professor->Person->id }}" class="check"
-                                                        data-radio="iradio_square-purple" />
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="d-flex justify-content-end mt-2">
-                                <button id="btnTeacher" class="btn btn-info waves-effect waves-light" type="button"
-                                    style="display: none">Asignar</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        @endif
-
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
@@ -326,7 +262,7 @@
                     <!-- TIMELINE DE SEGUIMIENTOS -->
                     <ul class="timeline">
                         <?php $contador = 0;?>
-                        @foreach ($application->WeeklyTrackings->sortBy('created_at') as $wt)
+                        @foreach ($pps->WeeklyTrackings->sortBy('created_at') as $wt)
                             <?php    $contador++; ?>
                             <li class="@if($contador % 2 != 0) timeline-inverted @endif">
                                 <div class="timeline-badge" style="background-color: #6c757d"><i
@@ -351,37 +287,37 @@
 
                                         <hr>
                                         <div class="d-flex flex-row justify-content-between align-items-center">
-                                            <!-- Download -->
-                                            <form action="/application/downloadWeeklyTracking/{{ $wt->id }}" method="GET">
+                                            <!-- Download 
+                                            <form action="/application/downloadWeeklyTracking/{ $wt->id }}" method="GET">
                                                 <button class="btn btn-secondary waves-effect waves-light"
                                                     type="submit"><span class="btn-label"><i
                                                             class="bi bi-file-earmark-arrow-down"></i></span>Descargar</button>
-                                            </form>
+                                            </form>-->
 
-                                            <!-- Delete -->
-                                            @if ($wt->is_accepted == false && auth()->user()->rol_id == 2)
-                                                <form id="form-deleteWT_{{ $wt->id }}"
-                                                    action="{{ url('/application/deleteWeeklyTracking') }}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="id" value="{{ $wt->id }}">
-                                                    <button onclick="deleteWT({{ $wt->id }})" type="button"
+                                            <!-- Delete 
+                                            if ($wt->is_accepted == false && auth()->user()->role_id == 1)
+                                                <form id="form-deleteWT_{ $wt->id }}"
+                                                    action=" url('/application/deleteWeeklyTracking') }}" method="POST">
+                                                    csrf
+                                                    <input type="hidden" name="id" value="{ $wt->id }}">
+                                                    <button onclick="deleteWT({ $wt->id }})" type="button"
                                                         class="btn btn-sm btn-danger btn-rounded px-3">Eliminar</button>
                                                 </form>
-                                            @endif
-                                        </div>
-
-                                        @if ($wt->is_accepted == false && auth()->user()->rol_id == 3)
+                                            endif
+                                        </div>-->
+                                        <!--
+                                        if ($wt->is_accepted == false && auth()->user()->role_id == 1)
                                             <hr>
                                             <div class="d-flex flex-row justify-content-end">
-                                                <form id="form-acceptWT_{{ $wt->id }}"
-                                                    action="{{ url('/application/acceptWeeklyTracking') }}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="id" value="{{ $wt->id }}">
-                                                    <button onclick="acceptWT({{ $wt->id }})" type="button"
+                                                <form id="form-acceptWT_{ $wt->id }}"
+                                                    action="{ url('/application/acceptWeeklyTracking') }}" method="POST">
+                                                    csrf
+                                                    <input type="hidden" name="id" value="{ $wt->id }}">
+                                                    <button onclick="acceptWT({ $wt->id }})" type="button"
                                                         class="btn btn-sm btn-info btn-rounded px-3">Aceptar</button>
                                                 </form>
                                             </div>
-                                        @endif
+                                        endif-->
                                     </div>
                                 </div>
                             </li>
@@ -405,22 +341,6 @@
 
 <script>
     $(document).ready(function () {
-        $("#DataTable").DataTable({
-            "language": {
-                "sInfo": "Mostrando _START_ a _END_ de _TOTAL_ profesores",
-                "sInfoEmpty": "Mostrando 0 a 0 de 0 profesores",
-                "sInfoFiltered": "(filtrado de _MAX_ profesores en total)",
-                "emptyTable": 'No hay profesores que coincidan con la búsqueda',
-                "sLengthMenu": "Mostrar _MENU_ profesores",
-                "sSearch": "Buscar:",
-            },
-            "scrollY": '30vh',
-            "scrollCollapse": true,
-            "paging": false,
-            "info": false,
-            "order": [[0, "asc"]],
-        });
-
         let drEvent = $('.dropify').dropify({
             messages: {
                 'default': 'Arrastre el archivo aquí o haga clic',
