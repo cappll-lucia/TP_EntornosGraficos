@@ -84,10 +84,10 @@ class PPSController extends Controller
     public function details($id)
     {
         try {
-            $pps = PPS::findOrFail($id)->load('Student', 'Teacher', 'Responsible', 'WorkPlan', 'WeeklyTrackings', 'FinalReport');
+            $pps = PPS::findOrFail($id);
             $user = User::where('id', auth()->user()->id)->first();
-            if (($user->role_id == 1 && $user->User->id != $pp->student_id) || ($user->role_id == 2 && $user->User->id != $pp->teacher_id) 
-            || ($user->role_id == 3 && $user->User->id != $pp->responsible_id)) {
+            if (($user->role_id == 1 && $user->id != $pps->student_id) || ($user->role_id == 2 && $user->id != $pps->teacher_id) 
+            || ($user->role_id == 3 && $user->id != $pps->responsible_id)) {
                 $error = new \stdClass();
                 $error->code = 403;
                 $error->message = 'No está autorizado a ver esta solicitud';

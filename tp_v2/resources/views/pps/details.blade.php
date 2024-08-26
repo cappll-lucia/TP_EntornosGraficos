@@ -9,6 +9,15 @@
 
 <!-- Styles -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<link rel="stylesheet" href="{{ asset('plugins/bootstrap/css/bootstrap.min.css') }}">
+<script src="{{ asset('plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('plugins/popper/popper.min.js') }}"></script>
+<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('css/colors/default-dark.css') }}">
+<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+<script src="{{ asset('js/waves.js') }}"></script>
 <link href="{{ asset('plugins/datatables/media/css/dataTables.bootstrap4.css') }}" rel="stylesheet" />
 <link href="{{ asset('plugins/icheck/skins/all.css') }}" rel="stylesheet" />
 <link href="{{ asset('plugins/wizard/steps.css') }}" rel="stylesheet" />
@@ -42,8 +51,8 @@
         <div class="col-md-5 col-8 align-self-center">
             <h3 class="text-themecolor m-b-0 m-t-0">Solicitudes</h3>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Inicio</a></li>
-                <li class="breadcrumb-item"><a href="{{ url('/application/index') }}">Solicitudes</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Inicio</a></li>
+                <li class="breadcrumb-item"><a href="{{ url('/pps/index') }}">Solicitudes</a></li>
                 <li class="breadcrumb-item active">Detalles</li>
             </ol>
         </div>
@@ -62,7 +71,7 @@
             <form role="form" class="needs-validation" method="POST" action="{{ url('/pps/editObservation') }}"
                 id="form-observation" autocomplete="off" novalidate>
                 @csrf
-                <input type="hidden" name="application_id" value="{{ $pps->id }}">
+                <input type="hidden" name="pps_id" value="{{ $pps->id }}">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Editar observaciones</h4>
@@ -103,13 +112,13 @@
                         <h2 class="box-title">Detalles de la solicitud #{{ $pps->id }}</h2>
                         <p class="box-subtitle">{{ $pps->created_at->format('d/m/Y') }}</p>
                         <hr class="m-t-0 m-b-20">
-                        {{-- Table con 4 columnas que contenga los datos de la application --}}
+                        {{-- Table con 4 columnas que contenga los datos de la pps --}}
                         <table class="table no-border">
                             <tbody>
                                 <tr>
                                     <td class="col-4"><b class="font-weight-bold">Estudiante:</b></td>
                                     <td>{{ $pps->Student->last_name }}, {{ $pps->Student->first_name }} -
-                                        Legajo: {{ $pps->Student->file_number }}</td>
+                                        Legajo: {{ $pps->Student->legajo }}</td>
                                 </tr>
                                 <tr>
                                     <td class="col-4"><b class="font-weight-bold">Responsable:</b></td>
@@ -122,7 +131,12 @@
                                 </tr>
                                 <tr>
                                     <td class="col-4"><b class="font-weight-bold">Profesor a cargo:</b></td>
-                                    <td>{{ $pps->Teacher->last_name }}, {{ $pps->Teacher->first_name }}</td>
+                                    @if ($pps->teacher_id != null)
+                                        <td>{{ $pps->Teacher->last_name }},
+                                            {{ $pps->Teacher->first_name }}</td>
+                                    @else
+                                        <td>Sin asignar</td>
+                                    @endif
                                 </tr>
                                 <tr>
                                     <td class="col-4"><b class="font-weight-bold">Fecha de inicio/fin:</b></td>
@@ -168,35 +182,10 @@
                             </tbody>
                         </table>
                         <hr class="m-t-0 m-b-20">
-                        <div class="d-flex flex-row justify-content-between">
-                            <form action="/pps/downloadWorkPlan/{{ $pps->id }}" method="GET">
-                                <button class="btn btn-secondary waves-effect waves-light" type="submit"><span
-                                        class="btn-label"><i class="bi bi-file-earmark-arrow-down"></i></span>Plan de
-                                    trabajo</button>
-                            </form>
-                            <!-- 
-                            if($pps->FinalReport != null)
-                                <form action="/pps/downloadFinalReport/ $pps->id }}" method="GET">
-                                    <button class="btn btn-secondary waves-effect waves-light" type="submit"><span
-                                            class="btn-label"><i class="bi bi-file-earmark-arrow-down"></i></span>Reporte
-                                        final</button>
-                                </form>
-                            endif
-
-                            ($pps->responsible_id === null && auth()->user()->rol_id == 3 && $pps->is_finished === false)
-                                <form id="form-takeApplication" action="/application/takeApplication/ $pps->id }}"
-                                    method="post">
-                                    csrf
-                                    <button id="btnResponsable" class="btn btn-info waves-effect waves-light"
-                                        type="button">Tomar solicitud</button>
-                                </form>
-                            endif-->
-
-                        </div>
                         @if (auth()->user()->role_id == 2 && $pps->is_finished === true && $pps->is_approved === false)
                             <hr>
                             <div class="d-flex justify-content-end">
-                                <form id="form-approve" action="/application/approve/{{ $pps->id }}" method="post">
+                                <form id="form-approve" action="/pps/approve/{{ $pps->id }}" method="post">
                                     @csrf
                                     <button id="btnFinish" class="btn btn-success waves-effect waves-light"
                                         type="button">Aprobar solicitud</button>
@@ -208,7 +197,7 @@
             </div>
         </div>
 
-        @if (auth()->user()->role_id == 1)
+        @if (auth()->user()->role_id == 4)
             <div class="col-12 col-lg-6">
                 <div class="row">
                     <div class="col-12 col-sm-6">
@@ -217,10 +206,10 @@
                                 <h2 class="card-title"
                                     style="@if ($today >= $pps_end_date) text-decoration: line-through; @endif">
                                     Subir seguimiento semanal</h2>
-                                <form id="form-uploadWT" action="/application/uploadWeeklyTracking" method="post">
+                                <form id="form-uploadWT" action="/pps/uploadWeeklyTracking" method="post">
                                     @csrf
                                     <input name="file" type="file" class="dropify" accept=".pdf" data-max-file-size="2M" @if ($today >= $pps_end_date) disabled @endif />
-                                    <input type="hidden" name="application_id" value="{{ $pps->id }}">
+                                    <input type="hidden" name="pps_id" value="{{ $pps->id }}">
                                     <div class="d-flex justify-content-end mt-2">
                                         <button id="btn-uploadWT" onclick="uploadWT()"
                                             class="btn btn-secondary waves-effect waves-light" type="button"
@@ -231,101 +220,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h2 class="card-title"
-                                    style="@if ($today < $pps_end_date || $pps->FinalReport != null) text-decoration: line-through; @endif">
-                                    Subir reporte final</h2>
-                                <form id="form-uploadFR" action="/application/uploadFinalReport" method="post">
-                                    @csrf
-                                    <input name="file" type="file" class="dropify" accept=".pdf" data-max-file-size="2M" @if ($today < $pps_end_date || $pps->FinalReport != null) disabled
-                                    @endif />
-                                    <input type="hidden" name="application_id" value="{{ $pps->id }}">
-                                    <div class="d-flex justify-content-end mt-2">
-                                        <button id="btn-uploadFR" onclick="uploadFR()"
-                                            class="btn btn-secondary waves-effect waves-light btn-upload" type="button"
-                                            style="display: none;"><span class="btn-label"><i
-                                                    class="bi bi-upload"></i></span>Subir</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title">Seguimientos semanales</h2>
-                    <hr>
-                    <!-- TIMELINE DE SEGUIMIENTOS -->
-                    <ul class="timeline">
-                        <?php $contador = 0;?>
-                        @foreach ($pps->WeeklyTrackings->sortBy('created_at') as $wt)
-                            <?php    $contador++; ?>
-                            <li class="@if($contador % 2 != 0) timeline-inverted @endif">
-                                <div class="timeline-badge" style="background-color: #6c757d"><i
-                                        class="bi bi-file-text"></i></div>
-                                <div class="timeline-panel">
-                                    <div class="timeline-heading">
-                                        <h3 class="timeline-title name-element text-center">Archivo #{{ $contador }}</h3>
-                                    </div>
-                                    <hr>
-                                    <div class="timeline-body">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <p><b class="font-weight-bold">Fecha de subida:</b>
-                                                    {{ $wt->created_at->format('d/m/Y') }}</p>
-                                                @if ($wt->is_accepted == true)
-                                                    <td><span class="label label-success">Aceptado</span></td>
-                                                @else
-                                                    <td><span class="label label-warning">Sin aceptar</span></td>
-                                                @endif
-                                            </div>
-                                        </div>
-
-                                        <hr>
-                                        <div class="d-flex flex-row justify-content-between align-items-center">
-                                            <!-- Download 
-                                            <form action="/application/downloadWeeklyTracking/{ $wt->id }}" method="GET">
-                                                <button class="btn btn-secondary waves-effect waves-light"
-                                                    type="submit"><span class="btn-label"><i
-                                                            class="bi bi-file-earmark-arrow-down"></i></span>Descargar</button>
-                                            </form>-->
-
-                                            <!-- Delete 
-                                            if ($wt->is_accepted == false && auth()->user()->role_id == 1)
-                                                <form id="form-deleteWT_{ $wt->id }}"
-                                                    action=" url('/application/deleteWeeklyTracking') }}" method="POST">
-                                                    csrf
-                                                    <input type="hidden" name="id" value="{ $wt->id }}">
-                                                    <button onclick="deleteWT({ $wt->id }})" type="button"
-                                                        class="btn btn-sm btn-danger btn-rounded px-3">Eliminar</button>
-                                                </form>
-                                            endif
-                                        </div>-->
-                                        <!--
-                                        if ($wt->is_accepted == false && auth()->user()->role_id == 1)
-                                            <hr>
-                                            <div class="d-flex flex-row justify-content-end">
-                                                <form id="form-acceptWT_{ $wt->id }}"
-                                                    action="{ url('/application/acceptWeeklyTracking') }}" method="POST">
-                                                    csrf
-                                                    <input type="hidden" name="id" value="{ $wt->id }}">
-                                                    <button onclick="acceptWT({ $wt->id }})" type="button"
-                                                        class="btn btn-sm btn-info btn-rounded px-3">Aceptar</button>
-                                                </form>
-                                            </div>
-                                        endif-->
-                                    </div>
-                                </div>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        </div>
+        @endif
     </div>
 </div>
 
@@ -539,7 +436,7 @@
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                let form = $("#form-takeApplication");
+                let form = $("#form-takepps");
                 $.ajax({
                     url: $(form).attr('action'),
                     method: $(form).attr('method'),
@@ -566,7 +463,7 @@
         let form = $("#form-uploadWT");
         let formData = new FormData();
         let file = $("#form-uploadWT input[name='file']")[0].files[0];
-        formData.append('application_id', $("#form-uploadWT input[name='application_id']").val());
+        formData.append('pps_id', $("#form-uploadWT input[name='pps_id']").val());
         formData.append('_token', $("#form-uploadWT input[name='_token']").val());
         formData.append('file', file);
 
@@ -675,7 +572,7 @@
         let form = $("#form-uploadFR");
         let formData = new FormData();
         let file = $("#form-uploadFR input[name='file']")[0].files[0];
-        formData.append('application_id', $("#form-uploadFR input[name='application_id']").val());
+        formData.append('pps_id', $("#form-uploadFR input[name='pps_id']").val());
         formData.append('_token', $("#form-uploadFR input[name='_token']").val());
         formData.append('file', file);
 

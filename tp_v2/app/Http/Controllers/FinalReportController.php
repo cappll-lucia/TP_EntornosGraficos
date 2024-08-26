@@ -12,41 +12,6 @@ use Illuminate\Support\Facades\Storage;
 
 class FinalReportController extends Controller
 {
-    public function index()
-    {
-        //
-    }
-
-    public function create()
-    {
-        //
-    }
-
-    public function store(Request $request)
-    {
-        //
-    }
-
-    public function show(string $id)
-    {
-        //
-    }
-
-    public function edit(string $id)
-    {
-        //
-    }
-
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    public function destroy(string $id)
-    {
-        //
-    }
-
     public function download($id)
     {
         try {
@@ -75,7 +40,7 @@ class FinalReportController extends Controller
         try {
             $pps = PPS::find($request->input('pps_id'));
             $student = User::where('user_id', auth()->user()->id)->first();
-            if ($pps->student_id != $student->id || auth()->user()->role_id != 2) {
+            if ($pps->student_id != $student->id || auth()->user()->role_id != 1) {
                 return response()->json([
                     'success' => false,
                     'title' => 'Error al subir el reporte',
