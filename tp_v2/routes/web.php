@@ -8,6 +8,7 @@ use App\Http\Controllers\ResponsiblesController;
 use App\Http\Middleware\AdminRoutes;
 use App\Http\Middleware\StudentsRoutes;
 use App\Http\Controllers\PPSController;
+use App\Http\Middleware\RespRoutes;
 
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('welcome');
@@ -67,6 +68,13 @@ Route::group(['middleware' => ['auth', StudentsRoutes::class]], function () {
     Route::post('/pps/edit/{id}', [PPSController::class, 'update'])->name('updatePps');
 
     Route::delete('/pps/delete/{id}', [PPSController::class, 'destroy'])->name('deletePps');
+});
+
+Route::group(['middleware' => ['auth', RespRoutes::class]], function () {
+    Route::patch('/pps/tomar/{id}', [PPSController::class, 'tomar'])->name('pps.tomar');
+    
+
+
 });
 
 

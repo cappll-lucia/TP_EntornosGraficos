@@ -28,7 +28,7 @@ class PPSController extends Controller
 
 
                 case 2:
-                    $pps = PPS::where('teacher_id', auth()->user()->User->id)->get();
+                    $pps = PPS::where('teacher_id', auth()->user()->id)->whereNotNull('responsible_id')->get();
                     break;
 
                 case 3:
@@ -262,4 +262,37 @@ class PPSController extends Controller
             ], 400);
         }
     }
+
+
+    public function tomar($id)
+{
+    try {
+        $pps = PPS::findOrFail($id);
+        $user = auth()->user();
+
+        // Verifica que el usuario tenga el rol adecuado
+        if ($user->role_id != 3) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autorizado'
+            ], 403);
+        }
+
+        // Actualiza el campo `responsible_id` con el ID del usuario actual
+        $pps->responsible_id = $user->id;
+        $pps->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Solicitud actualizada correctamente'
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al actualizar la solicitud',
+            'error' => $e->getMessage()
+        ], 400);
+    }
+}
+
 }

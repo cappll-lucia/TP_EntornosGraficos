@@ -49,9 +49,11 @@
                                     <th>Profesor</th>
                                     <th>PPS</th>
                                     <th>Fecha fin</th>
-                                    <th>Observación</th>
                                     <th>Finalizada</th>
                                     <th>Aprobada</th>
+                                    @if (auth()->user()->role_id == '3')
+                                        <th></th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody id="table_body">
@@ -70,7 +72,6 @@
                                         @endif
                                         <td>{{ $app->description }}</td>
                                         <td>{{ \Carbon\Carbon::parse($app->finish_date)->format('d/m/Y') }}</td>
-                                        <td>{{ $app->observation != null ? $app->observation : "-" }}</td>
                                         <td class="text-center">
                                             @if ($app->is_finished == true)
                                                 <i class="bi bi-check2" style="font-size: 1.5rem"></i>
@@ -85,6 +86,12 @@
                                                 <i class="bi bi-x-lg" style="font-size: 1.3rem"></i>
                                             @endif
                                         </td>
+                                        @if (auth()->user()->role_id == '3')
+                                            <td>
+                                                <button class="btn btn-sm btn-success take-btn" data-id="{{$app->id}}" data-student="{{ $app->Student->first_name }} {{ $app->Student->last_name }}">Tomar</button>
+                                                <button class="btn btn-sm btn-danger">Rechazar</button>
+                                            </td>
+                                        @endif    
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -112,16 +119,67 @@
                 "sPrevious": "Anterior",
             },
         },
+        "columnDefs": [
+        { "orderable": false, "targets": -1 }, 
+        ]
+
     });
 
     $(document).on("click", ".clickable", function () {
+        if (!$(event.target).closest('.btn').length) {
         let url = $(this).data('url');
         let id = $(this).data('id');
         window.location.href = url + "/" + id;
+        }
     });
+
 </script>
 
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $(document).on("click", ".take-btn", function () {
+        event.stopPropagation();
+        const id = $(this).data('id');
+        const studentName = $(this).data('student');
+        
+        Swal.fire({
+            title: '¿Está seguro?',
+            text: `¿Desea tomar la pps de ${studentName}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, tomar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `{{ route('pps.tomar', ':id') }}`.replace(':id', id),
+                    method: 'PATCH',
+                    data: {
+                        _token: "{{ csrf_token() }}", // Agrega el token CSRF para seguridad
+                    },
+                    success: function(response) {
+                        Swal.fire(
+                            'Tomado!',
+                            'La solicitud ha sido actualizada.',
+                            'success'
+                        );
+                        location.reload(); // Recarga la página para actualizar la tabla
+                    },
+                    error: function(xhr) {
+                        Swal.fire(
+                            'Error!',
+                            'Hubo un problema al actualizar la solicitud.',
+                            'error'
+                        );
+                    }
+                });
+            }
+        });
+    });
+</script>
 
 <style>
     .clickable {
@@ -129,7 +187,8 @@
     }
 
     .clickable:hover {
-        background-color: #dce5ff !important;
+        background-color: transparent;
     }
+
 </style>
 @endsection
