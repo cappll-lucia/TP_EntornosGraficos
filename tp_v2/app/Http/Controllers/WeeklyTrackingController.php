@@ -13,42 +13,12 @@ use App\Models\WeeklyTracking;
 
 class WeeklyTrackingController extends Controller
 {
-    public function index()
-    {
-        //
-    }
-
-    public function create()
-    {
-        //
-    }
-
-    public function store(Request $request)
-    {
-        //
-    }
-
-    public function show(string $id)
-    {
-        //
-    }
-
-    public function edit(string $id)
-    {
-        //
-    }
-
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
     public function delete(string $id)
     {
         try {
             $wt = WeeklyTracking::findOrFail($request->input('id'))->load('PPS');
             $rol = auth()->user()->role_id;
-            if (($rol != 1 && $rol != 2) || ($rol != 1 && $wt->PPS->student_id != auth()->user()->User->id)) {
+            if (($rol != 1 && $rol != 2) || ($rol != 1 && $wt->PPS->student_id != auth()->user()->id)) {
                 return response()->json([
                     'success' => false,
                     'title' => 'Error al eliminar la solicitud',
@@ -79,7 +49,7 @@ class WeeklyTrackingController extends Controller
             $wt = WeeklyTracking::findOrFail($request->input('id'))->load('PPS');
             $pps = $wt->PPS;
             $rol = auth()->user()->role_id;
-            if ($rol != 3 || $wt->PPS->teacher_id != auth()->user()->User->id) {
+            if ($rol != 2 || $wt->PPS->teacher_id != auth()->user()->User->id) {
                 return response()->json([
                     'success' => false,
                     'title' => 'Error al aceptar el seguimiento',
@@ -115,14 +85,14 @@ class WeeklyTrackingController extends Controller
     {
         try {
             $wt = WeeklyTracking::find($id)->load('PPS');
-            $user = User::where('user_id', auth()->user()->id)->first();
-            if ($wt->PPS->student_id != $user->id && auth()->user()->role_id == 2) {
+            $user = User::where('id', auth()->user()->id)->first();
+            if ($wt->PPS->student_id != $user->id && auth()->user()->role_id == 1) {
                 return response()->json([
                     'success' => false,
                     'title' => 'Error al descargar el seguimiento semanal',
                     'message' => 'No está autorizado a realizar esta descarga'
                 ], 400);
-            } else if ($wt->PPS->teacher_id != $user->id && auth()->user()->role_id == 3) {
+            } else if ($wt->PPS->teacher_id != $user->id && auth()->user()->role_id == 2) {
                 return response()->json([
                     'success' => false,
                     'title' => 'Error al descargar el seguimiento semanal',
