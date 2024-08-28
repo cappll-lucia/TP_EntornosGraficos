@@ -83,6 +83,9 @@ class PPSController extends Controller
 
     public function details($id)
     {
+
+        $approved = false;
+
         try {
             $pps = PPS::findOrFail($id);
             $user = User::where('id', auth()->user()->id)->first();
@@ -93,8 +96,16 @@ class PPSController extends Controller
                 $error->message = 'No está autorizado a ver esta solicitud';
                 return view('error', compact('error'));
             }
+            if ($pps->responsible_id != null){
+                $approved = true;
 
-            return view('pps.details', compact('pps'));
+                // Aca otro if para poder mostrar la tercera parte que deberia ser finalReport
+
+            } else {
+                $approved = true;
+            }
+
+            return view('pps.details', compact('pps', 'approved'));
         } catch (\Exception $e) {
             $error = new \stdClass();
             $error->code = 500;
@@ -265,34 +276,34 @@ class PPSController extends Controller
 
 
     public function tomar($id)
-{
-    try {
-        $pps = PPS::findOrFail($id);
-        $user = auth()->user();
+    {
+        try {
+            $pps = PPS::findOrFail($id);
+            $user = auth()->user();
 
-        // Verifica que el usuario tenga el rol adecuado
-        if ($user->role_id != 3) {
+            // Verifica que el usuario tenga el rol adecuado
+            if ($user->role_id != 3) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autorizado'
+                ], 403);
+            }
+
+            // Actualiza el campo `responsible_id` con el ID del usuario actual
+            $pps->responsible_id = $user->id;
+            $pps->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Solicitud actualizada correctamente'
+            ], 200);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'No autorizado'
-            ], 403);
+                'message' => 'Error al actualizar la solicitud',
+                'error' => $e->getMessage()
+            ], 400);
         }
-
-        // Actualiza el campo `responsible_id` con el ID del usuario actual
-        $pps->responsible_id = $user->id;
-        $pps->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Solicitud actualizada correctamente'
-        ], 200);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Error al actualizar la solicitud',
-            'error' => $e->getMessage()
-        ], 400);
     }
-}
 
 }

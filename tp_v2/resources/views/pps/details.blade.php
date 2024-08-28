@@ -43,6 +43,9 @@
 <!-- Steps -->
 <script src="{{ asset('plugins/wizard/jquery.steps.min.js') }}"></script>
 
+<!-- Make the form -->
+@livewireStyles
+
 <div class="container-fluid">
     <!-- ============================================================== -->
     <!-- Bread crumb and right sidebar toggle -->
@@ -104,6 +107,8 @@
     </div>
     <!-- End Modal -->
 
+<div class="container">
+    <!-- Primera parte del formulario -->
     <div class="row">
         <div class="col-12 col-lg-6">
             <div class="card">
@@ -182,6 +187,12 @@
                             </tbody>
                         </table>
                         <hr class="m-t-0 m-b-20">
+                        @if (auth()->user()->role_id == '3' && $pps->id_responsible != null)
+                            <td>
+                                <button class="btn btn-sm btn-success take-btn" data-id="{{$pps->id}}" data-student="{{ $pps->Student->first_name }} {{ $pps->Student->last_name }}">Tomar</button>
+                                <button class="btn btn-sm btn-danger">Rechazar</button>
+                            </td>
+                        @endif
                         @if (auth()->user()->role_id == 2 && $pps->is_finished === true && $pps->is_approved === false)
                             <hr>
                             <div class="d-flex justify-content-end">
@@ -196,7 +207,14 @@
                 </div>
             </div>
         </div>
-
+        <!-- Second part of the form (only if it is approved) -->
+        @if ($approved)
+            <div>
+                <input type="text" name="input2" value="Quiero ver si funciona">
+                <!-- Aca va lo de los planes semanales -->
+            </div>
+        @endif
+</div>
         @if (auth()->user()->role_id == 4)
             <div class="col-12 col-lg-6">
                 <div class="row">
@@ -225,6 +243,9 @@
         @endif
     </div>
 </div>
+
+@livewireScripts
+<script src="//unpkg.com/alpinejs" defer></script>
 
 <style>
     .dataTables_scrollHeadInner {
@@ -422,37 +443,42 @@
         });
     });
 
-    $("#btnResponsable").on("click", function () {
+    
+    $(document).on("click", ".take-btn", function () {
+        event.stopPropagation();
+        const id = $(this).data('id');
+        const studentName = $(this).data('student');
+        
         Swal.fire({
-            title: "Esta acción no se puede revertir",
-            text: '¿Seguro deseas tomar esta solicitud?',
-            icon: 'question',
+            title: '¿Está seguro?',
+            text: `¿Desea tomar la pps de ${studentName}?`,
+            icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Confirmar',
-            buttonsStyling: false,
-            customClass: {
-                confirmButton: 'btn btn-info waves-effect waves-light px-3 py-2',
-                cancelButton: 'btn btn-default waves-effect waves-light px-3 py-2'
-            }
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, tomar'
         }).then((result) => {
             if (result.isConfirmed) {
-                let form = $("#form-takepps");
                 $.ajax({
-                    url: $(form).attr('action'),
-                    method: $(form).attr('method'),
-                    data: $(form).serialize(),
-                    success: function (response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: response.message,
-                            confirmButtonColor: '#1e88e5',
-                            allowOutsideClick: false,
-                        }).then(() => {
-                            location.reload();
-                        });
+                    url: `{{ route('pps.tomar', ':id') }}`.replace(':id', id),
+                    method: 'PATCH',
+                    data: {
+                        _token: "{{ csrf_token() }}", // Agrega el token CSRF para seguridad
                     },
-                    error: function (errorThrown) {
-                        SwalError(errorThrown.responseJSON.message);
+                    success: function(response) {
+                        Swal.fire(
+                            'Tomado!',
+                            'La solicitud ha sido actualizada.',
+                            'success'
+                        );
+                        location.reload(); // Recarga la página para actualizar la tabla
+                    },
+                    error: function(xhr) {
+                        Swal.fire(
+                            'Error!',
+                            'Hubo un problema al actualizar la solicitud.',
+                            'error'
+                        );
                     }
                 });
             }

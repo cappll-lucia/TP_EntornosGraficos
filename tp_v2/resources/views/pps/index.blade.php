@@ -86,7 +86,7 @@
                                                 <i class="bi bi-x-lg" style="font-size: 1.3rem"></i>
                                             @endif
                                         </td>
-                                        @if (auth()->user()->role_id == '3')
+                                        @if (auth()->user()->role_id == '3' && $app->id_responsible != null)
                                             <td>
                                                 <button class="btn btn-sm btn-success take-btn" data-id="{{$app->id}}" data-student="{{ $app->Student->first_name }} {{ $app->Student->last_name }}">Tomar</button>
                                                 <button class="btn btn-sm btn-danger">Rechazar</button>
