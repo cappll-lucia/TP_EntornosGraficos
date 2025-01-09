@@ -72,7 +72,8 @@ Route::group(['middleware' => ['auth', StudentsRoutes::class]], function () {
 
 Route::group(['middleware' => ['auth', RespRoutes::class]], function () {
     Route::patch('/pps/tomar/{id}', [PPSController::class, 'tomar'])->name('pps.tomar');
-    
+    Route::get('/pps/details/{id}', [PPSController::class, 'details'])->name('pps.details');
+
 
 
 });

@@ -5,9 +5,11 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link href="{{ asset('plugins/datatables/media/css/dataTables.bootstrap4.css') }}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- This is data table -->
+
 <script src="{{ asset('plugins/datatables/datatables.min.js') }}"></script>
 
 <div class="container-fluid">
@@ -91,6 +93,8 @@
                                                 <button class="btn btn-sm btn-success take-btn" data-id="{{$app->id}}" data-student="{{ $app->Student->first_name }} {{ $app->Student->last_name }}">Tomar</button>
                                                 <button class="btn btn-sm btn-danger">Rechazar</button>
                                             </td>
+                                        @else
+                                            <td>&nbsp;</td>
                                         @endif    
                                     </tr>
                                 @endforeach
@@ -103,8 +107,12 @@
     </div>
 </div>
 
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     $('#DataTable').DataTable({
+        "autoWidth": false,
         "language": {
             "sInfo": "Mostrando _START_ a _END_ de _TOTAL_ solicitudes",
             "sInfoEmpty": "Mostrando 0 a 0 de 0 solicitudes",
@@ -125,7 +133,13 @@
 
     });
 
-    $(document).on("click", ".clickable", function () {
+    $('#DataTable').on('draw.dt', function () {
+    $('#DataTable tbody tr').addClass('clickable');
+});
+
+
+
+    $(document).on("click", ".clickable", function (event) {
         if (!$(event.target).closest('.btn').length) {
         let url = $(this).data('url');
         let id = $(this).data('id');
@@ -133,12 +147,6 @@
         }
     });
 
-</script>
-
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<script>
     $(document).on("click", ".take-btn", function () {
         event.stopPropagation();
         const id = $(this).data('id');
@@ -187,7 +195,7 @@
     }
 
     .clickable:hover {
-        background-color: transparent;
+        background-color: #7abcfd8c;
     }
 
 </style>
