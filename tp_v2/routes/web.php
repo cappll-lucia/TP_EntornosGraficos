@@ -78,6 +78,7 @@ Route::group(['middleware' => ['auth', RespRoutes::class]], function () {
 });
 
 Route::group(['middleware' => ['auth', TeacherRoutes::class]], function () {
+    Route::post('/pps/editObservation/{id}', [TeachersController::class, 'editObservation'])->name('pps.editObservation');
     Route::post('/pps/approve/{id}', [TeachersController::class, 'approvePps'])->name('pps.approve');
 });
 

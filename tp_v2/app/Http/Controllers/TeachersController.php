@@ -130,24 +130,18 @@ class TeachersController extends Controller
         }
     }
 
-    public function editObservation(Request $request) {
+    public function editObservation(Request $request, $id) {
         try {
-            $pps = PPS::findOrFail($request->input('id'));
+            $pps = PPS::findOrFail($id);
+
             if (auth()->user()->role_id == 2 && $pps->teacher_id == auth()->user()->id) {
-                $pps->update([
-                    'observation' => $request->input('observation'),
-                ]);
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Observación editada correctamente'
-                ], 201);
+                $pps->observation = $request->input('observation');
+                $pps->save();
+
+                return redirect()->back()->with('success', 'Observación guardada con éxito');
             }
 
-            return response()->json([
-                'success' => false,
-                'title' => 'Error al editar la observación',
-                'message' => 'No tiene permisos para editar la observación',
-            ], 400);
+            return redirect()->back()->with('error', 'No tienes permisos para agregar observaciones');
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([

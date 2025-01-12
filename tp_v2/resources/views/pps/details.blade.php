@@ -65,45 +65,31 @@
     <!-- Start Page Content -->
     <!-- ============================================================== -->
 
-    <!-- Modal -->
-    <div id="modalObservation" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true" style="display: none;">
+    <!-- Modal para agregar observaciones -->
+    <div class="modal fade" id="modalObservation" tabindex="-1" aria-labelledby="modalObservationLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form role="form" class="needs-validation" method="POST" action="{{ url('/pps/editObservation') }}"
-                id="form-observation" autocomplete="off" novalidate>
-                @csrf
-                <input type="hidden" name="pps_id" value="{{ $pps->id }}">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Editar observaciones</h4>
-                        <button type="button" class="close" id="btnCloseModal" data-dismiss="modal"
-                            aria-hidden="true">×</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="form-column">
-                                    <div class="col-12 mb-3">
-                                        <textarea class="form-control" name="observation" style="height: 300px"
-                                            required>{{ $pps->observation }}</textarea>
-                                        <div class="invalid-feedback">
-                                            Por favor, ingrese una observación
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cerrar</button>
-                        <button id="btnSendObservation" type="button"
-                            class="btn btn-success waves-effect waves-light">Editar</button>
-                    </div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalObservationLabel">Escriba Observaciones</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </form>
+                <div class="modal-body">
+                    <form id="observationForm" method="post" action="{{ route('pps.editObservation', $pps->id) }}">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="observationInput" class="form-label">Observación</label>
+                            <textarea class="form-control" id="observationInput" name="observation" rows="3" required>{{ old('observation', $pps->observation) }}</textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- End Modal -->
+
 
 <div class="container">
     <!-- Primera parte del formulario -->
@@ -165,10 +151,11 @@
                                 <tr>
                                     <td class="col-4">
                                         <b class="font-weight-bold">Observaciones:</b>
-                                        @if (auth()->user()->role_id == '2')
+                                        @if (auth()->user()->role_id == '2' && $pps->is_finished === 1 && $pps->is_approved === 0)
                                             <button class="btn btn-sm waves-effect waves-light" type="button"
-                                                data-toggle="modal" data-target="#modalObservation"><i
-                                                    class="bi bi-pencil-square"></i></button>
+                                                    data-bs-toggle="modal" data-bs-target="#modalObservation">
+                                                <i class="bi bi-pencil-square"></i> Escribir observación
+                                            </button>
                                         @endif
                                     </td>
                                     <td>{{ $pps->observation != null ? $pps->observation : "-" }}</td>
@@ -204,6 +191,7 @@
                                 <input type="hidden" id="selectedTeacher" name="selectedTeacher" value="{{ $pps->teacher_id }}">
                                 <td><button id="btnFinalizar" class="btn btn-sm btn-success take-btn">Finalizar</button></td>
                             </form>
+                            <hr class="m-t-0 m-b-20">
                         @endif
                         @if(session('success'))
                             <div class="alert alert-success">
@@ -217,6 +205,9 @@
                                     <button id="btnFinish" class="btn btn-success waves-effect waves-light"
                                         type="button">Aprobar solicitud</button>
                                 </form>
+                                {{-- Boton de rechazo: envia un mail para que cambie la desc o fechas? se tendria que justamente comentar en observaciones asi se envia eso x mail --}}
+                                <button class="btn btn-sm btn-danger">Rechazar</button>
+                                <hr class="m-t-0 m-b-20">
                             </div>
                         @endif
                         </div>
@@ -245,10 +236,39 @@
 
 <script>
 $(document).ready(function () {
-    // Event listener para el cambio del select
     $('#TeacherSelect').on('change', function () {
         const selectedTeacher = $(this).val();
         $('#selectedTeacher').val(selectedTeacher);
+    });
+
+    $('#modalObservation').on('shown.bs.modal', function () {
+        $('#observationInput').trigger('focus');
+    });
+
+    $("#btnSaveObservation").on("click", function (e) {
+    e.preventDefault();
+    let form = $("#observationForm");
+    $.ajax({
+        url: form.attr('action'),
+        method: form.attr('method'),
+        data: form.serialize(),
+        success: function (response) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Observación guardada con éxito',
+                confirmButtonColor: '#1e88e5',
+            }).then(() => {
+                location.reload();
+            });
+        },
+        error: function (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo guardar la observación.',
+            });
+        },
+    });
     });
 
     $("#btnFinalizar").on("click", function () {
@@ -338,7 +358,7 @@ $(document).ready(function () {
     }
 
     $("#btnSeguimiento").on("click", function () {
-        window.location.href = "/seguimientos-semanales/{{ $pps->id }}";  // Redirigir al URL de seguimiento semanal
+        window.location.href = "/seguimientos-semanales/{{ $pps->id }}";
     });
 });
 </script>
