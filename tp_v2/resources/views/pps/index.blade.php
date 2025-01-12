@@ -6,7 +6,6 @@
 <link href="{{ asset('plugins/datatables/media/css/dataTables.bootstrap4.css') }}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- This is data table -->
 
@@ -53,9 +52,7 @@
                                     <th>Fecha fin</th>
                                     <th>Finalizada</th>
                                     <th>Aprobada</th>
-                                    @if (auth()->user()->role_id == '3')
-                                        <th></th>
-                                    @endif
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody id="table_body">
@@ -91,7 +88,7 @@
                                         @if (auth()->user()->role_id == '3' && $app->Responsible == null)
                                             <td>
                                                 <button class="btn btn-sm btn-success take-btn" data-id="{{$app->id}}" data-student="{{ $app->Student->first_name }} {{ $app->Student->last_name }}">Tomar</button>
-                                                <button class="btn btn-sm btn-danger">Rechazar</button>
+                                                {{-- <button class="btn btn-sm btn-danger">Rechazar</button> --}}
                                             </td>
                                         @else
                                             <td>&nbsp;</td>
@@ -140,6 +137,7 @@
 
 
     $(document).on("click", ".clickable", function (event) {
+        console.log("Anda el click")
         if (!$(event.target).closest('.btn').length) {
         let url = $(this).data('url');
         let id = $(this).data('id');

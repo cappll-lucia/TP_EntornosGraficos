@@ -7,6 +7,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use App\Models\PPS;
 
 class ResponsiblesController extends Controller
 {
@@ -109,4 +110,39 @@ class ResponsiblesController extends Controller
         }
     }
 
+    public function assignTeacher(Request $request, $id) {
+        try {
+            $pps = PPS::findOrFail($id);
+            $teacher = User::findOrFail($request->input('selectedTeacher'));
+
+            if ($pps->is_finished == 1) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al asignar el docente',
+                    'message' => 'La solicitud ya fue finalizada',
+                ], 400);
+            }
+            if (auth()->user()->role_id != 3) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al asignar el docente',
+                    'message' => 'El usuario no es un responsable',
+                ], 400);
+            }
+            // Mail::to($pps->Student->email)->send(new AssignTeacherEmail($pps->Student->name, $teacher->lastname . ', ' . $teacher->name, $teacher->User->email));
+            $pps->update([
+                'teacher_id' => $teacher->id,
+                'is_finished' => 1,
+            ]);
+            
+            return redirect()->route('pps.details', ['id' => $pps->id])->with('success', 'Docente asignado correctamente');
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al tomar la solicitud',
+                'message' => 'Intente nuevamente o comuníquese para soporte',
+                'error' => $e->getMessage()
+            ], 400);
+        }
+    }
 }

@@ -9,6 +9,7 @@ use App\Http\Middleware\AdminRoutes;
 use App\Http\Middleware\StudentsRoutes;
 use App\Http\Controllers\PPSController;
 use App\Http\Middleware\RespRoutes;
+use App\Http\Middleware\TeacherRoutes;
 
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('welcome');
@@ -23,7 +24,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
     Route::get('/pps', [PPSController::class, 'index'])->name('getPps');
-    Route::get('/pps/details/{id}', [PPSController::class, 'details'])->name('ppsDetails');
+    Route::get('/pps/details/{id}', [PPSController::class, 'details'])->name('pps.details');
+    Route::post('/pps/approve/{id}', [TeacherController::class, 'approveApplication']);
     Route::get('/pps/downloadWorkPlan', [PPSController::class, 'downloadWorkPlan']);
 });
 
@@ -72,10 +74,11 @@ Route::group(['middleware' => ['auth', StudentsRoutes::class]], function () {
 
 Route::group(['middleware' => ['auth', RespRoutes::class]], function () {
     Route::patch('/pps/tomar/{id}', [PPSController::class, 'tomar'])->name('pps.tomar');
-    Route::get('/pps/details/{id}', [PPSController::class, 'details'])->name('pps.details');
+    Route::post('/pps/assignTeacher/{id}', [ResponsiblesController::class, 'assignTeacher'])->name('assignTeacher');
+});
 
-
-
+Route::group(['middleware' => ['auth', TeacherRoutes::class]], function () {
+    Route::post('/pps/approve/{id}', [TeachersController::class, 'approvePps'])->name('pps.approve');
 });
 
 

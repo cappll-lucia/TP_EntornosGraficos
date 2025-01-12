@@ -83,11 +83,8 @@ class PPSController extends Controller
 
     public function details($id)
     {
-
-        $approved = false;
-
         try {
-            $pps = PPS::findOrFail($id);
+            $pps = PPS::with('Responsible', 'Student')->findOrFail($id);
             $user = User::where('id', auth()->user()->id)->first();
             if (($user->role_id == 1 && $user->id != $pps->student_id) || ($user->role_id == 2 && $user->id != $pps->teacher_id) 
             || ($user->role_id == 3 && $user->id != $pps->responsible_id)) {
@@ -97,15 +94,18 @@ class PPSController extends Controller
                 return view('error', compact('error'));
             }
             if ($pps->responsible_id != null){
-                $approved = true;
 
-                // Aca otro if para poder mostrar la tercera parte que deberia ser finalReport
-
-            } else {
-                $approved = true;
+                $all_teachers = User::where('role_id', 2)->get();
+                $teachers = [];
+                foreach ($all_teachers as $teach) {
+                $cant_pps = PPS::where('teacher_id', $teach->id)->where('is_finished', 0)->count();
+                if ($cant_pps <= 10) {
+                    $teachers[] = $teach;
+                }
+                }    
             }
 
-            return view('pps.details', compact('pps', 'approved'));
+            return view('pps.details', compact('pps', 'teachers'));
         } catch (\Exception $e) {
             $error = new \stdClass();
             $error->code = 500;

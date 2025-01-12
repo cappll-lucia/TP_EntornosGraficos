@@ -3,8 +3,8 @@
     $today = Carbon::now(new \DateTimeZone('America/Argentina/Buenos_Aires'));
     $pps_end_date = Carbon::parse($pps->finish_date);
 @endphp
-@extends('layouts.app')
 
+@extends('layouts.app')
 @section('content')
 
 <!-- Styles -->
@@ -15,8 +15,8 @@
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('plugins/popper/popper.min.js') }}"></script>
 <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
-<link rel="stylesheet" href="{{ asset('css/colors/default-dark.css') }}">
-<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+{{-- <link rel="stylesheet" href="{{ asset('css/colors/default-dark.css') }}">
+<link rel="stylesheet" href="{{ asset('css/style.css') }}"> --}}
 <script src="{{ asset('js/waves.js') }}"></script>
 <link href="{{ asset('plugins/datatables/media/css/dataTables.bootstrap4.css') }}" rel="stylesheet" />
 <link href="{{ asset('plugins/icheck/skins/all.css') }}" rel="stylesheet" />
@@ -24,8 +24,7 @@
 <!-- Switchery -->
 <link href="{{ asset('plugins/switchery/dist/switchery.min.css') }}" rel="stylesheet" />
 <!-- Datepicker -->
-<link href="{{ asset('plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css') }}"
-    rel="stylesheet">
+<link href="{{ asset('plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css') }}" rel="stylesheet">
 
 <link href="{{ asset('plugins/dropify/dist/css/dropify.min.css') }}" rel="stylesheet">
 
@@ -43,8 +42,7 @@
 <!-- Steps -->
 <script src="{{ asset('plugins/wizard/jquery.steps.min.js') }}"></script>
 
-<!-- Make the form -->
-@livewireStyles
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <div class="container-fluid">
     <!-- ============================================================== -->
@@ -55,7 +53,7 @@
             <h3 class="text-themecolor m-b-0 m-t-0">Solicitudes</h3>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Inicio</a></li>
-                <li class="breadcrumb-item"><a href="{{ url('/pps/index') }}">Solicitudes</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('getPps') }}">Solicitudes</a></li>
                 <li class="breadcrumb-item active">Detalles</li>
             </ol>
         </div>
@@ -142,6 +140,18 @@
                                     @else
                                         <td>Sin asignar</td>
                                     @endif
+                                    
+                                </tr>
+                                <tr>
+                                    @if (auth()->user()->role_id == '3' && $pps->is_finished == 0)
+                                        <td class="col-4"><b class="font-weight-bold">Cambiar profesor:</b></td>
+                                        <td><select id="TeacherSelect" name="TeacherSelect" class="form-control">
+                                            @foreach($teachers as $teach)
+                                            <option value="{{ $teach->id }}">{{ $teach->first_name }} {{ $teach->last_name }}</option>
+                                            @endforeach
+                                            </select>
+                                        </td>
+                                    @endif
                                 </tr>
                                 <tr>
                                     <td class="col-4"><b class="font-weight-bold">Fecha de inicio/fin:</b></td>
@@ -155,7 +165,7 @@
                                 <tr>
                                     <td class="col-4">
                                         <b class="font-weight-bold">Observaciones:</b>
-                                        @if (auth()->user()->role_id == 2)
+                                        @if (auth()->user()->role_id == '2')
                                             <button class="btn btn-sm waves-effect waves-light" type="button"
                                                 data-toggle="modal" data-target="#modalObservation"><i
                                                     class="bi bi-pencil-square"></i></button>
@@ -165,8 +175,8 @@
                                 </tr>
                                 <tr>
                                     <td class="col-4"><b class="font-weight-bold">Estado:</b></td>
-                                    @if ($pps->is_approved == true)
-                                        @if ($pps->is_finished == true)
+                                    @if ($pps->is_approved == 1)
+                                        @if ($pps->is_finished == 1)
                                             <td><span class="label label-success">Finalizada</span> - <span
                                                     class="label label-success">Aprobada</span></td>
                                         @else
@@ -174,7 +184,7 @@
                                                     class="label label-success">Aprobada</span></td>
                                         @endif
                                     @else
-                                        @if ($pps->is_finished == true)
+                                        @if ($pps->is_finished == 1)
                                             <td><span class="label label-success">Finalizada</span> - <span
                                                     class="label label-danger">Pendiente de aprobación</span></td>
                                         @else
@@ -182,69 +192,45 @@
                                                     class="label label-danger">Pendiente de aprobación</span></td>
                                         @endif
                                     @endif
-                                    <td>{{ $pps->status }}</td>
+                                    {{-- <td>{{ $pps->status }}</td> --}}
                                 </tr>
                             </tbody>
                         </table>
-                        <hr class="m-t-0 m-b-20">
-                        @if (auth()->user()->role_id == '3' && $pps->id_responsible != null)
-                            <td>
-                                <button class="btn btn-sm btn-success take-btn" data-id="{{$pps->id}}" data-student="{{ $pps->Student->first_name }} {{ $pps->Student->last_name }}">Tomar</button>
-                                <button class="btn btn-sm btn-danger">Rechazar</button>
-                            </td>
+                        {{-- <hr class="m-t-0 m-b-20"> --}}
+                        @if (auth()->user()->role_id == '3' && $pps->is_finished === 0)
+                            <form id="form-finalizar" action="{{ route('assignTeacher', ['id' => $pps->id]) }}" method="POST">
+                                @csrf
+                                 <!-- Campo oculto para enviar el profesor seleccionado -->
+                                <input type="hidden" id="selectedTeacher" name="selectedTeacher" value="{{ $pps->teacher_id }}">
+                                <td><button id="btnFinalizar" class="btn btn-sm btn-success take-btn">Finalizar</button></td>
+                            </form>
                         @endif
-                        @if (auth()->user()->role_id == 2 && $pps->is_finished === true && $pps->is_approved === false)
-                            <hr>
+                        @if(session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        @if (auth()->user()->role_id == '2' && $pps->is_finished === 1 && $pps->is_approved === 0)
                             <div class="d-flex justify-content-end">
-                                <form id="form-approve" action="/pps/approve/{{ $pps->id }}" method="post">
+                                <form id="form-approve" action="{{ route('pps.approve', ['id' => $pps->id]) }}" method="post">
                                     @csrf
                                     <button id="btnFinish" class="btn btn-success waves-effect waves-light"
                                         type="button">Aprobar solicitud</button>
                                 </form>
                             </div>
                         @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Second part of the form (only if it is approved) -->
-        @if ($approved)
-            <div>
-                <input type="text" name="input2" value="Quiero ver si funciona">
-                <!-- Aca va lo de los planes semanales -->
-            </div>
-        @endif
-</div>
-        @if (auth()->user()->role_id == 4)
-            <div class="col-12 col-lg-6">
-                <div class="row">
-                    <div class="col-12 col-sm-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h2 class="card-title"
-                                    style="@if ($today >= $pps_end_date) text-decoration: line-through; @endif">
-                                    Subir seguimiento semanal</h2>
-                                <form id="form-uploadWT" action="/pps/uploadWeeklyTracking" method="post">
-                                    @csrf
-                                    <input name="file" type="file" class="dropify" accept=".pdf" data-max-file-size="2M" @if ($today >= $pps_end_date) disabled @endif />
-                                    <input type="hidden" name="pps_id" value="{{ $pps->id }}">
-                                    <div class="d-flex justify-content-end mt-2">
-                                        <button id="btn-uploadWT" onclick="uploadWT()"
-                                            class="btn btn-secondary waves-effect waves-light" type="button"
-                                            style="display: none;"><span class="btn-label"><i
-                                                    class="bi bi-upload"></i></span>Subir</button>
-                                    </div>
-                                </form>
-                            </div>
+                        </div>
+                        <div>
+                            <button id="btnSeguimiento" class="btn btn-secondary" disabled>Ir a seguimientos semanales</button>
                         </div>
                     </div>
                 </div>
             </div>
-        @endif
+        </div>
     </div>
 </div>
 
-@livewireScripts
+
 <script src="//unpkg.com/alpinejs" defer></script>
 
 <style>
@@ -258,380 +244,103 @@
 </style>
 
 <script>
-    $(document).ready(function () {
-        let drEvent = $('.dropify').dropify({
-            messages: {
-                'default': 'Arrastre el archivo aquí o haga clic',
-                'replace': 'Arrastre el archivo aquí o haga clic para reemplazar',
-                'remove': 'Eliminar',
-                'error': 'Ooops, ocurrió un error.'
-            },
-            error: {
-                'fileSize': 'El tamaño del archivo es demasiado grande. Máximo 2MB.',
-            }
-        });
-
-        drEvent.on('dropify.afterClear', function (event, element) {
-            $('#btn-uploadWT').hide();
-            $('#btn-uploadFR').hide();
-        });
-        drEvent.on('dropify.errors', function (event, element) {
-            $('#btn-uploadWT').hide();
-            $('#btn-uploadFR').hide();
-        });
+$(document).ready(function () {
+    // Event listener para el cambio del select
+    $('#TeacherSelect').on('change', function () {
+        const selectedTeacher = $(this).val();
+        $('#selectedTeacher').val(selectedTeacher);
     });
 
-    const SwalError = (title, text = "") => {
-        Swal.fire({
-            icon: 'error',
-            title: title,
-            text: text,
-            confirmButtonColor: '#1e88e5',
-        });
-    };
-</script>
-
-<script>
-    $('#form-uploadFR input[type="file"]').change(function () {
-        if ($(this).get(0).files.length > 0) {
-            $('#btn-uploadFR').show();
-        } else {
-            $('#btn-uploadFR').hide();
+    $("#btnFinalizar").on("click", function () {
+    Swal.fire({
+        title: 'Esta acción no se puede revertir',
+        text: '¿Seguro deseas finalizar esta solicitud?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Confirmar',
+        buttonsStyling: false,
+        customClass: {
+            confirmButton: 'btn btn-info waves-effect waves-light px-3 py-2',
+            cancelButton: 'btn btn-default waves-effect waves-light px-3 py-2'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let form = $("#form-finalizar");
+            $.ajax({
+                url: $(form).attr('action'),
+                method: $(form).attr('method'),
+                data: $(form).serialize(),
+                success: function (response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: response.message,
+                        confirmButtonColor: '#1e88e5',
+                        allowOutsideClick: false,
+                    }).then(() => {
+                        location.reload();
+                    });
+                },
+                error: function (errorThrown) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: errorThrown.responseJSON.title || 'Error',
+                        text: errorThrown.responseJSON.message || 'Hubo un error al finalizar la solicitud',
+                        confirmButtonColor: '#d33'
+                    });
+                }
+            });
         }
     });
-    $('#form-uploadWT input[type="file"]').change(function () {
-        if ($(this).get(0).files.length > 0) {
-            $('#btn-uploadWT').show();
-        } else {
-            $('#btn-uploadWT').hide();
-        }
     });
 
-    $('input').on('ifClicked', function (ev) {
-        $("#btnTeacher").show();
-    });
 
     $("#btnFinish").on("click", function () {
-        Swal.fire({
-            title: 'Esta acción no se puede revertir',
-            text: '¿Seguro deseas aprobar esta solicitud?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Confirmar',
-            buttonsStyling: false,
-            customClass: {
-                confirmButton: 'btn btn-info waves-effect waves-light px-3 py-2',
-                cancelButton: 'btn btn-default waves-effect waves-light px-3 py-2'
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                let form = $("#form-approve");
-                $.ajax({
-                    url: $(form).attr('action'),
-                    method: $(form).attr('method'),
-                    data: $(form).serialize(),
-                    success: function (response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: response.message,
-                            confirmButtonColor: '#1e88e5',
-                            allowOutsideClick: false,
-                        }).then(() => {
-                            location.reload();
-                        });
-                    },
-                    error: function (errorThrown) {
-                        SwalError(errorThrown.responseJSON.title, errorThrown.responseJSON.message);
-                    }
-                });
-            }
+            Swal.fire({
+                title: 'Esta acción no se puede revertir',
+                text: '¿Seguro deseas aprobar esta solicitud?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Confirmar',
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'btn btn-info waves-effect waves-light px-3 py-2',
+                    cancelButton: 'btn btn-default waves-effect waves-light px-3 py-2'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let form = $("#form-approve");
+                    $.ajax({
+                        url: $(form).attr('action'),
+                        method: $(form).attr('method'),
+                        data: $(form).serialize(),
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: response.message,
+                                confirmButtonColor: '#1e88e5',
+                                allowOutsideClick: false,
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(errorThrown) {
+                            SwalError(errorThrown.responseJSON.title, errorThrown.responseJSON.message);
+                        }
+                    });
+                }
+            });
         });
-    });
 
-    $("#btnDeleteTeacher").on("click", function () {
-        let professor_name = $(this).data('name');
-        Swal.fire({
-            text: `¿Seguro deseas eliminar a ${professor_name} de esta PPS?`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Confirmar',
-            buttonsStyling: false,
-            customClass: {
-                confirmButton: 'btn btn-danger waves-effect waves-light px-3 py-2',
-                cancelButton: 'btn btn-default waves-effect waves-light px-3 py-2'
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                let form = $("#form-deleteTeacher");
-                $.ajax({
-                    url: $(form).attr('action'),
-                    method: $(form).attr('method'),
-                    data: $(form).serialize(),
-                    success: function (response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: response.message,
-                            confirmButtonColor: '#1e88e5',
-                            allowOutsideClick: false,
-                        }).then(() => {
-                            location.reload();
-                        });
-                    },
-                    error: function (errorThrown) {
-                        SwalError(errorThrown.responseJSON.message);
-                    }
-                });
-            }
-        });
-    });
-
-    $("#btnTeacher").on("click", function () {
-        let professor_name = $(`#form-teacher input[name='teacher_id']:checked`).parent().parent().parent().find('td:nth-child(1)').text();
-        Swal.fire({
-            text: `¿Seguro deseas asignar a ${professor_name} a esta PPS?`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Confirmar',
-            buttonsStyling: false,
-            customClass: {
-                confirmButton: 'btn btn-info waves-effect waves-light px-3 py-2',
-                cancelButton: 'btn btn-default waves-effect waves-light px-3 py-2'
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                let form = $("#form-teacher");
-                $.ajax({
-                    url: $(form).attr('action'),
-                    method: $(form).attr('method'),
-                    data: $(form).serialize(),
-                    success: function (response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: response.message,
-                            confirmButtonColor: '#1e88e5',
-                            allowOutsideClick: false,
-                        }).then(() => {
-                            location.reload();
-                        });
-                    },
-                    error: function (errorThrown) {
-                        SwalError(errorThrown.responseJSON.message);
-                    }
-                });
-            }
-        });
-    });
-
-    $("#btnSendObservation").on("click", function () {
-        let form = $("#form-observation");
-        $.ajax({
-            url: $(form).attr('action'),
-            method: $(form).attr('method'),
-            data: $(form).serialize(),
-            success: function (response) {
-                $("#btnCloseModal").click();
-                Swal.fire({
-                    icon: 'success',
-                    title: response.message,
-                    confirmButtonColor: '#1e88e5',
-                    allowOutsideClick: false,
-                });
-            },
-            error: function (errorThrown) {
-                SwalError(errorThrown.responseJSON.message);
-            }
-        });
-    });
-
-    
-    $(document).on("click", ".take-btn", function () {
-        event.stopPropagation();
-        const id = $(this).data('id');
-        const studentName = $(this).data('student');
-        
-        Swal.fire({
-            title: '¿Está seguro?',
-            text: `¿Desea tomar la pps de ${studentName}?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, tomar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: `{{ route('pps.tomar', ':id') }}`.replace(':id', id),
-                    method: 'PATCH',
-                    data: {
-                        _token: "{{ csrf_token() }}", // Agrega el token CSRF para seguridad
-                    },
-                    success: function(response) {
-                        Swal.fire(
-                            'Tomado!',
-                            'La solicitud ha sido actualizada.',
-                            'success'
-                        );
-                        location.reload(); // Recarga la página para actualizar la tabla
-                    },
-                    error: function(xhr) {
-                        Swal.fire(
-                            'Error!',
-                            'Hubo un problema al actualizar la solicitud.',
-                            'error'
-                        );
-                    }
-                });
-            }
-        });
-    });
-
-    function uploadWT() {
-        let form = $("#form-uploadWT");
-        let formData = new FormData();
-        let file = $("#form-uploadWT input[name='file']")[0].files[0];
-        formData.append('pps_id', $("#form-uploadWT input[name='pps_id']").val());
-        formData.append('_token', $("#form-uploadWT input[name='_token']").val());
-        formData.append('file', file);
-
-        $.ajax({
-            url: $(form).attr('action'),
-            method: $(form).attr('method'),
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: response.message,
-                    confirmButtonColor: '#1e88e5',
-                    allowOutsideClick: false,
-                }).then(() => {
-                    location.reload();
-                });
-            },
-            error: function (errorThrown) {
-                Swal.fire({
-                    icon: 'error',
-                    title: errorThrown.responseJSON.title,
-                    text: errorThrown.responseJSON.message,
-                    confirmButtonColor: '#1e88e5',
-                });
-            }
-        });
+    if ("{{ $pps->is_approved }}" == 1) {
+        $("#btnSeguimiento").prop('disabled', false).removeClass('btn-secondary').addClass('btn-success');
+    } else {
+        $("#btnSeguimiento").prop('disabled', true).removeClass('btn-success').addClass('btn-secondary');
     }
 
-    function deleteWT(id) {
-        let form = $(`#form-deleteWT_${id}`);
-        Swal.fire({
-            title: "Esta acción no se puede revertir",
-            text: '¿Seguro deseas eliminar este archivo?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Eliminar',
-            buttonsStyling: false,
-            customClass: {
-                confirmButton: 'btn btn-danger waves-effect waves-light px-3 py-2',
-                cancelButton: 'btn btn-default waves-effect waves-light px-3 py-2'
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: $(form).attr('action'),
-                    method: $(form).attr('method'),
-                    data: $(form).serialize(),
-                    success: function (response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: response.message,
-                            confirmButtonColor: '#1e88e5',
-                            allowOutsideClick: false,
-                        }).then(() => {
-                            location.reload();
-                        });
-                    },
-                    error: function (errorThrown) {
-                        SwalError(errorThrown.responseJSON.message);
-                    }
-                });
-            }
-        });
-    }
-
-    function acceptWT(id) {
-        let form = $(`#form-acceptWT_${id}`);
-        Swal.fire({
-            title: "Esta acción no se puede revertir",
-            text: '¿Seguro deseas aceptar este seguimiento?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Confirmar',
-            buttonsStyling: false,
-            customClass: {
-                confirmButton: 'btn btn-info waves-effect waves-light px-3 py-2',
-                cancelButton: 'btn btn-default waves-effect waves-light px-3 py-2'
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: $(form).attr('action'),
-                    method: $(form).attr('method'),
-                    data: $(form).serialize(),
-                    success: function (response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: response.message,
-                            confirmButtonColor: '#1e88e5',
-                            allowOutsideClick: false,
-                        }).then(() => {
-                            location.reload();
-                        });
-                    },
-                    error: function (errorThrown) {
-                        SwalError(errorThrown.responseJSON.message);
-                    }
-                });
-            }
-        });
-    }
-
-    function uploadFR() {
-        let form = $("#form-uploadFR");
-        let formData = new FormData();
-        let file = $("#form-uploadFR input[name='file']")[0].files[0];
-        formData.append('pps_id', $("#form-uploadFR input[name='pps_id']").val());
-        formData.append('_token', $("#form-uploadFR input[name='_token']").val());
-        formData.append('file', file);
-
-        $.ajax({
-            url: $(form).attr('action'),
-            method: $(form).attr('method'),
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: response.message,
-                    confirmButtonColor: '#1e88e5',
-                    allowOutsideClick: false,
-                }).then(() => {
-                    location.reload();
-                });
-            },
-            error: function (errorThrown) {
-                Swal.fire({
-                    icon: 'error',
-                    title: errorThrown.responseJSON.title,
-                    text: errorThrown.responseJSON.message,
-                    confirmButtonColor: '#1e88e5',
-                });
-            }
-        });
-    }
+    $("#btnSeguimiento").on("click", function () {
+        window.location.href = "/seguimientos-semanales/{{ $pps->id }}";  // Redirigir al URL de seguimiento semanal
+    });
+});
 </script>
 
-<!-- jQuery file upload -->
-<script src="{{ asset('plugins/dropify/dist/js/dropify.min.js') }}"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection

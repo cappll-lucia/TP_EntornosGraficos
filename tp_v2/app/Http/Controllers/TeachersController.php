@@ -7,6 +7,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use App\Models\PPS;
 
 class TeachersController extends Controller
 {
@@ -129,5 +130,83 @@ class TeachersController extends Controller
         }
     }
 
+    public function editObservation(Request $request) {
+        try {
+            $pps = PPS::findOrFail($request->input('id'));
+            if (auth()->user()->role_id == 2 && $pps->teacher_id == auth()->user()->id) {
+                $pps->update([
+                    'observation' => $request->input('observation'),
+                ]);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Observación editada correctamente'
+                ], 201);
+            }
+
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al editar la observación',
+                'message' => 'No tiene permisos para editar la observación',
+            ], 400);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al editar la observación',
+                'message' => 'Intente nuevamente o comuníquese para soporte',
+                'error' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function approvePps(Request $request, $id) {
+        try {
+            $pps = PPS::findOrFail($id);
+
+            if (auth()->user()->role_id != 2) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al aprobar la solicitud',
+                    'message' => 'El usuario no es un profesor',
+                ], 400);
+            }
+            if (auth()->user()->role_id == 2 && $pps->teacher_id != auth()->user()->id) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al aprobar la solicitud',
+                    'message' => 'No tiene permisos para aprobar la solicitud',
+                ], 400);
+            }
+            if ($pps->is_finished === 0) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al aprobar la solicitud',
+                    'message' => 'La solicitud no está finalizada',
+                ], 400);
+            }
+
+            $pps->update([
+                'is_approved' => 1,
+            ]);
+
+            // Mail::to($application->Student->User->email)->send(
+            //     new ApproveApplicationEmail(
+            //         $application->Student->name,
+            //         $application->id,
+            //         $application->Teacher->User->email
+            //     )
+            // );
+
+            return redirect()->route('pps.details', ['id' => $pps->id])->with('success', 'PPS aprobada correctamente');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al aprobar la solicitud',
+                'message' => 'Intente nuevamente o comuníquese para soporte',
+                'error' => $e->getMessage()
+            ], 400);
+        }
+    }
 
 }
