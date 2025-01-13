@@ -11,6 +11,8 @@ class WeeklyTracking extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $table = 'weekly_tracking';
+
     protected $fillable = [
         'pps_id',
         'file_path',

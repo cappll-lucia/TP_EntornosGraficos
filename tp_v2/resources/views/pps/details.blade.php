@@ -12,6 +12,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <link rel="stylesheet" href="{{ asset('plugins/bootstrap/css/bootstrap.min.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('plugins/popper/popper.min.js') }}"></script>
 <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
@@ -92,7 +93,6 @@
 
 
 <div class="container">
-    <!-- Primera parte del formulario -->
     <div class="row">
         <div class="col-12 col-lg-6">
             <div class="card">
@@ -143,6 +143,14 @@
                                     <td class="col-4"><b class="font-weight-bold">Fecha de inicio/fin:</b></td>
                                     <td>{{ \Carbon\Carbon::parse($pps->start_date)->format('d/m/Y') }} -
                                         {{ \Carbon\Carbon::parse($pps->finish_date)->format('d/m/Y') }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-4"><b class="font-weight-bold">Plan de trabajo</b></td>
+                                    <td>
+                                        <a href="{{ Storage::url($wp->file_path) }}" target="_blank" class="btn btn-success btn-sm">
+                                        Ver archivo
+                                        </a>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="col-4"><b class="font-weight-bold">Descripción:</b></td>
@@ -358,7 +366,7 @@ $(document).ready(function () {
     }
 
     $("#btnSeguimiento").on("click", function () {
-        window.location.href = "/seguimientos-semanales/{{ $pps->id }}";
+        window.location.href = "{{ route('getWeeklyTrackings', ['id' => $pps->id]) }}";
     });
 });
 </script>

@@ -131,13 +131,12 @@
     });
 
     $('#DataTable').on('draw.dt', function () {
-    $('#DataTable tbody tr').addClass('clickable');
-});
+        $('#DataTable tbody tr').addClass('clickable');
+    });
 
 
 
     $(document).on("click", ".clickable", function (event) {
-        console.log("Anda el click")
         if (!$(event.target).closest('.btn').length) {
         let url = $(this).data('url');
         let id = $(this).data('id');

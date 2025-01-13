@@ -45,11 +45,11 @@ class PPS extends Model
 
     public function WeeklyTrackings()
     {
-        return $this->hasMany(WeeklyTracking::class, 'application_id');
+        return $this->hasMany(WeeklyTracking::class, 'pps_id');
     }
 
     public function WorkPlan()
     {
-        return $this->hasOne(WorkPlan::class);
+        return $this->hasOne(WorkPlan::class, 'pps_id');
     }
 }

@@ -13,6 +13,53 @@ use App\Models\WeeklyTracking;
 
 class WeeklyTrackingController extends Controller
 {
+    public function index($id){
+
+        $pps = PPS::with('WeeklyTrackings')->findOrFail($id);
+
+        $wts = $pps->WeeklyTrackings()->exists();
+
+        return view('weekly_trackings.index', compact('pps', 'wts'));
+    }
+
+    public function generateWT(Request $request, $id)
+    {
+        try {
+            $pps = PPS::findOrFail($id);
+
+            if (auth()->user()->role_id != 3) {
+                return redirect()->back()->with('error', 'No tienes permisos para realizar esta acción.');
+            }
+
+            if ($pps->WeeklyTrackings()->count() > 0) {
+                return redirect()->back()->with('error', 'Los seguimientos semanales ya fueron generados.');
+            }
+
+            for ($i = 1; $i <= 10; $i++) {
+                WeeklyTracking::create([
+                    'pps_id' => $pps->id,
+                    'file_path' => null,
+                    'is_accepted' => 0,
+                ]);
+            }
+    
+            return redirect()->route('getWeeklyTrackings', ['id' => $pps->id]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Ocurrió un error al generar los seguimientos: ' . $e->getMessage());
+        }
+    }
+
+    public function details($id)
+    {
+        $wt = WeeklyTracking::find($id);
+
+        if (!$wt) {
+            return redirect()->route('pps.index')->with('error', 'El seguimiento semanal no existe.');
+        }
+
+        return view('weekly_trackings.details', compact('wt'));
+    }
+
     public function delete(string $id)
     {
         try {
@@ -37,44 +84,6 @@ class WeeklyTrackingController extends Controller
             return response()->json([
                 'success' => false,
                 'title' => 'Error al eliminar la seguimiento',
-                'message' => 'Intente nuevamente o comuníquese para soporte',
-                'error' => $e->getMessage()
-            ], 400);
-        }
-    }
-
-    public function accept(Request $request)
-    {
-        try {
-            $wt = WeeklyTracking::findOrFail($request->input('id'))->load('PPS');
-            $pps = $wt->PPS;
-            $rol = auth()->user()->role_id;
-            if ($rol != 2 || $wt->PPS->teacher_id != auth()->user()->User->id) {
-                return response()->json([
-                    'success' => false,
-                    'title' => 'Error al aceptar el seguimiento',
-                    'message' => 'No está autorizado a realizar esta acción'
-                ], 400);
-            }
-            $wt->is_accepted = true;
-            $wt->save();
-
-            /*Mail::to($pps->Student->User->email)->send(
-                new ApproveWeeklyTrackingEmail(
-                    $pps->Student->name,
-                    $pps->id,
-                    $pps->Teacher->User->email
-                )
-            );*/
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Seguimiento aceptado correctamente'
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'title' => 'Error al aceptar el seguimiento',
                 'message' => 'Intente nuevamente o comuníquese para soporte',
                 'error' => $e->getMessage()
             ], 400);
@@ -117,4 +126,5 @@ class WeeklyTrackingController extends Controller
             ], 400);
         }
     }
+
 }

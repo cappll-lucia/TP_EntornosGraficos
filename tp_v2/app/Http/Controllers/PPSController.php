@@ -84,8 +84,9 @@ class PPSController extends Controller
     public function details($id)
     {
         try {
-            $pps = PPS::with('Responsible', 'Student')->findOrFail($id);
+            $pps = PPS::with('Responsible', 'Student', 'WorkPlan')->findOrFail($id);
             $user = User::where('id', auth()->user()->id)->first();
+            $wp = WorkPlan::where('pps_id', $pps->id)->first();
             if (($user->role_id == 1 && $user->id != $pps->student_id) || ($user->role_id == 2 && $user->id != $pps->teacher_id) 
             || ($user->role_id == 3 && $user->id != $pps->responsible_id)) {
                 $error = new \stdClass();
@@ -105,7 +106,7 @@ class PPSController extends Controller
                 }    
             }
 
-            return view('pps.details', compact('pps', 'teachers'));
+            return view('pps.details', compact('pps', 'teachers', 'wp'));
         } catch (\Exception $e) {
             $error = new \stdClass();
             $error->code = 500;

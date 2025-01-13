@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\PPS;
+use App\Models\WeeklyTracking;
 
 class TeachersController extends Controller
 {
@@ -130,7 +131,7 @@ class TeachersController extends Controller
         }
     }
 
-    public function editObservation(Request $request, $id) {
+    public function editObservationPPS(Request $request, $id) {
         try {
             $pps = PPS::findOrFail($id);
 
@@ -197,6 +198,52 @@ class TeachersController extends Controller
             return response()->json([
                 'success' => false,
                 'title' => 'Error al aprobar la solicitud',
+                'message' => 'Intente nuevamente o comuníquese para soporte',
+                'error' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function editObservationWT(Request $request, $id)
+    {
+        $wt = WeeklyTracking::findOrFail($id);
+        $wt->observation = $request->input('observation');
+        $wt->save();
+
+        return redirect()->back()->with('success', 'Observación guardada con éxito');
+    }
+
+    public function approveWT(Request $request, $id)
+    {
+        try {
+            $wt = WeeklyTracking::findOrFail($request->input('id'))->load('PPS');
+            $pps = $wt->PPS;
+
+            if (auth()->user()->role_id != 2 || $pps->teacher_id != auth()->user()->id) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al aceptar el seguimiento',
+                    'message' => 'No está autorizado a realizar esta acción'
+                ], 400);
+            }
+    
+            $wt->is_accepted = true;
+            $wt->save();
+    
+            // Enviar el correo si es necesario
+            /*Mail::to($pps->Student->User->email)->send(
+                new ApproveWeeklyTrackingEmail(
+                    $pps->Student->name,
+                    $pps->id,
+                    $pps->Teacher->User->email
+                )
+            );*/
+    
+            return redirect()->route('wt.approve', ['id' => $wt->id])->with('success', 'Seguimiento aprobado correctamente');
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al aceptar el seguimiento',
                 'message' => 'Intente nuevamente o comuníquese para soporte',
                 'error' => $e->getMessage()
             ], 400);
