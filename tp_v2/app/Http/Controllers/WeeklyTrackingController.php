@@ -19,7 +19,10 @@ class WeeklyTrackingController extends Controller
 
         $wts = $pps->WeeklyTrackings()->exists();
 
-        return view('weekly_trackings.index', compact('pps', 'wts'));
+        $lastWt = $pps->WeeklyTrackings->last();
+        $isLastWtApproved = $lastWt ? $lastWt->is_accepted : false;
+
+        return view('weekly_trackings.index', compact('pps', 'wts', 'isLastWtApproved'));
     }
 
     public function generateWT(Request $request, $id)
@@ -52,12 +55,13 @@ class WeeklyTrackingController extends Controller
     public function details($id)
     {
         $wt = WeeklyTracking::find($id);
+        $pps = PPS::find($wt->pps_id);
 
         if (!$wt) {
             return redirect()->route('pps.index')->with('error', 'El seguimiento semanal no existe.');
         }
 
-        return view('weekly_trackings.details', compact('wt'));
+        return view('weekly_trackings.details', compact('wt', 'pps'));
     }
 
     public function delete(string $id)

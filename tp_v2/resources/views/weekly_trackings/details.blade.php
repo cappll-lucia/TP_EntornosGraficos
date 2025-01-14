@@ -76,7 +76,7 @@
                     </tr>
                     <tr>
                         <td class="col-4"><b class="font-weight-bold">Estado:</b></td>
-                        <td>{{ $wt->is_accepted ? 'Aprobado' : 'Pendiente' }}</td>
+                        <td>{{ $wt->is_accepted ? 'Aprobado' : 'Pendiente de aprobación' }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -93,10 +93,21 @@
                     </div>
                 @endif
             @endif
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
         </div>
     </div>
 
-    {{-- <a href="{{ route('getWeeklyTrackings') }}" class="btn btn-secondary">Volver</a> --}}
+    <a href="{{ route('getWeeklyTrackings', ['id' => $pps->id]) }}" class="btn btn-link">Volver</a>
 </div>
 
 <!-- Modal para agregar observaciones -->

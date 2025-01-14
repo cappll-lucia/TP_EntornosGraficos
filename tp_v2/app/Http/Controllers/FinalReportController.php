@@ -35,6 +35,12 @@ class FinalReportController extends Controller
         }
     }
 
+    public function details($id){
+        $fr = FinalReport::where('pps_id', $id)->first();
+
+        return view('final_report.details', compact('fr'));
+    }
+
     public function upload(Request $request)
     {
         try {

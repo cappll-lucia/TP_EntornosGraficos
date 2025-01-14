@@ -95,6 +95,16 @@
         }
     });
 
+    if ("{{ $isLastWtApproved }}" == true) {
+        $("#btnSeguimiento").prop('disabled', false).removeClass('btn-secondary').addClass('btn-success');
+    } else {
+        $("#btnSeguimiento").prop('disabled', true).removeClass('btn-success').addClass('btn-secondary');
+    }
+
+    $("#btnSeguimiento").on("click", function () {
+        window.location.href = "{{ route('fr.details', ['id' => $pps->id]) }}";
+    });
+
 </script>    
 
 <style>

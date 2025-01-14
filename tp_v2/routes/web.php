@@ -11,6 +11,7 @@ use App\Http\Controllers\PPSController;
 use App\Http\Middleware\RespRoutes;
 use App\Http\Middleware\TeacherRoutes;
 use App\Http\Controllers\WeeklyTrackingController;
+use App\Http\Controllers\FinalReportController;
 
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('welcome');
@@ -30,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pps/downloadWorkPlan', [PPSController::class, 'downloadWorkPlan']);
     Route::get('/pps/{id}/weeklyTracking', [WeeklyTrackingController::class, 'index'])->name('getWeeklyTrackings');
     Route::get('/weeklyTracking/{id}', [WeeklyTrackingController::class, 'details'])->name('wt.details');
+    Route::get('/finalReport/{id}', [FinalReportController::class, 'details'])->name('fr.details');
 });
 
 

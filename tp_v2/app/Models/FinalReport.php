@@ -11,6 +11,8 @@ class FinalReport extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $table = 'final_report';
+
     protected $fillable = [
         'pps_id',
         'file_path',
