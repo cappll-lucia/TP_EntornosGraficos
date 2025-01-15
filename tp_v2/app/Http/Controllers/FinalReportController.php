@@ -12,6 +12,18 @@ use Illuminate\Support\Facades\Storage;
 
 class FinalReportController extends Controller
 {
+    public function details($id){
+        $fr = FinalReport::where('pps_id', $id)->first();
+
+        $existsFR = FinalReport::where('pps_id', $id)->exists();
+
+        return view('final_report.details', compact('fr', 'existsFR'));
+    }
+
+    public function createFR($id){
+        
+    }
+
     public function download($id)
     {
         try {
@@ -35,13 +47,8 @@ class FinalReportController extends Controller
         }
     }
 
-    public function details($id){
-        $fr = FinalReport::where('pps_id', $id)->first();
 
-        return view('final_report.details', compact('fr'));
-    }
-
-    public function upload(Request $request)
+    public function uploadFR(Request $request)
     {
         try {
             $pps = PPS::find($request->input('pps_id'));
