@@ -33,8 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/weeklyTracking/{id}', [WeeklyTrackingController::class, 'details'])->name('wt.details');
     Route::get('/finalReport/{id}', [FinalReportController::class, 'details'])->name('fr.details');
     Route::get('/pps/{id}/resume', [PPSController::class, 'finalResume'])->name('resume');
-    Route::get('/pps/{id}/resume/wp/download', [PPS::class, 'downloadWorkPlan'])->name('wp.download');
-    Route::get('/pps/{id}/resume/fr/download', [PPS::class, 'download'])->name('fr.download');
+    Route::get('/pps/{id}/resume/wp/download', [PPSController::class, 'downloadWorkPlan'])->name('wp.download');
+    Route::get('/pps/{id}/resume/fr/download', [FinalReportController::class, 'download'])->name('fr.download');
 });
 
 

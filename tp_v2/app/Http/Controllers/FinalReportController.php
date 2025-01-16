@@ -57,15 +57,14 @@ class FinalReportController extends Controller
             $pps = PPS::findOrFail($id);
             $fr = FinalReport::where('pps_id', $pps->id)->first();
 
-            if (!$fr || !Storage::exists('public/final_report/' . $fr->file_path)) {
-                return response()->json([
-                    'success' => false,
-                    'title' => 'Error al descargar el reporte',
-                    'message' => 'El archivo no existe'
-                ], 400);
+            if (Storage::exists($fr->file_path)) {
+                return response()->download(storage_path('app/' . $fr->file_path));
             }
-
-            return response()->download(storage_path('public/final_report/' . $fr->file_path));
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al descargar el plan de trabajo',
+                'message' => 'El archivo no existe'
+            ], 400);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

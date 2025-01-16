@@ -239,26 +239,26 @@ class PPSController extends Controller
     public function downloadWorkPlan($id)
     {
         try {
-            $pp = PPS::find($id);
-            $user = User::where('id', auth()->user()->id)->first();
-            if ($pp->student_id != $user->id && auth()->user()->rol_id == 2) {
-                return response()->json([
-                    'success' => false,
-                    'title' => 'Error al descargar el plan de trabajo',
-                    'message' => 'No está autorizado a realizar esta descarga'
-                ], 400);
-            } else if ($pp->teacher_id != $user->id && auth()->user()->rol_id == 3) {
-                return response()->json([
-                    'success' => false,
-                    'title' => 'Error al descargar el plan de trabajo',
-                    'message' => 'No está autorizado a realizar esta descarga'
-                ], 400);
-            }
+            $pps = PPS::find($id);
+            // $user = User::where('id', auth()->user()->id)->first();
+            // if ($pps->student_id != $user->id && auth()->user()->rol_id == 2) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'title' => 'Error al descargar el plan de trabajo',
+            //         'message' => 'No está autorizado a realizar esta descarga'
+            //     ], 400);
+            // } else if ($pp->teacher_id != $user->id && auth()->user()->rol_id == 3) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'title' => 'Error al descargar el plan de trabajo',
+            //         'message' => 'No está autorizado a realizar esta descarga'
+            //     ], 400);
+            // }
 
-            $work_plan = WorkPlan::where('pp_id', $pp->id)->first();
+            $work_plan = WorkPlan::where('pps_id', $pps->id)->first();
 
             if (Storage::exists($work_plan->file_path)) {
-                return response()->download(storage_path('app/public/' . $work_plan->file_path));
+                return response()->download(storage_path('app/' . $work_plan->file_path));
             }
             return response()->json([
                 'success' => false,

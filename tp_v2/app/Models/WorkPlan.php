@@ -21,6 +21,6 @@ class WorkPlan extends Model
 
     public function PPS()
     {
-        return $this->belongsTo(PPS::class);
+        return $this->belongsTo(PPS::class, 'pps_id');
     }
 }
