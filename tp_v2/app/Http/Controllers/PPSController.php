@@ -258,7 +258,7 @@ class PPSController extends Controller
             $work_plan = WorkPlan::where('pp_id', $pp->id)->first();
 
             if (Storage::exists($work_plan->file_path)) {
-                return response()->download(storage_path('app/' . $work_plan->file_path));
+                return response()->download(storage_path('app/public/' . $work_plan->file_path));
             }
             return response()->json([
                 'success' => false,
@@ -282,7 +282,6 @@ class PPSController extends Controller
             $pps = PPS::findOrFail($id);
             $user = auth()->user();
 
-            // Verifica que el usuario tenga el rol adecuado
             if ($user->role_id != 3) {
                 return response()->json([
                     'success' => false,
@@ -290,7 +289,6 @@ class PPSController extends Controller
                 ], 403);
             }
 
-            // Actualiza el campo `responsible_id` con el ID del usuario actual
             $pps->responsible_id = $user->id;
             $pps->save();
 
@@ -305,6 +303,13 @@ class PPSController extends Controller
                 'error' => $e->getMessage()
             ], 400);
         }
+    }
+
+    public function finalResume($id)
+    {
+        $pps = PPS::with('Responsible', 'Student', 'Teacher', 'WorkPlan', 'FinalReport')->findOrFail($id);
+
+        return view('resume.resume', compact('pps'));
     }
 
 }

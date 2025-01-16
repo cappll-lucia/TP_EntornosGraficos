@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\WeeklyTracking;
+use App\Models\FinalReport;
 
 class StudentsController extends Controller
 {
@@ -131,23 +132,63 @@ class StudentsController extends Controller
         }
     }
 
-    public function saveFile(Request $request, $id)
+    public function saveFileWT(Request $request, $id)
     {
-        $wt = WeeklyTracking::find($id);
+        try {
+            $wt = WeeklyTracking::find($id);
+                
+                $file = $request->file('file');
+                
+                if ($file && $file->isValid()) {
+                    $content = file_get_contents($file->getRealPath());
+                    $path = $file->storeAs('public/weekly_trackings', $file->getClientOriginalName());
+
+                    $wt->file_path = $path;
+                    $wt->save();
+
+                    return redirect()->route('wt.details', ['id' => $wt->id]);
+                    // ->with('success', 'Archivo cargado exitosamente.');
+                }
+
+            return response()->json(['success' => false]);
+        } catch (\Exception $exep) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al guardar el archivo',
+                'message' => 'Intente nuevamente o comuníquese para soporte',
+                'error' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function saveFileFR(Request $request, $id)
+    {
+        try {
+            $fr = FinalReport::find($id);
             
             $file = $request->file('file');
             
             if ($file && $file->isValid()) {
                 $content = file_get_contents($file->getRealPath());
-                $path = $file->storeAs('public/weekly_trackings', $file->getClientOriginalName());
+                $path = $file->storeAs('public/final_report', $file->getClientOriginalName());
 
-                $wt->file_path = $path;
-                $wt->save();
+                $fr->file_path = $path;
+                $fr->save();
 
-                return redirect()->route('wt.details', ['id' => $wt->id])->with('success', 'Archivo cargado exitosamente.');
+                return redirect()->route('fr.details', ['id' => $fr->id])->with('success', 'Archivo cargado exitosamente.');
             }
 
-        return response()->json(['success' => false]);
+            return response()->json(['success' => false]);
+        } catch (\Exception $exep) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al guardar el archivo',
+                'message' => 'Intente nuevamente o comuníquese para soporte',
+                'error' => $e->getMessage()
+            ], 400);
+        }
     }
 
 }

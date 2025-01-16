@@ -52,7 +52,7 @@
                                             <label for="fileInput" class="form-label">Selecciona un archivo</label>
                                             <input type="file" class="form-control" id="fileInput" name="file" accept=".pdf,.doc,.docx" required>
                                         </div>
-                                        <button type="submit" class="btn btn-primary">
+                                        <button id="btnConfirmar" type="submit" class="btn btn-primary">
                                             Confirmar PDF
                                         </button>
                                     </form>
@@ -64,14 +64,12 @@
                         <td class="col-4"><b class="font-weight-bold">Observaciones:</b></td>
                         <td>
                             {{ $wt->observation != null ? $wt->observation : "-" }}
-                        </td>
-                        <td>
                             @if (auth()->user()->role_id == '2' && $wt->is_accepted == 0)
                                 <button class="btn btn-sm waves-effect waves-light" type="button"
                                                     data-bs-toggle="modal" data-bs-target="#modalObservation">
                                                 <i class="bi bi-pencil-square"></i> Escribir observación
                                             </button>
-                            @endif    
+                            @endif 
                         </td>
                     </tr>
                     <tr>
@@ -82,10 +80,10 @@
             </table>
             @if (auth()->user()->role_id == '2' && $wt->is_accepted == 0)
                 @if ($wt->file_path)
-                    <form action="{{ route('wt.approve', ['id' => $wt->id]) }}" method="POST" id="form_data">
+                    <form action="{{ route('wt.approve', ['id' => $wt->id]) }}" method="POST" id="form-approve">
                         @csrf
                         <input type="hidden" name="id" value="{{ $wt->id }}">
-                        <button type="submit" class="btn btn-success btn-sm">Aprobar</button>
+                        <button id="btnAprobar" type="submit" class="btn btn-success btn-sm">Aprobar</button>
                     </form>
                 @else
                     <div class="alert alert-warning" role="alert">
@@ -115,7 +113,7 @@
 <div class="modal fade" id="modalObservation" tabindex="-1" aria-labelledby="modalObservationLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="{{ route('wt.editObservation', $wt->id) }}" method="POST">
+            <form id="observationForm" action="{{ route('wt.editObservation', $wt->id) }}" method="POST">
                 @csrf
                 <div class="modal-header">
                     <br>
@@ -127,7 +125,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button id="btnSaveObservation" type="submit" class="btn btn-primary">Guardar</button>
                 </div>
             </form>
         </div>
@@ -136,78 +134,71 @@
 @endif
 
 <script>
-
-$(document).ready(function () {
-        moment.locale('es');
-
-        let drEvent = $('.dropify').dropify({
-            messages: {
-                'default': 'Arrastre el archivo aquí o haga clic',
-                'replace': 'Arrastre el archivo aquí o haga clic para reemplazar',
-                'remove': 'Eliminar',
-                'error': 'Ops, ocurrió un error.'
-            },
-            error: {
-                'fileSize': 'El tamaño del archivo es demasiado grande. Máximo 2MB.',
-            }
-        });
-
-        drEvent.on('dropify.errors', function (event, element) {
-            console.log('Has Errors');
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const fileInput = document.getElementById('fileInput');
-        const confirmButtonContainer = document.getElementById('confirmButtonContainer');
-
-        // Detectar cuando se selecciona un archivo
-        fileInput.addEventListener('change', function() {
-            if (fileInput.files.length > 0) {
-                confirmButtonContainer.style.display = 'block';
-            } else {
-                confirmButtonContainer.style.display = 'none';
-            }
+    $("#btnConfirmar").on("click", function () {
+        event.preventDefault();
+            Swal.fire({
+                title: 'Esta acción no se puede revertir',
+                text: '¿Estás seguro de subir este archivo?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Confirmar',
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'btn btn-info waves-effect waves-light px-3 py-2',
+                    cancelButton: 'btn btn-default waves-effect waves-light px-3 py-2'
+                }
+            }).then((result) => {
+        if (result.isConfirmed) {
+            $("#uploadForm").submit();
+        }
         });
     });
 
-    function sendFile(id) {
-    let form = $("#form_data");
-    let formData = new FormData();
-    let file = $("input[name='file']")[0].files[0];
-
+    $("#btnSaveObservation").on("click", function (e) {
+    e.preventDefault();
+    let form = $("#observationForm");
     $.ajax({
-            url: $(form).attr('action'),
-            method: $(form).attr('method'),
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                Swal.fire({
-                    title: response.message,
-                    icon: 'success',
-                    showCancelButton: false,
-                    confirmButtonColor: '#1e88e5',
-                    confirmButtonText: 'OK',
-                    allowOutsideClick: false,
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = window.location.origin;
-                    }
-                });
-            },
-            error: function (errorThrown) {
-                Swal.fire({
-                    icon: 'error',
-                    title: errorThrown.responseJSON.title,
-                    text: errorThrown.responseJSON.message,
-                    confirmButtonColor: '#1e88e5',
-                });
-            }
-        });
-}
+        url: form.attr('action'),
+        method: form.attr('method'),
+        data: form.serialize(),
+        success: function (response) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Observación guardada con éxito',
+                confirmButtonColor: '#1e88e5',
+            }).then(() => {
+                location.reload();
+            });
+        },
+        error: function (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo guardar la observación.',
+            });
+        },
+    });
+    });
 
-
+    $("#btnAprobar").on("click", function () {
+        event.preventDefault();
+            Swal.fire({
+                title: 'Esta acción no se puede revertir',
+                text: '¿Seguro deseas aprobar esta solicitud?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Confirmar',
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'btn btn-info waves-effect waves-light px-3 py-2',
+                    cancelButton: 'btn btn-default waves-effect waves-light px-3 py-2'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $("#form-approve").submit();
+                }
+            });
+ });
 </script>
 
 @endsection

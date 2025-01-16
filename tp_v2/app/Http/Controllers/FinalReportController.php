@@ -13,30 +13,59 @@ use Illuminate\Support\Facades\Storage;
 class FinalReportController extends Controller
 {
     public function details($id){
+        $pps = PPS::findOrFail($id);
+
         $fr = FinalReport::where('pps_id', $id)->first();
 
         $existsFR = FinalReport::where('pps_id', $id)->exists();
 
-        return view('final_report.details', compact('fr', 'existsFR'));
+        return view('final_report.details', compact('pps', 'fr', 'existsFR'));
     }
 
-    public function createFR($id){
-        
+    public function createFR($id)
+    {
+        try {
+            if (auth()->user()->role_id != 3) {
+                return redirect()
+                    ->back()
+                    ->with('error', 'No tienes permisos para realizar esta acción.');
+            }
+
+            $pps = PPS::findOrFail($id);
+    
+            $fr = FinalReport::create([
+                'pps_id' => $pps->id,
+                'file_path' => null,
+                'is_accepted' => false,
+                'observations' => '',
+            ]);
+    
+            return redirect()
+            ->route('fr.details', ['id' => $pps->id])
+            ->with('success', 'El reporte final se ha creado exitosamente.');
+
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'Error al crear el Final Report: ' . $e->getMessage());
+        }
     }
 
     public function download($id)
     {
         try {
-            $pps = PPS::findOrFail($id)->load('FinalReport');
-            $fr = $pps->FinalReport;
-            if (Storage::exists($fr->file_path)) {
-                return response()->download(storage_path('app/' . $fr->file_path));
+            $pps = PPS::findOrFail($id);
+            $fr = FinalReport::where('pps_id', $pps->id)->first();
+
+            if (!$fr || !Storage::exists('public/final_report/' . $fr->file_path)) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al descargar el reporte',
+                    'message' => 'El archivo no existe'
+                ], 400);
             }
-            return response()->json([
-                'success' => false,
-                'title' => 'Error al descargar el reporte',
-                'message' => 'El archivo no existe'
-            ], 400);
+
+            return response()->download(storage_path('public/final_report/' . $fr->file_path));
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

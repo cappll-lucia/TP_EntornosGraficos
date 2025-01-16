@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\PPS;
 use App\Models\WeeklyTracking;
+use App\Models\FinalReport;
 
 class TeachersController extends Controller
 {
@@ -206,35 +207,56 @@ class TeachersController extends Controller
 
     public function editObservationWT(Request $request, $id)
     {
-        $wt = WeeklyTracking::findOrFail($id);
-        $wt->observation = $request->input('observation');
-        $wt->save();
+        try {
+            $wt = WeeklyTracking::findOrFail($id);
+            $wt->observation = $request->input('observation');
+            $wt->save();
 
-        return redirect()->back()->with('success', 'Observación guardada con éxito');
+            return redirect()->back()->with('success', 'Observación guardada con éxito');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al editar la solicitud',
+                'message' => 'Intente nuevamente o comuníquese para soporte',
+                'error' => $e->getMessage()
+            ], 400);
+        }
     }
 
     public function approveWT(Request $request, $id)
     {
-        $wt = WeeklyTracking::findOrFail($id);
-        $pps = $wt->pps;
+        try {
+            $wt = WeeklyTracking::findOrFail($id);
+            $pps = $wt->pps;
 
-        if ($wt->id == $pps->weeklyTrackings()->first()->id) {
+            if ($wt->id == $pps->weeklyTrackings()->first()->id) {
+                $wt->is_accepted = true;
+                $wt->save();
+                
+                return redirect()->route('wt.details', ['id' => $pps->id])->with('success', 'Semana aprobada correctamente.');
+            }
+
+            $previousWT = $pps->weeklyTrackings()->where('id', '<', $wt->id)->orderBy('id', 'desc')->first();
+
+            if ($previousWT && !$previousWT->is_accepted) {
+                return redirect()->route('wt.details', ['id' => $wt->id])->with('error', 'No se puede aprobar este seguimiento, ya que el anterior no está aprobado.');
+            }
+
             $wt->is_accepted = true;
             $wt->save();
-            
+
             return redirect()->route('wt.details', ['id' => $wt->id])->with('success', 'Semana aprobada correctamente.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al aprobar la solicitud',
+                'message' => 'Intente nuevamente o comuníquese para soporte',
+                'error' => $e->getMessage()
+            ], 400);
         }
-
-        $previousWT = $pps->weeklyTrackings()->where('id', '<', $wt->id)->orderBy('id', 'desc')->first();
-
-        if ($previousWT && !$previousWT->is_accepted) {
-            return redirect()->route('wt.details', ['id' => $wt->id])->with('error', 'No se puede aprobar este seguimiento, ya que el anterior no está aprobado.');
-        }
-
-        $wt->is_accepted = true;
-        $wt->save();
-
-        return redirect()->route('wt.details', ['id' => $wt->id])->with('success', 'Semana aprobada correctamente.');
+        
 
         // Version original (sin validar que la wt esté aprobada)
         // try {
@@ -270,6 +292,72 @@ class TeachersController extends Controller
         //         'error' => $e->getMessage()
         //     ], 400);
         // }
+    }
+
+    public function editObservationFR(Request $request, $id)
+    {
+        try {
+            $fr = FinalReport::findOrFail($id);
+            $fr->observation = $request->input('observation');
+            $fr->save();
+
+            return redirect()->back()->with('success', 'Observación guardada con éxito');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al aprobar la solicitud',
+                'message' => 'Intente nuevamente o comuníquese para soporte',
+                'error' => $e->getMessage()
+            ], 400);
+        }
+        
+    }
+
+    public function approveFR(Request $request, $id)
+    {
+        try {
+            $fr = FinalReport::findOrFail($id);
+            $pps = PPS::where('pp_id', $fr->pps_id)->first();
+
+            if (auth()->user()->role_id != 2) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al aprobar la solicitud',
+                    'message' => 'El usuario no es un profesor',
+                ], 400);
+            }
+
+            if (auth()->user()->role_id == 2 && $pps->teacher_id != auth()->user()->id) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al aprobar la solicitud',
+                    'message' => 'No tiene permisos para aprobar la solicitud',
+                ], 400);
+            }
+
+            $fr->update([
+                'is_accepted' => 1,
+            ]);
+
+            // Mail::to($application->Student->User->email)->send(
+            //     new ApproveApplicationEmail(
+            //         $application->Student->name,
+            //         $application->id,
+            //         $application->Teacher->User->email
+            //     )
+            // );
+
+            return redirect()->route('fr.details', ['id' => $pps->id])->with('success', 'Reporte final aprobado correctamente');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al aprobar la solicitud',
+                'message' => 'Intente nuevamente o comuníquese para soporte',
+                'error' => $e->getMessage()
+            ], 400);
+        }
     }
 
 }

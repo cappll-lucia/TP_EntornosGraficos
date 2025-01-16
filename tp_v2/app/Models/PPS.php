@@ -40,7 +40,7 @@ class PPS extends Model
 
     public function FinalReport()
     {
-        return $this->hasOne(FinalReport::class);
+        return $this->hasOne(FinalReport::class, 'pps_id');
     }
 
     public function WeeklyTrackings()

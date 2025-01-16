@@ -32,6 +32,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/pps/{id}/weeklyTracking', [WeeklyTrackingController::class, 'index'])->name('getWeeklyTrackings');
     Route::get('/weeklyTracking/{id}', [WeeklyTrackingController::class, 'details'])->name('wt.details');
     Route::get('/finalReport/{id}', [FinalReportController::class, 'details'])->name('fr.details');
+    Route::get('/pps/{id}/resume', [PPSController::class, 'finalResume'])->name('resume');
+    Route::get('/pps/{id}/resume/wp/download', [PPS::class, 'downloadWorkPlan'])->name('wp.download');
+    Route::get('/pps/{id}/resume/fr/download', [PPS::class, 'download'])->name('fr.download');
 });
 
 
@@ -76,13 +79,17 @@ Route::group(['middleware' => ['auth', StudentsRoutes::class]], function () {
 
     Route::delete('/pps/delete/{id}', [PPSController::class, 'destroy'])->name('deletePps');
 
-    Route::post('/weeklyTracking/{id}/saveFile', [StudentsController::class, 'saveFile'])->name('wt.saveFile');
+    Route::post('/weeklyTracking/{id}/saveFile', [StudentsController::class, 'saveFileWT'])->name('wt.saveFile');
+
+    Route::post('/finalReport/{id}/saveFile', [StudentsController::class, 'saveFileFR'])->name('fr.saveFile');
 });
 
 Route::group(['middleware' => ['auth', RespRoutes::class]], function () {
     Route::patch('/pps/tomar/{id}', [PPSController::class, 'tomar'])->name('pps.tomar');
     Route::post('/pps/assignTeacher/{id}', [ResponsiblesController::class, 'assignTeacher'])->name('assignTeacher');
     Route::post('/pps/{id}/weeklyTracking/generate', [WeeklyTrackingController::class, 'generateWT'])->name('wt.generate');
+    Route::post('/finalReports/{id}/create', [FinalReportController::class, 'createFR'])->name('fr.generate');
+
 });
 
 Route::group(['middleware' => ['auth', TeacherRoutes::class]], function () {
@@ -90,6 +97,8 @@ Route::group(['middleware' => ['auth', TeacherRoutes::class]], function () {
     Route::post('/pps/approve/{id}', [TeachersController::class, 'approvePps'])->name('pps.approve');
     Route::post('/weeklyTracking/{id}/editObservation', [TeachersController::class, 'editObservationWT'])->name('wt.editObservation');
     Route::post('/weeklyTracking/{id}/approve', [TeachersController::class, 'approveWT'])->name('wt.approve');
+    Route::post('/finalReport/{id}/editObservation', [TeachersController::class, 'editObservationFR'])->name('fr.editObservation');
+    Route::post('/finalReport/{id}/approve', [TeachersController::class, 'approveFR'])->name('fr.approve');
 });
 
 
