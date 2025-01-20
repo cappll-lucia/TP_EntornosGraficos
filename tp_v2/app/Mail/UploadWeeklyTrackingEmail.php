@@ -16,7 +16,7 @@ class UploadWeeklyTrackingEmail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(private $student_name, private $student_email, private $application_number, private $teacher_name)
+    public function __construct(private $student_name, private $student_email, private $pps_number, private $teacher_name)
     {
         //
     }
@@ -27,7 +27,7 @@ class UploadWeeklyTrackingEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'SYSACAD - Información de estado de solicitud #' . $this->application_number,
+            subject: 'SYSACAD - Información de estado de solicitud #' . $this->pps_number,
         );
     }
 
@@ -37,11 +37,11 @@ class UploadWeeklyTrackingEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'email.uploadFinalReport',
+            view: 'email.uploadWeeklyTracking',
             with: [
                 'student_name' => $this->student_name,
                 'student_email' => $this->student_email,
-                'application_number' => $this->application_number,
+                'pps_number' => $this->pps_number,
                 'teacher_name' => $this->teacher_name,
             ],
         );

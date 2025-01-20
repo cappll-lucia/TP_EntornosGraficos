@@ -10,6 +10,10 @@ use Illuminate\Http\Request;
 use App\Models\PPS;
 use App\Models\WeeklyTracking;
 use App\Models\FinalReport;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ApprovePPSEmail;
+use App\Mail\ApproveWeeklyTrackingEmail;
+use App\Mail\ApproveFinalReportEmail;
 
 class TeachersController extends Controller
 {
@@ -157,7 +161,7 @@ class TeachersController extends Controller
 
     public function approvePps(Request $request, $id) {
         try {
-            $pps = PPS::findOrFail($id);
+            $pps = PPS::with('Student', 'Teacher')->findOrFail($id);
 
             if (auth()->user()->role_id != 2) {
                 return response()->json([
@@ -185,13 +189,21 @@ class TeachersController extends Controller
                 'is_approved' => 1,
             ]);
 
-            // Mail::to($application->Student->User->email)->send(
-            //     new ApproveApplicationEmail(
-            //         $application->Student->name,
-            //         $application->id,
-            //         $application->Teacher->User->email
+            // Mail::to($pps->Student->User->email)->send(
+            //     new ApprovePPSEmail(
+            //         $pps->Student->name,
+            //         $pps->id,
+            //         $pps->Teacher->User->email
             //     )
             // );
+
+            Mail::to($pps->Student->email)->send(
+                new ApprovePPSEmail(
+                    $pps->Student->name,
+                    $pps->id,
+                    $pps->Teacher->email
+                )
+            );
 
             return redirect()->route('pps.details', ['id' => $pps->id])->with('success', 'PPS aprobada correctamente');
         } catch (\Exception $e) {
@@ -228,11 +240,12 @@ class TeachersController extends Controller
     {
         try {
             $wt = WeeklyTracking::findOrFail($id);
-            $pps = $wt->pps;
+            $pps = PPS::with('Student', 'Teacher')->findOrFail($wt->pps_id);
 
             if ($wt->id == $pps->weeklyTrackings()->first()->id) {
-                $wt->is_accepted = true;
-                $wt->save();
+                $wt->update([
+                    'is_accepted' => 1,
+                ]);
                 
                 return redirect()->route('wt.details', ['id' => $pps->id])->with('success', 'Semana aprobada correctamente.');
             }
@@ -243,8 +256,17 @@ class TeachersController extends Controller
                 return redirect()->route('wt.details', ['id' => $wt->id])->with('error', 'No se puede aprobar este seguimiento, ya que el anterior no está aprobado.');
             }
 
-            $wt->is_accepted = true;
-            $wt->save();
+            $wt->update([
+                'is_accepted' => 1,
+            ]);
+
+            Mail::to($pps->Student->email)->send(
+                new ApproveWeeklyTrackingEmail(
+                    $pps->Student->first_name,
+                    $pps->id,
+                    $pps->Teacher->email
+                )
+            );
 
             return redirect()->route('wt.details', ['id' => $wt->id])->with('success', 'Semana aprobada correctamente.');
         } catch (\Exception $e) {
@@ -318,7 +340,7 @@ class TeachersController extends Controller
     {
         try {
             $fr = FinalReport::findOrFail($id);
-            $pps = PPS::where('pp_id', $fr->pps_id)->first();
+            $pps = PPS::with('Student', 'Teacher')->findOrFail($fr->pps_id);
 
             if (auth()->user()->role_id != 2) {
                 return response()->json([
@@ -340,13 +362,13 @@ class TeachersController extends Controller
                 'is_accepted' => 1,
             ]);
 
-            // Mail::to($application->Student->User->email)->send(
-            //     new ApproveApplicationEmail(
-            //         $application->Student->name,
-            //         $application->id,
-            //         $application->Teacher->User->email
-            //     )
-            // );
+            Mail::to($pps->Student->email)->send(
+                new ApproveFinalReportEmail(
+                    $pps->Student->first_name,
+                    $pps->id,
+                    $pps->Teacher->email
+                )
+            );
 
             return redirect()->route('fr.details', ['id' => $pps->id])->with('success', 'Reporte final aprobado correctamente');
         } catch (\Exception $e) {

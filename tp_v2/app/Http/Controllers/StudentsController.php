@@ -8,8 +8,12 @@ use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use App\Models\PPS;
 use App\Models\WeeklyTracking;
 use App\Models\FinalReport;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UploadWeeklyTrackingEmail;
+use App\Mail\UploadFinalReportEmail;
 
 class StudentsController extends Controller
 {
@@ -136,8 +140,9 @@ class StudentsController extends Controller
     {
         try {
             $wt = WeeklyTracking::find($id);
+            $pps = PPS::with('Student', 'Teacher')->findOrFail($wt->pps_id);
                 
-                $file = $request->file('file');
+            $file = $request->file('file');
                 
                 if ($file && $file->isValid()) {
                     $content = file_get_contents($file->getRealPath());
@@ -145,6 +150,15 @@ class StudentsController extends Controller
 
                     $wt->file_path = $path;
                     $wt->save();
+
+                    Mail::to($pps->Teacher->email)->send(
+                        new UploadWeeklyTrackingEmail(
+                            $pps->Student->last_name . ', ' . $pps->Student->first_name,
+                            $pps->Student->email,
+                            $pps->id,
+                            $pps->Teacher->first_name
+                        )
+                    );
 
                     return redirect()->route('wt.details', ['id' => $wt->id]);
                     // ->with('success', 'Archivo cargado exitosamente.');
@@ -166,6 +180,7 @@ class StudentsController extends Controller
     {
         try {
             $fr = FinalReport::find($id);
+            $pps = PPS::with('Student', 'Teacher')->findOrFail($fr->pps_id);
             
             $file = $request->file('file');
             
@@ -175,6 +190,15 @@ class StudentsController extends Controller
 
                 $fr->file_path = $path;
                 $fr->save();
+
+                Mail::to($pps->Teacher->email)->send(
+                    new UploadFinalReportEmail(
+                        $pps->Student->last_name . ', ' . $pps->Student->first_name,
+                        $pps->Student->email,
+                        $pps->id,
+                        $pps->Teacher->first_name
+                    )
+                );
 
                 return redirect()->route('fr.details', ['id' => $fr->id])->with('success', 'Archivo cargado exitosamente.');
             }

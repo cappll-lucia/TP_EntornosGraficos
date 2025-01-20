@@ -16,7 +16,7 @@ class ApproveWeeklyTrackingEmail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(private $student_name, private $application_number, private $teacher_email)
+    public function __construct(private $student_name, private $pps_number, private $teacher_email)
     {
         //
     }
@@ -40,7 +40,7 @@ class ApproveWeeklyTrackingEmail extends Mailable
             view: 'email.approveWeeklyTracking',
             with: [
                 'student_name' => $this->student_name,
-                'application_number' => $this->application_number,
+                'pps_number' => $this->pps_number,
                 'teacher_email' => $this->teacher_email,
             ],
         );

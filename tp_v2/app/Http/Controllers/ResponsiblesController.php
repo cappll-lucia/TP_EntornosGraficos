@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\PPS;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AssignTeacherEmail;
 
 class ResponsiblesController extends Controller
 {
@@ -112,7 +114,7 @@ class ResponsiblesController extends Controller
 
     public function assignTeacher(Request $request, $id) {
         try {
-            $pps = PPS::findOrFail($id);
+            $pps = PPS::with('Student')->findOrFail($id);
             $teacher = User::findOrFail($request->input('selectedTeacher'));
 
             if ($pps->is_finished == 1) {
@@ -129,7 +131,15 @@ class ResponsiblesController extends Controller
                     'message' => 'El usuario no es un responsable',
                 ], 400);
             }
-            // Mail::to($pps->Student->email)->send(new AssignTeacherEmail($pps->Student->name, $teacher->lastname . ', ' . $teacher->name, $teacher->User->email));
+            
+            Mail::to($pps->Student->email)->send(
+                new AssignTeacherEmail(
+                    $pps->Student->first_name, 
+                    $teacher->last_name . ', ' . $teacher->first_name, 
+                    $teacher->email
+                )
+            );
+
             $pps->update([
                 'teacher_id' => $teacher->id,
                 'is_finished' => 1,

@@ -9,14 +9,14 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ApproveApplicationEmail extends Mailable
+class ApproveFinalReportEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(private $student_name, private $application_number, private $teacher_email)
+    public function __construct()
     {
         //
     }
@@ -37,10 +37,10 @@ class ApproveApplicationEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'email.approveApplication',
+            view: 'email.approvFinalReport',
             with: [
                 'student_name' => $this->student_name,
-                'application_number' => $this->application_number,
+                'pps_number' => $this->pps_number,
                 'teacher_email' => $this->teacher_email,
             ],
         );

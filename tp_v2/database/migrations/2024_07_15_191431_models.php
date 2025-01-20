@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string("file_path");
             $table->boolean('is_accepted')->default(false);
             $table->string('observation')->nullable();
+            $table->boolean('is_checked')->default(false);
             $table->softDeletes();
         });
 

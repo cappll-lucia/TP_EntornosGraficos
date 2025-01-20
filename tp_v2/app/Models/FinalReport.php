@@ -18,10 +18,11 @@ class FinalReport extends Model
         'file_path',
         'is_accepted',
         'observation',
+        'is_checked',
     ];
 
     public function PPS()
     {
-        return $this->belongsTo(PPS::class);
+        return $this->belongsTo(PPS::class, 'pps_id');
     }
 }

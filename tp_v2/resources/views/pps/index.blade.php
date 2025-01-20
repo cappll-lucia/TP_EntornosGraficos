@@ -48,10 +48,10 @@
                                     <th>Estudiante</th>
                                     <th>Responsable</th>
                                     <th>Profesor</th>
-                                    <th>PPS</th>
+                                    <th>Descripción</th>
                                     <th>Fecha fin</th>
-                                    <th>Finalizada</th>
                                     <th>Aprobada</th>
+                                    <th>Finalizada</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -72,15 +72,23 @@
                                         <td>{{ $app->description }}</td>
                                         <td>{{ \Carbon\Carbon::parse($app->finish_date)->format('d/m/Y') }}</td>
                                         <td class="text-center">
-                                            @if ($app->is_finished == true)
-                                                <i class="bi bi-check2" style="font-size: 1.5rem"></i>
+                                            @if ($app->FinalReport != null)
+                                                @if ($app->is_accepted == true)
+                                                    <i class="bi bi-check2" style="font-size: 1.5rem"></i>
+                                                @else
+                                                    <i class="bi bi-x-lg" style="font-size: 1.3rem"></i>
+                                                @endif
                                             @else
                                                 <i class="bi bi-x-lg" style="font-size: 1.3rem"></i>
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            @if ($app->is_approved == true)
-                                                <i class="bi bi-check2" style="font-size: 1.5rem"></i>
+                                            @if ($app->FinalReport != null)
+                                                @if ($app->is_checked == true)
+                                                    <i class="bi bi-check2" style="font-size: 1.5rem"></i>
+                                                @else
+                                                    <i class="bi bi-x-lg" style="font-size: 1.3rem"></i>
+                                                @endif
                                             @else
                                                 <i class="bi bi-x-lg" style="font-size: 1.3rem"></i>
                                             @endif
@@ -91,7 +99,13 @@
                                                 {{-- <button class="btn btn-sm btn-danger">Rechazar</button> --}}
                                             </td>
                                         @else
-                                            <td>&nbsp;</td>
+                                            @if ($app->FinalReport != null && $app->FinalReport->is_approved == true)
+                                                <td>
+                                                    <a href="{{ route('resume', $app->id) }}" class="btn btn-sm btn-info">Ver</a>
+                                                </td>
+                                            @else
+                                                <td>&nbsp;</td>
+                                            @endif
                                         @endif    
                                     </tr>
                                 @endforeach

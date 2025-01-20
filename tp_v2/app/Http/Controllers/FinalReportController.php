@@ -76,63 +76,61 @@ class FinalReportController extends Controller
     }
 
 
-    public function uploadFR(Request $request)
-    {
-        try {
-            $pps = PPS::find($request->input('pps_id'));
-            $student = User::where('user_id', auth()->user()->id)->first();
-            if ($pps->student_id != $student->id || auth()->user()->role_id != 1) {
-                return response()->json([
-                    'success' => false,
-                    'title' => 'Error al subir el reporte',
-                    'message' => 'No está autorizado a realizar esta acción'
-                ], 400);
-            }
+    // public function uploadFR(Request $request)
+    // {
+    //     try {
+    //         $pps = PPS::find($request->input('pps_id'));
+    //         $student = User::where('user_id', auth()->user()->id)->first();
 
-            DB::beginTransaction();
-            $file = $request->file('file');
-            if ($file->isValid()) {
-                $path = $file->store('public/final_reports');                
-                FinalReport::create([
-                    'pps_id' => $pps->id,
-                    'file_path' => $path,
-                    'is_accepted' => false,
-                    'observations' => ''
-                ]);
+    //         if ($pps->student_id != $student->id || auth()->user()->role_id != 1) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'title' => 'Error al subir el reporte',
+    //                 'message' => 'No está autorizado a realizar esta acción'
+    //             ], 400);
+    //         }
 
-                /*Mail::to($pps->Teacher->User->email)->send(
-                    new UploadFinalReportEmail(
-                        $pps->Student->lastname . ', ' . $pps->Student->first_name,
-                        $pps->Student->User->email,
-                        $pps->id,
-                        $pps->Teacher->name
-                    )
-                );*/
-                
-                $pps->is_finished = true;
-                $pps->save();
+    //         DB::beginTransaction();
+    //         $file = $request->file('file');
+    //         if ($file->isValid()) {
+    //             $path = $file->store('public/final_reports');                
+    //             FinalReport::create([
+    //                 'pps_id' => $pps->id,
+    //                 'file_path' => $path,
+    //                 'is_accepted' => false,
+    //                 'observations' => ''
+    //             ]);
 
-                DB::commit();
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Reporte subido correctamente',
-                    'data' => $pps
-                ], 201);
-            }
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'title' => 'Error al subir el reporte',
-                'message' => 'El archivo no es válido'
-            ], 400);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'title' => 'Error al subir el reporte',
-                'message' => 'Intente nuevamente o comuníquese para soporte',
-                'error' => $e->getMessage()
-            ], 400);
-        }
-    }
+    //             Mail::to($pps->Teacher->email)->send(
+    //                 new UploadFinalReportEmail(
+    //                     $pps->Student->last_name . ', ' . $pps->Student->first_name,
+    //                     $pps->Student->email,
+    //                     $pps->id,
+    //                     $pps->Teacher->first_name
+    //                 )
+    //             );
+
+    //             DB::commit();
+    //             return response()->json([
+    //                 'success' => true,
+    //                 'message' => 'Reporte subido correctamente',
+    //                 'data' => $pps
+    //             ], 201);
+    //         }
+    //         DB::rollBack();
+    //         return response()->json([
+    //             'success' => false,
+    //             'title' => 'Error al subir el reporte',
+    //             'message' => 'El archivo no es válido'
+    //         ], 400);
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         return response()->json([
+    //             'success' => false,
+    //             'title' => 'Error al subir el reporte',
+    //             'message' => 'Intente nuevamente o comuníquese para soporte',
+    //             'error' => $e->getMessage()
+    //         ], 400);
+    //     }
+    // }
 }

@@ -9,14 +9,14 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class UploadFinalReportEmail extends Mailable
+class ApprovePPSEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(private $student_name, private $student_email, private $pps_number, private $teacher_name)
+    public function __construct(private $student_name, private $pps_number, private $teacher_email)
     {
         //
     }
@@ -27,7 +27,7 @@ class UploadFinalReportEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'SYSACAD - Información de estado de solicitud #' . $this->pps_number,
+            subject: 'SYSACAD - Información de estado de su solicitud',
         );
     }
 
@@ -37,12 +37,11 @@ class UploadFinalReportEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'email.uploadFinalReport',
+            view: 'email.approvePPS',
             with: [
                 'student_name' => $this->student_name,
-                'student_email' => $this->student_email,
                 'pps_number' => $this->pps_number,
-                'teacher_name' => $this->teacher_name,
+                'teacher_email' => $this->teacher_email,
             ],
         );
     }
