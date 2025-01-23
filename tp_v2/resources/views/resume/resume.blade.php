@@ -21,7 +21,7 @@
                     <td>{{ $pps->Student->first_name }} {{ $pps->Student->last_name }}</td>
                     <td>{{ $pps->Teacher->first_name }} {{ $pps->Teacher->last_name }}</td>
                     <td>{{ $pps->Responsible->first_name }} {{ $pps->Responsible->last_name }}</td>
-                    <td>{{ $pps->created_at }}</td>
+                    <td>{{ \Carbon\Carbon::parse($pps->created_at)->format('d/m/Y') }}</td>
                     <td>
                         <a href="{{ route('wp.download', $pps->id) }}" class="btn btn-success btn-sm">Descargar</a>
                 </tr>
@@ -42,7 +42,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>{{ $pps->FinalReport->created_at }}</td>
+                    <td>{{ \Carbon\Carbon::parse($pps->FinalReport->created_at)->format('d/m/Y') }}</td>
                     <td>
                         <a href="{{ route('fr.download', $pps->id) }}" class="btn btn-success btn-sm">Descargar</a>
                     </td>

@@ -73,7 +73,7 @@
                                         <td>{{ \Carbon\Carbon::parse($app->finish_date)->format('d/m/Y') }}</td>
                                         <td class="text-center">
                                             @if ($app->FinalReport != null)
-                                                @if ($app->is_accepted == true)
+                                                @if ($app->FinalReport->is_accepted == true)
                                                     <i class="bi bi-check2" style="font-size: 1.5rem"></i>
                                                 @else
                                                     <i class="bi bi-x-lg" style="font-size: 1.3rem"></i>
@@ -84,7 +84,7 @@
                                         </td>
                                         <td class="text-center">
                                             @if ($app->FinalReport != null)
-                                                @if ($app->is_checked == true)
+                                                @if ($app->FinalReport->is_checked == true)
                                                     <i class="bi bi-check2" style="font-size: 1.5rem"></i>
                                                 @else
                                                     <i class="bi bi-x-lg" style="font-size: 1.3rem"></i>

@@ -184,20 +184,11 @@
                                 @csrf
                                  <!-- Campo oculto para enviar el profesor seleccionado -->
                                 <input type="hidden" id="selectedTeacher" name="selectedTeacher" value="{{ $pps->teacher_id }}">
-                                <td><button id="btnFinalizar" class="btn btn-sm btn-success take-btn">Finalizar</button></td>
+                                <td><button id="btnFinalizar" class="btn btn-sm btn-success take-btn">Cerrar solicitud inicial</button></td>
                             </form>
                             <hr class="m-t-0 m-b-20">
                         @endif
-                        @if(session('success'))
-                            <div class="alert alert-success">
-                                {{ session('success') }}
-                            </div>
-                        @endif
-                        @if(session('error'))
-                            <div class="alert alert-danger">
-                                {{ session('error') }}
-                            </div>
-                        @endif
+                        
                         @if (auth()->user()->role_id == '2' && $pps->is_finished == true && $pps->is_approved == false)
                             <div class="d-flex justify-content-end">
                                 <form id="form-approve" action="{{ route('pps.approve', ['id' => $pps->id]) }}" method="post">
@@ -208,6 +199,16 @@
                                 {{-- Boton de rechazo: envia un mail para que cambie la desc o fechas? se tendria que justamente comentar en observaciones asi se envia eso x mail --}}
                                 <button class="btn btn-sm btn-danger">Rechazar</button>
                                 <hr class="m-t-0 m-b-20">
+                            </div>
+                        @endif
+                        @if(session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        @if(session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
                             </div>
                         @endif
                         </div>

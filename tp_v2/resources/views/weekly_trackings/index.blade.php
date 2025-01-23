@@ -46,9 +46,12 @@
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $counter = 1;
+                @endphp
                 @foreach ($pps->WeeklyTrackings as $wt)
                     <tr data-id="{{ $wt->id }}" class="clickable" data-url="/weeklyTracking"> 
-                        <td>{{ $wt->id }}</td>
+                        <td>{{ $counter }}</td>
                         <td>
                             @if ($wt->file_path == null)
                                 <span class="text-danger">No se ha subido el archivo</span>
@@ -74,6 +77,9 @@
                             @endif
                         </td>
                     </tr>
+                    @php
+                        $counter++;
+                    @endphp
                 @endforeach
                 
             </tbody>
