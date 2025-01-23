@@ -10,7 +10,9 @@ class PPS extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
     protected $table = 'pps';
+    
     protected $fillable = [
         'student_id',
         'responsible_id',

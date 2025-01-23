@@ -31,9 +31,9 @@
                         <h2 class="box-title">Reporte final</h2>
                         @if (auth()->user()->role_id == '3' && !$existsFR)
                             <div class="mb-3">
-                                <form id="generate-wt-form" action="{{ route('fr.generate', $pps->id) }}" method="POST">
+                                <form id="generate-fr-form" action="{{ route('fr.generate', $pps->id) }}" method="POST">
                                     @csrf
-                                    <button id="btnGeneratewts" class="btn btn-primary">
+                                    <button id="btnGenerateFR" class="btn btn-primary">
                                         Generar reporte final
                                     </button>
                                 </form>
@@ -117,41 +117,44 @@
                                 @endif
                             @endif
                             </div>
-                            <div>
+                            @if(isset($fr) && $fr->is_accepted)
+                                <button id="btnSeguimiento" class="btn btn-success">Ir a resumen</button>
+                            @else
                                 <button id="btnSeguimiento" class="btn btn-secondary" disabled>Ir a resumen</button>
+                            @endif
+                        </div>
+
+                        <!-- Modal para agregar observaciones -->
+                        @if (auth()->user()->role_id == '2')
+                        <div class="modal fade" id="modalObservation" tabindex="-1" aria-labelledby="modalObservationLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form id="observationForm" action="{{ route('fr.editObservation', $pps->id) }}" method="POST">
+                                        @csrf
+                                        <div class="modal-header">
+                                            <br>
+                                            <h5 class="modal-title" id="modalObservationLabel">Agregar Observación</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <textarea name="observation" class="form-control" rows="4" placeholder="Escribe tu observación aquí"></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                            <button id="btnSaveObservation" type="submit" class="btn btn-primary">Guardar</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
+                        @endif
+
                     @endif
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Modal para agregar observaciones -->
-@if (auth()->user()->role_id == '2')
-<div class="modal fade" id="modalObservation" tabindex="-1" aria-labelledby="modalObservationLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="observationForm" action="{{ route('fr.editObservation', $fr->id) }}" method="POST">
-                @csrf
-                <div class="modal-header">
-                    <br>
-                    <h5 class="modal-title" id="modalObservationLabel">Agregar Observación</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    <textarea name="observation" class="form-control" rows="4" placeholder="Escribe tu observación aquí"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button id="btnSaveObservation" type="submit" class="btn btn-primary">Guardar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-@endif
 
 <script>
     $("#btnConfirmar").on("click", function () {
@@ -220,11 +223,7 @@
             });
         });
 
-    if ("{{ $fr->is_accepted }}" == 1) {
-        $("#btnSeguimiento").prop('disabled', false).removeClass('btn-secondary').addClass('btn-success');
-    } else {
-        $("#btnSeguimiento").prop('disabled', true).removeClass('btn-success').addClass('btn-secondary');
-    }
+
 
     $("#btnSeguimiento").on("click", function () {
         window.location.href = "{{ route('resume', ['id' => $pps->id]) }}";

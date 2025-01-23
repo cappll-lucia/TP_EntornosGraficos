@@ -189,17 +189,9 @@ class TeachersController extends Controller
                 'is_approved' => 1,
             ]);
 
-            // Mail::to($pps->Student->User->email)->send(
-            //     new ApprovePPSEmail(
-            //         $pps->Student->name,
-            //         $pps->id,
-            //         $pps->Teacher->User->email
-            //     )
-            // );
-
             Mail::to($pps->Student->email)->send(
                 new ApprovePPSEmail(
-                    $pps->Student->name,
+                    $pps->Student->first_name,
                     $pps->id,
                     $pps->Teacher->email
                 )
@@ -278,42 +270,6 @@ class TeachersController extends Controller
                 'error' => $e->getMessage()
             ], 400);
         }
-        
-
-        // Version original (sin validar que la wt esté aprobada)
-        // try {
-        //     $wt = WeeklyTracking::findOrFail($request->input('id'))->load('PPS');
-        //     $pps = $wt->PPS;
-
-        //     if (auth()->user()->role_id != 2 || $pps->teacher_id != auth()->user()->id) {
-        //         return response()->json([
-        //             'success' => false,
-        //             'title' => 'Error al aceptar el seguimiento',
-        //             'message' => 'No está autorizado a realizar esta acción'
-        //         ], 400);
-        //     }
-    
-        //     $wt->is_accepted = true;
-        //     $wt->save();
-    
-        //     // Enviar el correo si es necesario
-        //     /*Mail::to($pps->Student->User->email)->send(
-        //         new ApproveWeeklyTrackingEmail(
-        //             $pps->Student->name,
-        //             $pps->id,
-        //             $pps->Teacher->User->email
-        //         )
-        //     );*/
-    
-        //     return redirect()->route('wt.approve', ['id' => $wt->id])->with('success', 'Seguimiento aprobado correctamente');
-        // } catch (\Exception $e) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'title' => 'Error al aceptar el seguimiento',
-        //         'message' => 'Intente nuevamente o comuníquese para soporte',
-        //         'error' => $e->getMessage()
-        //     ], 400);
-        // }
     }
 
     public function editObservationFR(Request $request, $id)

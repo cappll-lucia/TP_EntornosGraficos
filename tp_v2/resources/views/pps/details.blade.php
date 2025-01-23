@@ -169,30 +169,17 @@
                                     <td>{{ $pps->observation != null ? $pps->observation : "-" }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="col-4"><b class="font-weight-bold">Estado:</b></td>
-                                    @if ($pps->is_approved == 1)
-                                        @if ($pps->is_finished == 1)
-                                            <td><span class="label label-success">Finalizada</span> - <span
-                                                    class="label label-success">Aprobada</span></td>
+                                    <td class="col-4"><b class="font-weight-bold">Estado de la solicitud incial:</b></td>
+                                    @if ($pps->is_approved == true)
+                                            <td><span class="label label-success">Aprobada</span></td>
                                         @else
-                                            <td><span class="label label-warning">Sin finalizar</span> - <span
-                                                    class="label label-success">Aprobada</span></td>
-                                        @endif
-                                    @else
-                                        @if ($pps->is_finished == 1)
-                                            <td><span class="label label-success">Finalizada</span> - <span
-                                                    class="label label-danger">Pendiente de aprobación</span></td>
-                                        @else
-                                            <td><span class="label label-warning">Sin finalizar</span> - <span
-                                                    class="label label-danger">Pendiente de aprobación</span></td>
-                                        @endif
+                                            <td><span class="label label-warning">Pendiente de aprobación</span></td>
                                     @endif
-                                    {{-- <td>{{ $pps->status }}</td> --}}
                                 </tr>
                             </tbody>
                         </table>
                         {{-- <hr class="m-t-0 m-b-20"> --}}
-                        @if (auth()->user()->role_id == '3' && $pps->is_finished === 0)
+                        @if (auth()->user()->role_id == '3' && $pps->is_finished == false)
                             <form id="form-finalizar" action="{{ route('assignTeacher', ['id' => $pps->id]) }}" method="POST">
                                 @csrf
                                  <!-- Campo oculto para enviar el profesor seleccionado -->
@@ -206,7 +193,12 @@
                                 {{ session('success') }}
                             </div>
                         @endif
-                        @if (auth()->user()->role_id == '2' && $pps->is_finished === 1 && $pps->is_approved === 0)
+                        @if(session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+                        @if (auth()->user()->role_id == '2' && $pps->is_finished == true && $pps->is_approved == false)
                             <div class="d-flex justify-content-end">
                                 <form id="form-approve" action="{{ route('pps.approve', ['id' => $pps->id]) }}" method="post">
                                     @csrf
@@ -224,8 +216,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> 
         </div>
+        <br>
     </div>
 </div>
 
@@ -359,7 +352,7 @@ $(document).ready(function () {
             });
         });
 
-    if ("{{ $pps->is_approved }}" == 1) {
+    if ("{{ $pps->is_approved }}" == true) {
         $("#btnSeguimiento").prop('disabled', false).removeClass('btn-secondary').addClass('btn-success');
     } else {
         $("#btnSeguimiento").prop('disabled', true).removeClass('btn-success').addClass('btn-secondary');

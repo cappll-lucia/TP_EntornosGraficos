@@ -84,7 +84,7 @@ class PPSController extends Controller
     public function details($id)
     {
         try {
-            $pps = PPS::with('Responsible', 'Student', 'WorkPlan')->findOrFail($id);
+            $pps = PPS::with('Responsible', 'Student', 'WorkPlan', 'FinalReport')->findOrFail($id);
             $user = User::where('id', auth()->user()->id)->first();
             $wp = WorkPlan::where('pps_id', $pps->id)->first();
             if (($user->role_id == 1 && $user->id != $pps->student_id) || ($user->role_id == 2 && $user->id != $pps->teacher_id) 

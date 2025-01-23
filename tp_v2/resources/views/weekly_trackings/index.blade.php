@@ -4,21 +4,31 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link href="{{ asset('plugins/datatables/media/css/dataTables.bootstrap4.css') }}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+{{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
 <script src="{{ asset('plugins/datatables/datatables.min.js') }}"></script>
 
 <div class="container-fluid">
     <div class="col-md-5 col-8 align-self-center">
         <h3 class="text-themecolor m-b-0 m-t-0">Seguimientos semanales</h3>
         @if (auth()->user()->role_id == '3' && !$wts)
-        <div class="mb-3">
-            <form id="generate-wt-form" action="{{ route('wt.generate', $pps->id) }}" method="POST">
-                @csrf
-                <button id="btnGeneratewts" class="btn btn-primary">
-                    Generar Seguimientos Semanales
-                </button>
-            </form>
-        </div>
+            <div class="mb-3">
+                <form id="generate-wt-form" action="{{ route('wt.generate', $pps->id) }}" method="POST">
+                    @csrf
+                    <button id="btnGeneratewts" class="btn btn-primary">
+                        Generar Seguimientos Semanales
+                    </button>
+                </form>
+            </div>
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
         @endif
     </div>
     @if (!$wts)
@@ -37,7 +47,6 @@
             </thead>
             <tbody>
                 @foreach ($pps->WeeklyTrackings as $wt)
-                    {{-- CAMBIAR URL --}}
                     <tr data-id="{{ $wt->id }}" class="clickable" data-url="/weeklyTracking"> 
                         <td>{{ $wt->id }}</td>
                         <td>
@@ -50,7 +59,7 @@
                             @endif
                         </td>
                         <td>{{ $wt->observation != null ? $wt->observation : "-" }}
-                            @if (auth()->user()->role_id == '2' && $pps->is_finished === 1 && $pps->is_approved === 0)
+                            @if (auth()->user()->role_id == '2' && $pps->is_finished == true && $pps->is_approved == false)
                                     <button class="btn btn-sm waves-effect waves-light" type="button"
                                         data-bs-toggle="modal" data-bs-target="#modalObservation">
                                     <i class="bi bi-pencil-square"></i> Escribir observación
@@ -58,7 +67,7 @@
                             @endif
                         </td>
                         <td>
-                            @if ($wt->is_accepted == 1)
+                            @if ($wt->is_accepted == true)
                                 <i class="bi bi-check2" style="font-size: 1.5rem"></i>
                             @else
                                 <i class="bi bi-x-lg" style="font-size: 1.3rem"></i>

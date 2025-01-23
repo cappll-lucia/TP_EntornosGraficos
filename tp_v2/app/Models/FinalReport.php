@@ -15,7 +15,6 @@ class FinalReport extends Model
 
     protected $fillable = [
         'pps_id',
-        'file_path',
         'is_accepted',
         'observation',
         'is_checked',
