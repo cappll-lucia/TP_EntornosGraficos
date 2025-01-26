@@ -147,9 +147,21 @@
                                 <tr>
                                     <td class="col-4"><b class="font-weight-bold">Plan de trabajo</b></td>
                                     <td>
-                                        <a href="{{ Storage::url($wp->file_path) }}" target="_blank" class="btn btn-success btn-sm">
+                                        <a href="{{ Storage::url($pps->file_path) }}" target="_blank" class="btn btn-success btn-sm">
                                         Ver archivo
                                         </a>
+                                        @if (auth()->user()->role_id == '1' && $pps->is_finished == 0) 
+                                            <form id="uploadForm" action="{{ route('updatePps', ['id' => $pps->id]) }}" method="POST" enctype="multipart/form-data" class="border p-4 rounded shadow-sm">
+                                                @csrf
+                                                <div class="mb-3">
+                                                    <label for="fileInput" class="form-label">Selecciona un archivo</label>
+                                                    <input type="file" class="form-control" id="fileInput" name="file" accept=".pdf,.doc,.docx" required>
+                                                </div>
+                                                <button id="btnConfirmar" type="submit" class="btn btn-primary">
+                                                    Confirmar PDF
+                                                </button>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                                 <tr>
@@ -169,7 +181,7 @@
                                     <td>{{ $pps->observation != null ? $pps->observation : "-" }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="col-4"><b class="font-weight-bold">Estado de la solicitud incial:</b></td>
+                                    <td class="col-4"><b class="font-weight-bold">Estado de la solicitud inicial:</b></td>
                                     @if ($pps->is_approved == true)
                                             <td><span class="label label-success">Aprobada</span></td>
                                         @else
@@ -180,24 +192,31 @@
                         </table>
                         {{-- <hr class="m-t-0 m-b-20"> --}}
                         @if (auth()->user()->role_id == '3' && $pps->is_finished == false)
-                            <form id="form-finalizar" action="{{ route('assignTeacher', ['id' => $pps->id]) }}" method="POST">
+                            {{-- <form id="form-finalizar" action="{{ route('assignTeacher', ['id' => $pps->id]) }}" method="POST">
                                 @csrf
                                  <!-- Campo oculto para enviar el profesor seleccionado -->
                                 <input type="hidden" id="selectedTeacher" name="selectedTeacher" value="{{ $pps->teacher_id }}">
                                 <td><button id="btnFinalizar" class="btn btn-sm btn-success take-btn">Cerrar solicitud inicial</button></td>
-                            </form>
+                            </form> --}}
+                            <form id="form-finalizar">
+                                @csrf
+                                <!-- Campo oculto para enviar el profesor seleccionado -->
+                                <input type="hidden" id="selectedTeacher" name="selectedTeacher" value="{{ $pps->teacher_id }}">
+                                <button 
+                                    id="btnFinalizar" 
+                                    class="btn btn-sm btn-success take-btn" 
+                                    type="button" 
+                                    data-id="{{ $pps->id }}">
+                                    Cerrar solicitud inicial
+                                </button>
+                            </form>                            
                             <hr class="m-t-0 m-b-20">
                         @endif
                         
                         @if (auth()->user()->role_id == '2' && $pps->is_finished == true && $pps->is_approved == false)
                             <div class="d-flex justify-content-end">
-                                <form id="form-approve" action="{{ route('pps.approve', ['id' => $pps->id]) }}" method="post">
-                                    @csrf
-                                    <button id="btnFinish" class="btn btn-success waves-effect waves-light"
-                                        type="button">Aprobar solicitud</button>
-                                </form>
-                                {{-- Boton de rechazo: envia un mail para que cambie la desc o fechas? se tendria que justamente comentar en observaciones asi se envia eso x mail --}}
-                                <button class="btn btn-sm btn-danger">Rechazar</button>
+                                <button id="btnAprobar" class="btn btn-success waves-effect waves-light" data-id="{{$pps->id}}">Aprobar solicitud</button>
+                                <button id="btnRechazar" class="btn btn-danger waves-effect waves-light" data-id="{{$pps->id}}">Rechazar solicitud</button>
                                 <hr class="m-t-0 m-b-20">
                             </div>
                         @endif
@@ -273,41 +292,84 @@ $(document).ready(function () {
     });
     });
 
-    $("#btnFinalizar").on("click", function () {
+    // $("#btnFinalizar").on("click", function () {
+    //     Swal.fire({
+    //         title: 'Esta acción no se puede revertir',
+    //         text: '¿Seguro deseas cerrar esta solicitud?',
+    //         icon: 'question',
+    //         showCancelButton: true,
+    //         confirmButtonText: 'Confirmar',
+    //         buttonsStyling: false,
+    //         customClass: {
+    //             confirmButton: 'btn btn-info waves-effect waves-light px-3 py-2',
+    //             cancelButton: 'btn btn-default waves-effect waves-light px-3 py-2'
+    //         }
+    // }).then((result) => {
+    //     if (result.isConfirmed) {
+    //         let form = $("#form-finalizar");
+    //         $.ajax({
+    //             url: $(form).attr('action'),
+    //             method: $(form).attr('method'),
+    //             data: $(form).serialize(),
+    //             success: function (response) {
+    //                 Swal.fire({
+    //                     icon: 'success',
+    //                     title: '¡Éxito!',
+    //                     text: response.message,
+    //                     confirmButtonColor: '#1e88e5',
+    //                     allowOutsideClick: false,
+    //                 }).then(() => {
+    //                     window.location.reload();
+    //                 });
+    //             },
+    //             error: function (errorThrown) {
+    //                 Swal.fire({
+    //                     icon: 'error',
+    //                     title: errorThrown.responseJSON.title || 'Error',
+    //                     text: errorThrown.responseJSON.message || 'Hubo un error al finalizar la solicitud',
+    //                     confirmButtonColor: '#d33'
+    //                 });
+    //             }
+    //         });
+    //     }
+    //     });
+    // });
+
+    $(document).on("click", "#btnFinalizar", function () {
+    event.stopPropagation();
+    const id = $(this).data('id');
+    
     Swal.fire({
-        title: 'Esta acción no se puede revertir',
-        text: '¿Seguro deseas finalizar esta solicitud?',
-        icon: 'question',
+        title: '¿Está seguro?',
+        text: '¿Desea finalizar esta solicitud?',
+        icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Confirmar',
-        buttonsStyling: false,
-        customClass: {
-            confirmButton: 'btn btn-info waves-effect waves-light px-3 py-2',
-            cancelButton: 'btn btn-default waves-effect waves-light px-3 py-2'
-        }
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, finalizar'
     }).then((result) => {
         if (result.isConfirmed) {
-            let form = $("#form-finalizar");
             $.ajax({
-                url: $(form).attr('action'),
-                method: $(form).attr('method'),
-                data: $(form).serialize(),
+                url: `{{ route('assignTeacher', ':id') }}`.replace(':id', id),
+                method: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    selectedTeacher: $("#selectedTeacher").val(),
+                },
                 success: function (response) {
                     Swal.fire({
                         icon: 'success',
-                        title: response.message,
-                        confirmButtonColor: '#1e88e5',
-                        allowOutsideClick: false,
+                        title: '¡Éxito!',
+                        text: response.message || 'La solicitud ha sido finalizada correctamente.',
                     }).then(() => {
-                        location.reload();
+                        window.location.reload();
                     });
                 },
-                error: function (errorThrown) {
+                error: function (xhr) {
                     Swal.fire({
                         icon: 'error',
-                        title: errorThrown.responseJSON.title || 'Error',
-                        text: errorThrown.responseJSON.message || 'Hubo un error al finalizar la solicitud',
-                        confirmButtonColor: '#d33'
+                        title: xhr.responseJSON?.title || 'Error!',
+                        text: xhr.responseJSON?.message || 'Hubo un problema al finalizar la solicitud.',
                     });
                 }
             });
@@ -316,42 +378,88 @@ $(document).ready(function () {
     });
 
 
-    $("#btnFinish").on("click", function () {
-            Swal.fire({
-                title: 'Esta acción no se puede revertir',
-                text: '¿Seguro deseas aprobar esta solicitud?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Confirmar',
-                buttonsStyling: false,
-                customClass: {
-                    confirmButton: 'btn btn-info waves-effect waves-light px-3 py-2',
-                    cancelButton: 'btn btn-default waves-effect waves-light px-3 py-2'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    let form = $("#form-approve");
-                    $.ajax({
-                        url: $(form).attr('action'),
-                        method: $(form).attr('method'),
-                        data: $(form).serialize(),
-                        success: function(response) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: response.message,
-                                confirmButtonColor: '#1e88e5',
-                                allowOutsideClick: false,
-                            }).then(() => {
-                                location.reload();
-                            });
-                        },
-                        error: function(errorThrown) {
-                            SwalError(errorThrown.responseJSON.title, errorThrown.responseJSON.message);
-                        }
-                    });
-                }
-            });
+
+    $(document).on("click", "#btnAprobar", function () {
+        event.stopPropagation();
+        const id = $(this).data('id');
+        
+        Swal.fire({
+            title: '¿Está seguro?',
+            text: `¿Desea rechazar la PPS?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, tomar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `{{ route('pps.approve', ':id') }}`.replace(':id', id),
+                    method: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                    },
+                    success: function(response) {
+                        Swal.fire(
+                            'Tomado!',
+                            'La solicitud ha sido aprobada con éxito.',
+                            'success'
+                        ).then(() => {
+                            window.location.reload();
+                        });
+                    },
+                    error: function(xhr) {
+                        Swal.fire(
+                            'Error!',
+                            'Hubo un problema al aprobar la solicitud.',
+                            'error'
+                        );
+                    }
+                });
+            }
         });
+    });
+
+    $(document).on("click", "#btnRechazar", function () {
+        event.stopPropagation();
+        const id = $(this).data('id');
+        
+        Swal.fire({
+            title: '¿Está seguro?',
+            text: `¿Desea rechazar la PPS?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, tomar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `{{ route('pps.reject', ':id') }}`.replace(':id', id),
+                    method: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                    },
+                    success: function(response) {
+                        Swal.fire(
+                            'Tomado!',
+                            'La solicitud ha sido rechazada con éxito.',
+                            'success'
+                        ).then(() => {
+                            window.location.reload();
+                        });
+                    },
+                    error: function(xhr) {
+                        Swal.fire(
+                            'Error!',
+                            'Hubo un problema al rechazar la solicitud.',
+                            'error'
+                        );
+                    }
+                });
+            }
+        });
+    });
 
     if ("{{ $pps->is_approved }}" == true) {
         $("#btnSeguimiento").prop('disabled', false).removeClass('btn-secondary').addClass('btn-success');

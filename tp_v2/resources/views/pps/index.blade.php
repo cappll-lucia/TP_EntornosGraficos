@@ -95,8 +95,7 @@
                                         </td>
                                         @if (auth()->user()->role_id == '3' && $app->Responsible == null)
                                             <td>
-                                                <button class="btn btn-sm btn-success take-btn" data-id="{{$app->id}}" data-student="{{ $app->Student->first_name }} {{ $app->Student->last_name }}">Tomar</button>
-                                                {{-- <button class="btn btn-sm btn-danger">Rechazar</button> --}}
+                                                <button id="tomarPPS" class="btn btn-sm btn-success take-btn" data-id="{{$app->id}}" data-student="{{ $app->Student->first_name }} {{ $app->Student->last_name }}">Tomar</button>
                                             </td>
                                         @else
                                             @if ($app->FinalReport != null && $app->FinalReport->is_approved == true)
@@ -177,15 +176,16 @@
                     url: `{{ route('pps.tomar', ':id') }}`.replace(':id', id),
                     method: 'PATCH',
                     data: {
-                        _token: "{{ csrf_token() }}", // Agrega el token CSRF para seguridad
+                        _token: "{{ csrf_token() }}",
                     },
                     success: function(response) {
                         Swal.fire(
                             'Tomado!',
                             'La solicitud ha sido actualizada.',
                             'success'
-                        );
-                        location.reload(); // Recarga la página para actualizar la tabla
+                        ).then(() => {
+                            window.location.reload();
+                        });
                     },
                     error: function(xhr) {
                         Swal.fire(

@@ -24,7 +24,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
     Route::get('/pps', [PPSController::class, 'index'])->name('getPps');
     Route::get('/pps/details/{id}', [PPSController::class, 'details'])->name('pps.details');
     Route::post('/pps/approve/{id}', [TeacherController::class, 'approveApplication']);
@@ -67,20 +66,12 @@ Route::group(['middleware' => ['auth', AdminRoutes::class]], function () {
 });
 
 Route::group(['middleware' => ['auth', StudentsRoutes::class]], function () {
-   // Route::get('/pps', [PPSController::class, 'index'])->name('getPps');
     Route::get('/pps/new', [PPSController::class, 'new'])->name('pps.new');
-    // Route::get('/pps/create', [PPSController::class, 'create']);
-
     Route::post('/pps/create', [PPSController::class, 'create'])->name('pps.create');
-
     Route::get('/pps/edit/{id}', [PPSController::class, 'edit'])->name('editPps');
-
     Route::post('/pps/edit/{id}', [PPSController::class, 'update'])->name('updatePps');
-
     Route::delete('/pps/delete/{id}', [PPSController::class, 'destroy'])->name('deletePps');
-
     Route::post('/weeklyTracking/{id}/saveFile', [StudentsController::class, 'saveFileWT'])->name('wt.saveFile');
-
     Route::post('/finalReport/{id}/saveFile', [StudentsController::class, 'saveFileFR'])->name('fr.saveFile');
 });
 
@@ -89,12 +80,13 @@ Route::group(['middleware' => ['auth', RespRoutes::class]], function () {
     Route::post('/pps/assignTeacher/{id}', [ResponsiblesController::class, 'assignTeacher'])->name('assignTeacher');
     Route::post('/pps/{id}/weeklyTracking/generate', [WeeklyTrackingController::class, 'generateWT'])->name('wt.generate');
     Route::post('/finalReports/{id}/create', [FinalReportController::class, 'createFR'])->name('fr.generate');
-
+    Route::post('/finalReports/{id}/finish', [ResponsiblesController::class, 'finishWholePPS'])->name('fr.finish');
 });
 
 Route::group(['middleware' => ['auth', TeacherRoutes::class]], function () {
     Route::post('/pps/editObservation/{id}', [TeachersController::class, 'editObservationPPS'])->name('pps.editObservation');
     Route::post('/pps/approve/{id}', [TeachersController::class, 'approvePps'])->name('pps.approve');
+    Route::post('/pps/reject/{id}', [TeachersController::class, 'rejectPps'])->name('pps.reject');
     Route::post('/weeklyTracking/{id}/editObservation', [TeachersController::class, 'editObservationWT'])->name('wt.editObservation');
     Route::post('/weeklyTracking/{id}/approve', [TeachersController::class, 'approveWT'])->name('wt.approve');
     Route::post('/finalReport/{id}/editObservation', [TeachersController::class, 'editObservationFR'])->name('fr.editObservation');

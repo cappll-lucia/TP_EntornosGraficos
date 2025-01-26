@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ApprovePPSEmail;
 use App\Mail\ApproveWeeklyTrackingEmail;
 use App\Mail\ApproveFinalReportEmail;
+use App\Mail\RejectPPSEmail;
 
 class TeachersController extends Controller
 {
@@ -155,14 +156,14 @@ class TeachersController extends Controller
                 'title' => 'Error al editar la observación',
                 'message' => 'Intente nuevamente o comuníquese para soporte',
                 'error' => $e->getMessage()
-            ], 400);
+            ], 500);
         }
     }
 
     public function approvePps(Request $request, $id) {
         try {
             $pps = PPS::with('Student', 'Teacher')->findOrFail($id);
-
+    
             if (auth()->user()->role_id != 2) {
                 return response()->json([
                     'success' => false,
@@ -170,6 +171,7 @@ class TeachersController extends Controller
                     'message' => 'El usuario no es un profesor',
                 ], 400);
             }
+    
             if (auth()->user()->role_id == 2 && $pps->teacher_id != auth()->user()->id) {
                 return response()->json([
                     'success' => false,
@@ -177,18 +179,19 @@ class TeachersController extends Controller
                     'message' => 'No tiene permisos para aprobar la solicitud',
                 ], 400);
             }
-            if ($pps->is_finished === 0) {
+    
+            if ($pps->is_finished == 0) {
                 return response()->json([
                     'success' => false,
                     'title' => 'Error al aprobar la solicitud',
                     'message' => 'La solicitud no está finalizada',
                 ], 400);
             }
-
+    
             $pps->update([
                 'is_approved' => 1,
             ]);
-
+    
             Mail::to($pps->Student->email)->send(
                 new ApprovePPSEmail(
                     $pps->Student->first_name,
@@ -196,18 +199,62 @@ class TeachersController extends Controller
                     $pps->Teacher->email
                 )
             );
-
-            return redirect()->route('pps.details', ['id' => $pps->id])->with('success', 'PPS aprobada correctamente');
+    
+            return response()->json([
+                'success' => true,
+                'title' => 'PPS aprobada con éxito',
+                'message' => 'Se notificó al estudiante.',
+            ]);
         } catch (\Exception $e) {
-            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'title' => 'Error al aprobar la solicitud',
                 'message' => 'Intente nuevamente o comuníquese para soporte',
                 'error' => $e->getMessage()
-            ], 400);
+            ], 500);
         }
     }
+
+    public function rejectPps(Request $request, $id) {
+        try {
+            $pps = PPS::with('Student', 'Teacher')->findOrFail($id);
+    
+            if (auth()->user()->role_id != 2 || $pps->teacher_id != auth()->user()->id) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al rechazar la solicitud',
+                    'message' => 'No tiene permisos para rechazar esta solicitud',
+                ], 403);
+            }
+    
+            $pps->update([
+                'is_finished' => 0,
+                'is_approved' => 0,
+            ]);
+    
+            Mail::to($pps->Student->email)->send(
+                new RejectPPSEmail(
+                    $pps->Student->first_name,
+                    $pps->id,
+                    $pps->observation,
+                    $pps->Teacher->email,
+                )
+            );
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Solicitud rechazada correctamente. El estudiante ha sido notificado.',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al rechazar la solicitud',
+                'message' => 'Ocurrió un error. Intente nuevamente.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+        
 
     public function editObservationWT(Request $request, $id)
     {
@@ -224,7 +271,7 @@ class TeachersController extends Controller
                 'title' => 'Error al editar la solicitud',
                 'message' => 'Intente nuevamente o comuníquese para soporte',
                 'error' => $e->getMessage()
-            ], 400);
+            ], 500);
         }
     }
 
@@ -268,7 +315,7 @@ class TeachersController extends Controller
                 'title' => 'Error al aprobar la solicitud',
                 'message' => 'Intente nuevamente o comuníquese para soporte',
                 'error' => $e->getMessage()
-            ], 400);
+            ], 600);
         }
     }
 
@@ -287,7 +334,7 @@ class TeachersController extends Controller
                 'title' => 'Error al aprobar la solicitud',
                 'message' => 'Intente nuevamente o comuníquese para soporte',
                 'error' => $e->getMessage()
-            ], 400);
+            ], 600);
         }
         
     }
@@ -303,7 +350,7 @@ class TeachersController extends Controller
                     'success' => false,
                     'title' => 'Error al aprobar la solicitud',
                     'message' => 'El usuario no es un profesor',
-                ], 400);
+                ], 600);
             }
 
             if (auth()->user()->role_id == 2 && $pps->teacher_id != auth()->user()->id) {
@@ -311,7 +358,7 @@ class TeachersController extends Controller
                     'success' => false,
                     'title' => 'Error al aprobar la solicitud',
                     'message' => 'No tiene permisos para aprobar la solicitud',
-                ], 400);
+                ], 600);
             }
 
             $fr->update([
@@ -334,7 +381,7 @@ class TeachersController extends Controller
                 'title' => 'Error al aprobar la solicitud',
                 'message' => 'Intente nuevamente o comuníquese para soporte',
                 'error' => $e->getMessage()
-            ], 400);
+            ], 600);
         }
     }
 

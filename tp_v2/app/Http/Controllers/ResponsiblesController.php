@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use App\Models\PPS;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AssignTeacherEmail;
+use App\Models\FinalReport;
+use App\Mail\FinishPPSEmail;
 
 class ResponsiblesController extends Controller
 {
@@ -145,14 +147,68 @@ class ResponsiblesController extends Controller
                 'is_finished' => 1,
             ]);
             
-            return redirect()->route('pps.details', ['id' => $pps->id])->with('success', 'Docente asignado correctamente');
+            return response()->json([
+                'success' => true,
+                'title' => 'Finalizado',
+                'message' => 'Has asignado el docente correctamente',
+            ]);
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'title' => 'Error al tomar la solicitud',
                 'message' => 'Intente nuevamente o comuníquese para soporte',
                 'error' => $e->getMessage()
-            ], 400);
+            ], 500);
+        }
+    }
+
+    public function finishWholePPS($id) {
+        try {
+            $pps = PPS::with('Teacher', 'Student', 'Responsible')->findOrFail($id);
+            $fr = FinalReport::where('pps_id', $pps->id)->first();
+
+            if ($fr->is_accepted == false) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al finalizar el proceso de PPS',
+                    'message' => 'El reporte final aún no ha sido aceptado',
+                ], 400);
+            }
+            if (auth()->user()->role_id != 3) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al asignar el docente',
+                    'message' => 'El usuario no es un responsable',
+                ], 400);
+            }
+            
+            Mail::to($pps->Teacher->email)->send(
+                new FinishPPSEmail(
+                    $pps->Student->first_name . ', ' .$pps->Student->last_name, 
+                    $teacher->first_name,
+                    $pps->id, 
+                    $pps->Responsible->email
+                )
+            );
+
+            $fr->update([
+                'is_checked' => true,
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'title' => 'Finalizado',
+                'message' => 'Has finalizado el proceso de PPS correctamente',
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al tomar la solicitud',
+                'message' => 'Intente nuevamente o comuníquese para soporte',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 }

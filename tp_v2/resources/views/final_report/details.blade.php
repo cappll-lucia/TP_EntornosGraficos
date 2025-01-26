@@ -118,9 +118,11 @@
                             @endif
                             </div>
                             @if(isset($fr) && $fr->is_accepted)
-                                <button id="btnSeguimiento" class="btn btn-success">Ir a resumen</button>
-                            @else
-                                <button id="btnSeguimiento" class="btn btn-secondary" disabled>Ir a resumen</button>
+                                <button id="btnResumen" class="btn btn-success">Ir a resumen</button>
+                            @endif
+                            @if(isset($fr) && $fr->is_accepted && !$fr->is_checked && auth()->user()->role_id == '3')
+                                <hr class="m-t-0 m-b-20">
+                                <button id="btnChecked" class="btn btn-success waves-effect waves-light" data-id="{{$pps->id}}">Finalizar PPS</button>
                             @endif
                         </div>
 
@@ -225,8 +227,49 @@
 
 
 
-    $("#btnSeguimiento").on("click", function () {
+    $("#btnResumen").on("click", function () {
         window.location.href = "{{ route('resume', ['id' => $pps->id]) }}";
+    });
+
+    $(document).on("click", "#btnChecked", function () {
+        event.stopPropagation();
+        const id = $(this).data('id');
+        
+        Swal.fire({
+            title: '¿Está seguro?',
+            text: `¿Desea finalizar la PPS?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, tomar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `{{ route('fr.finish', ':id') }}`.replace(':id', id),
+                    method: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                    },
+                    success: function(response) {
+                        Swal.fire(
+                            'Tomado!',
+                            'La solicitud ha sido finalizada.',
+                            'success'
+                        ).then(() => {
+                            window.location.reload();
+                        });
+                    },
+                    error: function(xhr) {
+                        Swal.fire(
+                            'Error!',
+                            'Hubo un problema al finalizar la solicitud.',
+                            'error'
+                        );
+                    }
+                });
+            }
+        });
     });
 </script>
 

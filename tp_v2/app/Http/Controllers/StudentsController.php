@@ -160,8 +160,7 @@ class StudentsController extends Controller
                         )
                     );
 
-                    return redirect()->route('wt.details', ['id' => $wt->id]);
-                    // ->with('success', 'Archivo cargado exitosamente.');
+                    return redirect()->route('wt.details', ['id' => $wt->id])->with('success', 'Archivo cargado exitosamente.');
                 }
 
             return response()->json(['success' => false]);

@@ -84,7 +84,7 @@ class PPSController extends Controller
     public function details($id)
     {
         try {
-            $pps = PPS::with( 'Student', 'Responsible', 'WorkPlan', 'FinalReport')->findOrFail($id);
+            $pps = PPS::with('Student', 'Responsible', 'WorkPlan', 'FinalReport')->findOrFail($id);
 
             $user = User::where('id', auth()->user()->id)->first();
             $wp = WorkPlan::where('pps_id', $pps->id)->first();
@@ -187,11 +187,11 @@ class PPSController extends Controller
         }
     }
 
-    public function update(PPSUpdateRequest $request)
+    public function update(PPSUpdateRequest $request, $id)
     {
         $today = Carbon::now(new \DateTimeZone('America/Argentina/Buenos_Aires'));
         try {
-            $pp = PPS::findOrFail($request->input('id'));
+            $pp = PPS::findOrFail($id);
             $pp->update([
                 'student_id' => $request->input('student_id'),
                 'responsible_id' => $request->input('responsible_id'),
@@ -203,11 +203,7 @@ class PPSController extends Controller
                 'updated_at' => $today
             ]);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Solicitud editada correctamente',
-                'data' => $pp
-            ], 201);
+            return redirect()->route('pps.details')->with('success', 'Solicitud actualizada correctamente');
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
