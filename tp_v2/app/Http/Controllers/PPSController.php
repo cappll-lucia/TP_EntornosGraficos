@@ -14,6 +14,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use PhpParser\Node\Stmt\TryCatch;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use DomPDF\Facade as PDF;
 
 class PPSController extends Controller
 {
@@ -63,7 +66,7 @@ class PPSController extends Controller
                 return view('error', compact('error'));
             }
             $student = User::where('email', $user->email)->first();
-            
+
             $all_teachers = User::where('role_id', 2)->get();
             $teachers = [];
             foreach ($all_teachers as $teach) {
@@ -72,7 +75,7 @@ class PPSController extends Controller
                     $teachers[] = $teach;
                 }
             }
-            return view('pps.new', ['student' => $user,'teachers' => $teachers]);
+            return view('pps.new', ['student' => $user, 'teachers' => $teachers]);
         } catch (\Exception $e) {
             $error = new \stdClass();
             $error->code = 500;
@@ -89,24 +92,26 @@ class PPSController extends Controller
             $user = User::where('id', auth()->user()->id)->first();
             $wp = WorkPlan::where('pps_id', $pps->id)->first();
 
-            if (($user->role_id == 1 && $user->id != $pps->student_id) || ($user->role_id == 2 && $user->id != $pps->teacher_id) 
-            || ($user->role_id == 3 && $user->id != $pps->responsible_id)) {
+            if (
+                ($user->role_id == 1 && $user->id != $pps->student_id) || ($user->role_id == 2 && $user->id != $pps->teacher_id)
+                || ($user->role_id == 3 && $user->id != $pps->responsible_id)
+            ) {
                 $error = new \stdClass();
                 $error->code = 403;
                 $error->message = 'No está autorizado a ver esta solicitud';
                 return view('error', compact('error'));
             }
 
-            if ($pps->responsible_id != null){
+            if ($pps->responsible_id != null) {
 
                 $all_teachers = User::where('role_id', 2)->get();
                 $teachers = [];
                 foreach ($all_teachers as $teach) {
-                $cant_pps = PPS::where('teacher_id', $teach->id)->where('is_finished', 0)->count();
-                if ($cant_pps <= 10) {
-                    $teachers[] = $teach;
+                    $cant_pps = PPS::where('teacher_id', $teach->id)->where('is_finished', 0)->count();
+                    if ($cant_pps <= 10) {
+                        $teachers[] = $teach;
+                    }
                 }
-                }    
             }
 
             return view('pps.details', compact('pps', 'teachers', 'wp'));
@@ -160,14 +165,14 @@ class PPSController extends Controller
 
             if ($file && $file->isValid()) {
                 $content = file_get_contents($file->getRealPath());
-                $path = $file->storeAs('public/work_plan',  $file->getClientOriginalName());
+                $path = $file->storeAs('public/work_plan', $file->getClientOriginalName());
                 WorkPlan::create([
                     'pps_id' => $pps->id,
                     'file_path' => $path,
                     'is_accepted' => 0
                 ]);
             } else {
-                
+
             }
             DB::commit();
 
@@ -310,5 +315,48 @@ class PPSController extends Controller
 
         return view('resume.resume', compact('pps'));
     }
+
+    public function downloadStudentsReport()
+    {
+        try {
+            // Incluir el autoloader de dompdf
+            require_once public_path('dompdf/autoload.inc.php');  // Ajusta la ruta según donde hayas colocado 'dompdf'
+
+            // Obtener las PPS del profesor autenticado
+            $pps = Pps::where('teacher_id', auth()->user()->id)->get();
+            $teacher = auth()->user(); // Obtener el profesor autenticado
+
+            // Usar DomPDF para generar el PDF
+            $dompdf = new \Dompdf\Dompdf();
+            $dompdf->loadHtml(view('pps.report', compact('pps', 'teacher'))->render());
+
+            // (Opcional) Configurar el tamaño del papel y orientación
+            $dompdf->setPaper('A4', 'portrait');
+
+            // Renderizar el PDF (generarlo)
+            $dompdf->render();
+
+            // Descargar el PDF
+            return response()->stream(
+                function () use ($dompdf) {
+                    echo $dompdf->output();
+                },
+                200,
+                [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'attachment; filename="informe_pps.pdf"'
+                ]
+            );
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al descargar el informe final',
+                'message' => 'Intente nuevamente o comuníquese para soporte',
+                'error' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+
 
 }

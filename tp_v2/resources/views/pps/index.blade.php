@@ -40,6 +40,11 @@
                             <a href="{{ route('pps.new') }}" class="btn btn-info btn-rounded waves-effect waves-light">Nueva
                                 solicitud</a>
                         @endif
+                        @if(auth()->user()->role_id == '2')
+                            <a href="{{ route('studentsReport') }}"
+                                class="btn btn-info btn-rounded waves-effect waves-light">Descargar
+                                informe</a>
+                        @endif
                     </div>
                     <div class="mt-1 table-responsive">
                         <table id="DataTable" class="table table-bordered table-striped">
@@ -95,7 +100,9 @@
                                         </td>
                                         @if (auth()->user()->role_id == '3' && $app->Responsible == null)
                                             <td>
-                                                <button id="tomarPPS" class="btn btn-sm btn-success take-btn" data-id="{{$app->id}}" data-student="{{ $app->Student->first_name }} {{ $app->Student->last_name }}">Tomar</button>
+                                                <button id="tomarPPS" class="btn btn-sm btn-success take-btn"
+                                                    data-id="{{$app->id}}"
+                                                    data-student="{{ $app->Student->first_name }} {{ $app->Student->last_name }}">Tomar</button>
                                             </td>
                                         @else
                                             @if ($app->FinalReport != null && $app->FinalReport->is_approved == true)
@@ -105,7 +112,7 @@
                                             @else
                                                 <td>&nbsp;</td>
                                             @endif
-                                        @endif    
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -138,7 +145,7 @@
             },
         },
         "columnDefs": [
-        { "orderable": false, "targets": -1 }, 
+            { "orderable": false, "targets": -1 },
         ]
 
     });
@@ -151,9 +158,9 @@
 
     $(document).on("click", ".clickable", function (event) {
         if (!$(event.target).closest('.btn').length) {
-        let url = $(this).data('url');
-        let id = $(this).data('id');
-        window.location.href = url + "/" + id;
+            let url = $(this).data('url');
+            let id = $(this).data('id');
+            window.location.href = url + "/" + id;
         }
     });
 
@@ -161,7 +168,7 @@
         event.stopPropagation();
         const id = $(this).data('id');
         const studentName = $(this).data('student');
-        
+
         Swal.fire({
             title: '¿Está seguro?',
             text: `¿Desea tomar la pps de ${studentName}?`,
@@ -178,7 +185,7 @@
                     data: {
                         _token: "{{ csrf_token() }}",
                     },
-                    success: function(response) {
+                    success: function (response) {
                         Swal.fire(
                             'Tomado!',
                             'La solicitud ha sido actualizada.',
@@ -187,7 +194,7 @@
                             window.location.reload();
                         });
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         Swal.fire(
                             'Error!',
                             'Hubo un problema al actualizar la solicitud.',
@@ -208,6 +215,5 @@
     .clickable:hover {
         background-color: #7abcfd8c;
     }
-
 </style>
 @endsection
