@@ -192,15 +192,8 @@
                         </table>
                         {{-- <hr class="m-t-0 m-b-20"> --}}
                         @if (auth()->user()->role_id == '3' && $pps->is_finished == false)
-                            {{-- <form id="form-finalizar" action="{{ route('assignTeacher', ['id' => $pps->id]) }}" method="POST">
-                                @csrf
-                                 <!-- Campo oculto para enviar el profesor seleccionado -->
-                                <input type="hidden" id="selectedTeacher" name="selectedTeacher" value="{{ $pps->teacher_id }}">
-                                <td><button id="btnFinalizar" class="btn btn-sm btn-success take-btn">Cerrar solicitud inicial</button></td>
-                            </form> --}}
                             <form id="form-finalizar">
                                 @csrf
-                                <!-- Campo oculto para enviar el profesor seleccionado -->
                                 <input type="hidden" id="selectedTeacher" name="selectedTeacher" value="{{ $pps->teacher_id }}">
                                 <button 
                                     id="btnFinalizar" 
@@ -215,6 +208,7 @@
                         
                         @if (auth()->user()->role_id == '2' && $pps->is_finished == true && $pps->is_approved == false)
                             <div class="d-flex justify-content-end">
+                                <hr class="m-t-0 m-b-20">
                                 <button id="btnAprobar" class="btn btn-success waves-effect waves-light" data-id="{{$pps->id}}">Aprobar solicitud</button>
                                 <button id="btnRechazar" class="btn btn-danger waves-effect waves-light" data-id="{{$pps->id}}">Rechazar solicitud</button>
                                 <hr class="m-t-0 m-b-20">
@@ -292,49 +286,6 @@ $(document).ready(function () {
     });
     });
 
-    // $("#btnFinalizar").on("click", function () {
-    //     Swal.fire({
-    //         title: 'Esta acción no se puede revertir',
-    //         text: '¿Seguro deseas cerrar esta solicitud?',
-    //         icon: 'question',
-    //         showCancelButton: true,
-    //         confirmButtonText: 'Confirmar',
-    //         buttonsStyling: false,
-    //         customClass: {
-    //             confirmButton: 'btn btn-info waves-effect waves-light px-3 py-2',
-    //             cancelButton: 'btn btn-default waves-effect waves-light px-3 py-2'
-    //         }
-    // }).then((result) => {
-    //     if (result.isConfirmed) {
-    //         let form = $("#form-finalizar");
-    //         $.ajax({
-    //             url: $(form).attr('action'),
-    //             method: $(form).attr('method'),
-    //             data: $(form).serialize(),
-    //             success: function (response) {
-    //                 Swal.fire({
-    //                     icon: 'success',
-    //                     title: '¡Éxito!',
-    //                     text: response.message,
-    //                     confirmButtonColor: '#1e88e5',
-    //                     allowOutsideClick: false,
-    //                 }).then(() => {
-    //                     window.location.reload();
-    //                 });
-    //             },
-    //             error: function (errorThrown) {
-    //                 Swal.fire({
-    //                     icon: 'error',
-    //                     title: errorThrown.responseJSON.title || 'Error',
-    //                     text: errorThrown.responseJSON.message || 'Hubo un error al finalizar la solicitud',
-    //                     confirmButtonColor: '#d33'
-    //                 });
-    //             }
-    //         });
-    //     }
-    //     });
-    // });
-
     $(document).on("click", "#btnFinalizar", function () {
     event.stopPropagation();
     const id = $(this).data('id');
@@ -385,7 +336,7 @@ $(document).ready(function () {
         
         Swal.fire({
             title: '¿Está seguro?',
-            text: `¿Desea rechazar la PPS?`,
+            text: `¿Desea aprobar la PPS?`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

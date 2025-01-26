@@ -78,13 +78,9 @@
                     </tr>
                 </tbody>
             </table>
-            @if (auth()->user()->role_id == '2' && $wt->is_accepted == 0)
+            @if (auth()->user()->role_id == '2' && $wt->is_accepted == false)
                 @if ($wt->file_path)
-                    <form action="{{ route('wt.approve', ['id' => $wt->id]) }}" method="POST" id="form-approve">
-                        @csrf
-                        <input type="hidden" name="id" value="{{ $wt->id }}">
-                        <button id="btnAprobar" type="submit" class="btn btn-success btn-sm">Aprobar</button>
-                    </form>
+                    <button id="btnAprobar" class="btn btn-success btn-sm" data-id="{{$wt->id}}">Aprobar</button>
                 @else
                     <div class="alert alert-warning" role="alert">
                         No se ha subido el seguimiento semanal en PDF.
@@ -180,25 +176,47 @@
     });
     });
 
-    $("#btnAprobar").on("click", function () {
-        event.preventDefault();
-            Swal.fire({
-                title: 'Esta acción no se puede revertir',
-                text: '¿Seguro deseas aprobar esta solicitud?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Confirmar',
-                buttonsStyling: false,
-                customClass: {
-                    confirmButton: 'btn btn-info waves-effect waves-light px-3 py-2',
-                    cancelButton: 'btn btn-default waves-effect waves-light px-3 py-2'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $("#form-approve").submit();
-                }
-            });
- });
+    $(document).on("click", "#btnAprobar", function () {
+        event.stopPropagation();
+        const id = $(this).data('id');
+        
+        Swal.fire({
+            title: '¿Está seguro?',
+            text: `¿Desea aprobar el seguimiento semanal?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, aprobar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `{{ route('wt.approve', ':id') }}`.replace(':id', id),
+                    method: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                    },
+                    success: function(response) {
+                        Swal.fire(
+                            'Aprobado!',
+                            'El seguimiento semanal ha sido aprobado con éxito.',
+                            'success'
+                        ).then(() => {
+                            window.location.reload();
+                        });
+                    },
+                    error: function(xhr) {
+                        Swal.fire(
+                            'Error!',
+                            'Hubo un problema al aprobar el seguimiento semanal.',
+                            'error'
+                        );
+                    }
+                });
+            }
+        });
+    });
+
 </script>
 
 @endsection

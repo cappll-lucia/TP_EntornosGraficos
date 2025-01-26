@@ -26,6 +26,7 @@ return new class extends Migration
             $table->boolean('is_approved')->default(false);
             $table->string('description');
             $table->string('observation')->nullable();
+            $table->boolean('is_editable')->default(false);
             $table->softDeletes();
         });
     }

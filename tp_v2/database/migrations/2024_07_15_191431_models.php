@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->foreignId('pps_id')->constraint('pps');
             $table->string("file_path");
             $table->boolean('is_accepted')->default(false);
+            $table->boolean('is_editable')->default(false);
             $table->string('observation')->nullable();
             $table->boolean('is_checked')->default(false);
             $table->softDeletes();
@@ -36,6 +37,7 @@ return new class extends Migration {
             $table->foreignId('pps_id')->constraint('pps');
             $table->string("file_path");
             $table->boolean('is_accepted')->default(false);
+            $table->boolean('is_editable')->default(false);
             $table->string('observation')->nullable();
             $table->softDeletes();
         });
