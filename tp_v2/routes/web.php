@@ -89,8 +89,10 @@ Route::group(['middleware' => ['auth', TeacherRoutes::class]], function () {
     Route::get('/studentsReport', [PPSController::class, 'downloadStudentsReport'])->name('studentsReport');
     Route::post('/weeklyTracking/{id}/editObservation', [TeachersController::class, 'editObservationWT'])->name('wt.editObservation');
     Route::post('/weeklyTracking/{id}/approve', [TeachersController::class, 'approveWT'])->name('wt.approve');
+    Route::post('/weeklyTracking/{id}/reject', [TeachersController::class, 'rejectWT'])->name('wt.reject');
     Route::post('/finalReport/{id}/editObservation', [TeachersController::class, 'editObservationFR'])->name('fr.editObservation');
     Route::post('/finalReport/{id}/approve', [TeachersController::class, 'approveFR'])->name('fr.approve');
+    Route::post('/finalReport/{id}/reject', [TeachersController::class, 'rejectFR'])->name('fr.reject');
 });
 
 

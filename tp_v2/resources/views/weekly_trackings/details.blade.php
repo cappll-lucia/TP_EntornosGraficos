@@ -44,20 +44,20 @@
                                 </a>
                             @else
                                 <span class="text-danger">No se ha subido el archivo</span>
-                                @if (auth()->user()->role_id == '1')
+                            @endif
+                            @if (auth()->user()->role_id == '1' && $wt->is_editable == 1)
                                     <br>
                                     <form id="uploadForm" action="{{ route('wt.saveFile', ['id' => $wt->id]) }}" method="POST" enctype="multipart/form-data" class="border p-4 rounded shadow-sm">
                                         @csrf
                                         <div class="mb-3">
                                             <label for="fileInput" class="form-label">Selecciona un archivo</label>
-                                            <input type="file" class="form-control" id="fileInput" name="file" accept=".pdf,.doc,.docx" required>
+                                            <input type="file" class="form-control" id="fileInput" name="file" accept=".pdf" required>
                                         </div>
                                         <button id="btnConfirmar" type="submit" class="btn btn-primary">
                                             Confirmar PDF
                                         </button>
                                     </form>
                                 @endif
-                            @endif
                         </td>
                     </tr>
                     <tr>
@@ -79,8 +79,9 @@
                 </tbody>
             </table>
             @if (auth()->user()->role_id == '2' && $wt->is_accepted == false)
-                @if ($wt->file_path)
-                    <button id="btnAprobar" class="btn btn-success btn-sm" data-id="{{$wt->id}}">Aprobar</button>
+                @if ($wt->file_path && $wt->is_editable == false)
+                    <button id="btnAprobar" class="btn btn-success waves-effect waves-light" data-id="{{$wt->id}}">Aprobar</button>
+                    <button id="btnRechazar" class="btn btn-danger waves-effect waves-light" data-id="{{$wt->id}}">Rechazar</button>
                 @else
                     <div class="alert alert-warning" role="alert">
                         No se ha subido el seguimiento semanal en PDF.
@@ -101,7 +102,14 @@
         </div>
     </div>
 
-    <a href="{{ route('getWeeklyTrackings', ['id' => $pps->id]) }}" class="btn btn-link">Volver</a>
+    <div>
+        <a href="{{ route('getWeeklyTrackings', ['id' => $pps->id]) }}" class="btn btn-link">Volver</a>
+    </div>
+    <div id="loadingSpinner" class="d-none">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+    </div>
 </div>
 
 <!-- Modal para agregar observaciones -->
@@ -145,6 +153,7 @@
                 }
             }).then((result) => {
         if (result.isConfirmed) {
+            $("#loadingSpinner").removeClass('d-none');
             $("#uploadForm").submit();
         }
         });
@@ -190,27 +199,78 @@
             confirmButtonText: 'Sí, aprobar'
         }).then((result) => {
             if (result.isConfirmed) {
+                $("#loadingSpinner").removeClass('d-none');
+
                 $.ajax({
                     url: `{{ route('wt.approve', ':id') }}`.replace(':id', id),
                     method: 'POST',
                     data: {
                         _token: "{{ csrf_token() }}",
                     },
-                    success: function(response) {
-                        Swal.fire(
-                            'Aprobado!',
-                            'El seguimiento semanal ha sido aprobado con éxito.',
-                            'success'
-                        ).then(() => {
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: response.message || 'El seguimiento ha sido aprobado correctamente.',
+                        }).then(() => {
                             window.location.reload();
                         });
                     },
-                    error: function(xhr) {
-                        Swal.fire(
-                            'Error!',
-                            'Hubo un problema al aprobar el seguimiento semanal.',
-                            'error'
-                        );
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: xhr.responseJSON?.title || 'Error!',
+                            text: xhr.responseJSON?.message || 'Hubo un problema al aprobar el seguimiento.',
+                        });
+                    },
+                    complete: function () {
+                        $("#loadingSpinner").addClass('d-none');
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).on("click", "#btnRechazar", function () {
+        event.stopPropagation();
+        const id = $(this).data('id');
+        
+        Swal.fire({
+            title: '¿Está seguro?',
+            text: `¿Desea rechazar el seguimiento semanal?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, rechazar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $("#loadingSpinner").removeClass('d-none');
+
+                $.ajax({
+                    url: `{{ route('wt.reject', ':id') }}`.replace(':id', id),
+                    method: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: response.message || 'El seguimiento ha sido rechazado correctamente.',
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: xhr.responseJSON?.title || 'Error!',
+                            text: xhr.responseJSON?.message || 'Hubo un problema al rechazar el seguimiento.',
+                        });
+                    },
+                    complete: function () {
+                        $("#loadingSpinner").addClass('d-none');
                     }
                 });
             }

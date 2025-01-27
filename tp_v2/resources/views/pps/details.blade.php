@@ -385,7 +385,7 @@ $(document).ready(function () {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, tomar'
+            confirmButtonText: 'Sí, aprobar'
         }).then((result) => {
             if (result.isConfirmed) {
                 $("#loadingSpinner").removeClass('d-none');
@@ -398,7 +398,7 @@ $(document).ready(function () {
                     },
                     success: function(response) {
                         Swal.fire(
-                            'Tomado!',
+                            'Aprobado!',
                             'La solicitud ha sido aprobada con éxito.',
                             'success'
                         ).then(() => {

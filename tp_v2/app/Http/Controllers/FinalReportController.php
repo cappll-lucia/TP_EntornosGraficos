@@ -26,9 +26,11 @@ class FinalReportController extends Controller
     {
         try {
             if (auth()->user()->role_id != 3) {
-                return redirect()
-                    ->back()
-                    ->with('error', 'No tienes permisos para realizar esta acción.');
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al crear el reporte',
+                    'message' => 'No está autorizado para realizar esta acción',
+                ], 400);
             }
 
             $pps = PPS::findOrFail($id);
@@ -45,9 +47,12 @@ class FinalReportController extends Controller
             ->with('success', 'El reporte final se ha creado exitosamente.');
 
         } catch (\Exception $e) {
-            return redirect()
-                ->back()
-                ->with('error', 'Error al crear el Final Report: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al crear el reporte',
+                'message' => 'Intente nuevamente o comuníquese para soporte',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 

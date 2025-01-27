@@ -57,20 +57,20 @@
                                                 </a>
                                             @else
                                                 <span class="text-danger">No se ha subido el archivo</span>
-                                                @if (auth()->user()->role_id == '1')
+                                            @endif
+                                            @if (auth()->user()->role_id == '1' && $fr->is_editable == true)
                                                     <br>
                                                     <form id="uploadForm" action="{{ route('fr.saveFile', ['id' => $fr->id]) }}" method="POST" enctype="multipart/form-data" class="border p-4 rounded shadow-sm">
                                                         @csrf
                                                         <div class="mb-3">
                                                             <label for="fileInput" class="form-label">Selecciona un archivo</label>
-                                                            <input type="file" class="form-control" id="fileInput" name="file" accept=".pdf,.doc,.docx" required>
+                                                            <input type="file" class="form-control" id="fileInput" name="file" accept=".pdf" required>
                                                         </div>
                                                         <button id="btnConfirmar" type="submit" class="btn btn-primary">
                                                             Confirmar PDF
                                                         </button>
                                                     </form>
                                                 @endif
-                                            @endif
                                         </td>
                                     </tr>
                                     <tr>
@@ -99,15 +99,12 @@
                                 </div>
                             @endif
                             @if (auth()->user()->role_id == '2' && $fr->is_accepted === 0)
-                                @if ($fr->file_path)
+                                @if ($fr->file_path && $fr->is_editable == false)
                                     <div class="d-flex justify-content-end">
-                                        <form id="form-approve" action="{{ route('fr.approve', ['id' => $fr->id]) }}" method="post">
-                                            @csrf
                                             <button id="btnAprobar" class="btn btn-success waves-effect waves-light"
-                                                type="button">Aprobar solicitud</button>
-                                        </form>
-                                        {{-- Boton de rechazo: envia un mail para que cambie la desc o fechas? se tendria que justamente comentar en observaciones asi se envia eso x mail --}}
-                                        <button class="btn btn-sm btn-danger">Rechazar</button>
+                                                data-id="{{$pps->id}}">Aprobar solicitud</button>
+                                                <button id="btnRechazar" class="btn btn-danger waves-effect waves-light" 
+                                                data-id="{{$pps->id}}">Rechazar solicitud</button>
                                         <hr class="m-t-0 m-b-20">
                                     </div>
                                 @else
@@ -153,6 +150,11 @@
 
                     @endif
                 </div>
+                <div id="loadingSpinner" class="d-none">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -174,6 +176,7 @@
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
+                    $("#loadingSpinner").removeClass('d-none');
                     $("#uploadForm").submit();
                 }
             });
@@ -205,27 +208,97 @@
     });
     });
 
-    $("#btnAprobar").on("click", function () {
-        event.preventDefault();
-            Swal.fire({
-                title: 'Esta acción no se puede revertir',
-                text: '¿Seguro deseas aprobar esta solicitud?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Confirmar',
-                buttonsStyling: false,
-                customClass: {
-                    confirmButton: 'btn btn-info waves-effect waves-light px-3 py-2',
-                    cancelButton: 'btn btn-default waves-effect waves-light px-3 py-2'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $("#form-approve").submit();
-                }
-            });
+    $(document).on("click", "#btnAprobar", function () {
+        event.stopPropagation();
+        const id = $(this).data('id');
+        
+        Swal.fire({
+            title: '¿Está seguro?',
+            text: `¿Desea aprobar el reporte final?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, aprobar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $("#loadingSpinner").removeClass('d-none');
+
+                $.ajax({
+                    url: `{{ route('fr.approve', ':id') }}`.replace(':id', id),
+                    method: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: response.message || 'El reporte final ha sido aprobado correctamente.',
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: xhr.responseJSON?.title || 'Error!',
+                            text: xhr.responseJSON?.message || 'Hubo un problema al aprobar el reporte.',
+                        });
+                    },
+                    complete: function () {
+                        $("#loadingSpinner").addClass('d-none');
+                    }
+                });
+            }
         });
+    });
 
+    $(document).on("click", "#btnRechazar", function () {
+        event.stopPropagation();
+        const id = $(this).data('id');
+        
+        Swal.fire({
+            title: '¿Está seguro?',
+            text: `¿Desea rechazar el reporte final?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, rechazar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $("#loadingSpinner").removeClass('d-none');
 
+                $.ajax({
+                    url: `{{ route('fr.reject', ':id') }}`.replace(':id', id),
+                    method: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: response.message || 'El reporte ha sido rechazado correctamente.',
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: xhr.responseJSON?.title || 'Error!',
+                            text: xhr.responseJSON?.message || 'Hubo un problema al rechazar el reporte.',
+                        });
+                    },
+                    complete: function () {
+                        $("#loadingSpinner").addClass('d-none');
+                    }
+                });
+            }
+        });
+    });
 
     $("#btnResumen").on("click", function () {
         window.location.href = "{{ route('resume', ['id' => $pps->id]) }}";
@@ -242,30 +315,35 @@
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, tomar'
+            confirmButtonText: 'Sí, finalizar'
         }).then((result) => {
             if (result.isConfirmed) {
+                $("#loadingSpinner").removeClass('d-none');
+                
                 $.ajax({
                     url: `{{ route('fr.finish', ':id') }}`.replace(':id', id),
                     method: 'POST',
                     data: {
                         _token: "{{ csrf_token() }}",
                     },
-                    success: function(response) {
-                        Swal.fire(
-                            'Tomado!',
-                            'La solicitud ha sido finalizada.',
-                            'success'
-                        ).then(() => {
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: response.message || 'El proceso de PPS ha sido cerrado correctamente.',
+                        }).then(() => {
                             window.location.reload();
                         });
                     },
-                    error: function(xhr) {
-                        Swal.fire(
-                            'Error!',
-                            'Hubo un problema al finalizar la solicitud.',
-                            'error'
-                        );
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: xhr.responseJSON?.title || 'Error!',
+                            text: xhr.responseJSON?.message || 'Hubo un problema al cerrar el proceoso de PPS.',
+                        });
+                    },
+                    complete: function () {
+                        $("#loadingSpinner").addClass('d-none');
                     }
                 });
             }

@@ -15,6 +15,8 @@ use App\Mail\ApprovePPSEmail;
 use App\Mail\ApproveWeeklyTrackingEmail;
 use App\Mail\ApproveFinalReportEmail;
 use App\Mail\RejectPPSEmail;
+use App\Mail\RejectWTEmail;
+use App\Mail\RejectRFEmail;
 
 class TeachersController extends Controller
 {
@@ -245,13 +247,6 @@ class TeachersController extends Controller
                 'success' => true,
                 'message' => 'Solicitud rechazada correctamente. El estudiante ha sido notificado.',
             ], 200);
-
-            // $updateResult = $pps->update([
-            //     'is_approved' => false,
-            //     'is_editable' => true,
-            // ]);
-            
-            // dd($updateResult); // Esto debería devolver `true` si la actualización fue exitosa.
             
         } catch (\Exception $e) {
             return response()->json([
@@ -293,13 +288,22 @@ class TeachersController extends Controller
                     'is_accepted' => 1,
                 ]);
                 
-                return redirect()->route('wt.details', ['id' => $pps->id])->with('success', 'Semana aprobada correctamente.');
+                return response()->json([
+                    'success' => true,
+                    'title' => 'Aprobado!',
+                    'message' => 'Semana aprobada correctamente.',
+                ], 200);
             }
 
             $previousWT = $pps->weeklyTrackings()->where('id', '<', $wt->id)->orderBy('id', 'desc')->first();
 
             if ($previousWT && !$previousWT->is_accepted) {
-                return redirect()->route('wt.details', ['id' => $wt->id])->with('error', 'No se puede aprobar este seguimiento, ya que el anterior no está aprobado.');
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al aprobar la solicitud',
+                    'message' => 'El seguimiento anterior no ha sido aprobado',
+                    'error' => $e->getMessage()
+                ], 400);
             }
 
             $wt->update([
@@ -314,7 +318,11 @@ class TeachersController extends Controller
                 )
             );
 
-            return redirect()->route('wt.details', ['id' => $wt->id])->with('success', 'Semana aprobada correctamente.');
+            return response()->json([
+                'success' => true,
+                'title' => 'Aprobado!',
+                'message' => 'Semana aprobada correctamente.',
+            ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -322,7 +330,48 @@ class TeachersController extends Controller
                 'title' => 'Error al aprobar la solicitud',
                 'message' => 'Intente nuevamente o comuníquese para soporte',
                 'error' => $e->getMessage()
-            ], 600);
+            ], 500);
+        }
+    }
+
+    public function rejectWT(Request $request, $id) {
+        try {
+            $wt = WeeklyTracking::findOrFail($id);
+            $pps = PPS::with('Student', 'Teacher')->findOrFail($wt->pps_id);
+    
+            if (auth()->user()->role_id != 2 || $pps->teacher_id != auth()->user()->id) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al rechazar la solicitud',
+                    'message' => 'No tiene permisos para rechazar esta solicitud',
+                ], 403);
+            }
+    
+            $wt->update([
+                'is_accepted' => false,
+                'is_editable' => true,
+            ]);
+    
+            Mail::to($pps->Student->email)->send(
+                new RejectWTEmail(
+                    $pps->Student->first_name,
+                    $wt->observation,
+                    $pps->Teacher->email,
+                )
+            );
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Seguimiento rechazado correctamente. El estudiante ha sido notificado.',
+            ], 200);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al rechazar el seguimiento',
+                'message' => 'Ocurrió un error. Intente nuevamente.',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -341,7 +390,7 @@ class TeachersController extends Controller
                 'title' => 'Error al aprobar la solicitud',
                 'message' => 'Intente nuevamente o comuníquese para soporte',
                 'error' => $e->getMessage()
-            ], 600);
+            ], 400);
         }
         
     }
@@ -357,7 +406,7 @@ class TeachersController extends Controller
                     'success' => false,
                     'title' => 'Error al aprobar la solicitud',
                     'message' => 'El usuario no es un profesor',
-                ], 600);
+                ], 400);
             }
 
             if (auth()->user()->role_id == 2 && $pps->teacher_id != auth()->user()->id) {
@@ -365,7 +414,7 @@ class TeachersController extends Controller
                     'success' => false,
                     'title' => 'Error al aprobar la solicitud',
                     'message' => 'No tiene permisos para aprobar la solicitud',
-                ], 600);
+                ], 400);
             }
 
             $fr->update([
@@ -388,8 +437,48 @@ class TeachersController extends Controller
                 'title' => 'Error al aprobar la solicitud',
                 'message' => 'Intente nuevamente o comuníquese para soporte',
                 'error' => $e->getMessage()
-            ], 600);
+            ], 500);
         }
     }
 
+    public function rejectFR(Request $request, $id) {
+        try {
+            $pps = PPS::with('Student', 'Teacher')->findOrFail($id);
+            $fr = FinalReport::where('pps_id', $pps->id)->first();
+    
+            if (auth()->user()->role_id != 2 || $pps->teacher_id != auth()->user()->id) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al rechazar la solicitud',
+                    'message' => 'No tiene permisos para rechazar esta solicitud',
+                ], 403);
+            }
+    
+            $fr->update([
+                'is_accepted' => false,
+                'is_editable' => true,
+            ]);
+    
+            Mail::to($pps->Student->email)->send(
+                new RejectRFEmail(
+                    $pps->Student->first_name,
+                    $fr->observation,
+                    $pps->Teacher->email,
+                )
+            );
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Reporte final rechazado correctamente. El estudiante ha sido notificado.',
+            ], 200);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al rechazar el reporte',
+                'message' => 'Ocurrió un error. Intente nuevamente.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

@@ -149,6 +149,7 @@ class StudentsController extends Controller
                     $path = $file->storeAs('public/weekly_trackings', $file->getClientOriginalName());
 
                     $wt->file_path = $path;
+                    $wt->is_editable = false;
                     $wt->save();
 
                     Mail::to($pps->Teacher->email)->send(
@@ -188,6 +189,7 @@ class StudentsController extends Controller
                 $path = $file->storeAs('public/final_report', $file->getClientOriginalName());
 
                 $fr->file_path = $path;
+                $fr->is_editable = false;
                 $fr->save();
 
                 Mail::to($pps->Teacher->email)->send(
