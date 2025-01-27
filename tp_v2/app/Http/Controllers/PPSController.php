@@ -192,27 +192,61 @@ class PPSController extends Controller
         }
     }
 
-    public function update(PPSUpdateRequest $request, $id)
+    public function update(Request $request, $id)
     {
         $today = Carbon::now(new \DateTimeZone('America/Argentina/Buenos_Aires'));
-        try {
-            $pp = PPS::findOrFail($id);
-            $pp->update([
-                'student_id' => $request->input('student_id'),
-                'responsible_id' => $request->input('responsible_id'),
-                'teacher_id' => $request->input('teacher_id'),
-                'pps_id' => $request->input('pps_id'),
-                'is_finished' => $request->input('is_finished'),
-                'is_approved' => $request->input('is_approved'),
-                'observation' => $request->input('observation'),
-                'updated_at' => $today
-            ]);
 
-            return redirect()->route('pps.details')->with('success', 'Solicitud actualizada correctamente');
+        try {
+            $pps = PPS::findOrFail($id);
+
+            $dateFrom = Carbon::createFromFormat('Y-m-d', $request->input('start_date'));
+            $dateTo = Carbon::createFromFormat('Y-m-d', $request->input('finish_date'));
+
+            if ($dateFrom > $dateTo) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al actualizar la solicitud',
+                    'message' => 'La fecha de inicio no puede ser mayor a la fecha de finalización'
+                ], 400);
+            }
+
+            DB::beginTransaction();
+
+            $pps->start_date = $request->input('start_date');
+            $pps->finish_date = $request->input('finish_date');
+            $pps->description = $request->input('description');
+            $pps->is_editable = false;
+            $pps->save();
+
+            $file = $request->file('file');
+            if ($file && $file->isValid()) {
+                // Eliminar archivo anterior si existe
+                if ($pps->WorkPlan) {
+                    Storage::delete($pps->WorkPlan->file_path);
+                    $pps->WorkPlan->delete();
+                }
+
+                // Guardar nuevo archivo
+                $path = $file->storeAs('public/work_plan', $file->getClientOriginalName());
+                WorkPlan::create([
+                    'pps_id' => $pps->id,
+                    'file_path' => $path,
+                    'is_accepted' => 0
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Solicitud actualizada correctamente',
+                'data' => $pps
+            ], 200);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
-                'title' => 'Error al editar la solicitud',
+                'title' => 'Error al actualizar la solicitud',
                 'message' => 'Intente nuevamente o comuníquese para soporte',
                 'error' => $e->getMessage()
             ], 400);
@@ -244,20 +278,22 @@ class PPSController extends Controller
     {
         try {
             $pps = PPS::find($id);
-            // $user = User::where('id', auth()->user()->id)->first();
-            // if ($pps->student_id != $user->id && auth()->user()->rol_id == 2) {
-            //     return response()->json([
-            //         'success' => false,
-            //         'title' => 'Error al descargar el plan de trabajo',
-            //         'message' => 'No está autorizado a realizar esta descarga'
-            //     ], 400);
-            // } else if ($pp->teacher_id != $user->id && auth()->user()->rol_id == 3) {
-            //     return response()->json([
-            //         'success' => false,
-            //         'title' => 'Error al descargar el plan de trabajo',
-            //         'message' => 'No está autorizado a realizar esta descarga'
-            //     ], 400);
-            // }
+
+            $user = User::where('id', auth()->user()->id)->first();
+
+            if ($pps->student_id != $user->id && auth()->user()->role_id != 1) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al descargar el plan de trabajo',
+                    'message' => 'No está autorizado a realizar esta descarga'
+                ], 400);
+            } else if ($pps->teacher_id != $user->id && auth()->user()->role_id != 2) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Error al descargar el plan de trabajo',
+                    'message' => 'No está autorizado a realizar esta descarga'
+                ], 400);
+            }
 
             $work_plan = WorkPlan::where('pps_id', $pps->id)->first();
 

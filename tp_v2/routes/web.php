@@ -68,25 +68,24 @@ Route::group(['middleware' => ['auth', AdminRoutes::class]], function () {
 Route::group(['middleware' => ['auth', StudentsRoutes::class]], function () {
     Route::get('/pps/new', [PPSController::class, 'new'])->name('pps.new');
     Route::post('/pps/create', [PPSController::class, 'create'])->name('pps.create');
-    Route::get('/pps/edit/{id}', [PPSController::class, 'edit'])->name('editPps');
-    Route::post('/pps/edit/{id}', [PPSController::class, 'update'])->name('updatePps');
-    Route::delete('/pps/delete/{id}', [PPSController::class, 'destroy'])->name('deletePps');
+    Route::post('/pps/{id}/update', [PPSController::class, 'update'])->name('pps.update');
+    Route::delete('/pps/{id}/delete', [PPSController::class, 'destroy'])->name('deletePps');
     Route::post('/weeklyTracking/{id}/saveFile', [StudentsController::class, 'saveFileWT'])->name('wt.saveFile');
     Route::post('/finalReport/{id}/saveFile', [StudentsController::class, 'saveFileFR'])->name('fr.saveFile');
 });
 
 Route::group(['middleware' => ['auth', RespRoutes::class]], function () {
-    Route::patch('/pps/tomar/{id}', [PPSController::class, 'tomar'])->name('pps.tomar');
-    Route::post('/pps/assignTeacher/{id}', [ResponsiblesController::class, 'assignTeacher'])->name('assignTeacher');
+    Route::patch('/pps/{id}/tomar', [PPSController::class, 'tomar'])->name('pps.tomar');
+    Route::post('/pps/{id}/assignTeacher', [ResponsiblesController::class, 'assignTeacher'])->name('assignTeacher');
     Route::post('/pps/{id}/weeklyTracking/generate', [WeeklyTrackingController::class, 'generateWT'])->name('wt.generate');
     Route::post('/finalReports/{id}/create', [FinalReportController::class, 'createFR'])->name('fr.generate');
     Route::post('/finalReports/{id}/finish', [ResponsiblesController::class, 'finishWholePPS'])->name('fr.finish');
 });
 
 Route::group(['middleware' => ['auth', TeacherRoutes::class]], function () {
-    Route::post('/pps/editObservation/{id}', [TeachersController::class, 'editObservationPPS'])->name('pps.editObservation');
-    Route::post('/pps/approve/{id}', [TeachersController::class, 'approvePps'])->name('pps.approve');
-    Route::post('/pps/reject/{id}', [TeachersController::class, 'rejectPps'])->name('pps.reject');
+    Route::post('/pps/{id}/editObservation', [TeachersController::class, 'editObservationPPS'])->name('pps.editObservation');
+    Route::post('/pps/{id}/approve', [TeachersController::class, 'approvePps'])->name('pps.approve');
+    Route::post('/pps/{id}/reject', [TeachersController::class, 'rejectPps'])->name('pps.reject');
     Route::get('/studentsReport', [PPSController::class, 'downloadStudentsReport'])->name('studentsReport');
     Route::post('/weeklyTracking/{id}/editObservation', [TeachersController::class, 'editObservationWT'])->name('wt.editObservation');
     Route::post('/weeklyTracking/{id}/approve', [TeachersController::class, 'approveWT'])->name('wt.approve');

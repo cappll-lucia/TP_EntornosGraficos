@@ -23,6 +23,7 @@ class PPS extends Model
         'observation',
         'description',
         'is_approved',
+        'is_editable',
     ];
 
     public function Student()

@@ -228,8 +228,8 @@ class TeachersController extends Controller
             }
     
             $pps->update([
-                'is_finished' => 0,
-                'is_approved' => 0,
+                'is_approved' => false,
+                'is_editable' => true,
             ]);
     
             Mail::to($pps->Student->email)->send(
@@ -245,6 +245,14 @@ class TeachersController extends Controller
                 'success' => true,
                 'message' => 'Solicitud rechazada correctamente. El estudiante ha sido notificado.',
             ], 200);
+
+            // $updateResult = $pps->update([
+            //     'is_approved' => false,
+            //     'is_editable' => true,
+            // ]);
+            
+            // dd($updateResult); // Esto debería devolver `true` si la actualización fue exitosa.
+            
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -255,7 +263,6 @@ class TeachersController extends Controller
         }
     }
         
-
     public function editObservationWT(Request $request, $id)
     {
         try {

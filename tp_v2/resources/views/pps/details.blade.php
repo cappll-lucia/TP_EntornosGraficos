@@ -101,97 +101,131 @@
                         <h2 class="box-title">Detalles de la solicitud #{{ $pps->id }}</h2>
                         <p class="box-subtitle">{{ $pps->created_at->format('d/m/Y') }}</p>
                         <hr class="m-t-0 m-b-20">
-                        {{-- Table con 4 columnas que contenga los datos de la pps --}}
                         <table class="table no-border">
                             <tbody>
                                 <tr>
                                     <td class="col-4"><b class="font-weight-bold">Estudiante:</b></td>
-                                    <td>{{ $pps->Student->last_name }}, {{ $pps->Student->first_name }} -
-                                        Legajo: {{ $pps->Student->legajo }}</td>
+                                    <td>
+                                        {{ $pps->Student->last_name }}, {{ $pps->Student->first_name }} - Legajo: {{ $pps->Student->legajo }}
+                                    </td>
                                 </tr>
+                        
                                 <tr>
                                     <td class="col-4"><b class="font-weight-bold">Responsable:</b></td>
-                                    @if ($pps->responsible_id != null)
-                                        <td>{{ $pps->Responsible->last_name }},
-                                            {{ $pps->Responsible->first_name }}</td>
-                                    @else
-                                        <td>Sin asignar</td>
-                                    @endif
+                                    <td>
+                                        @if ($pps->responsible_id != null)
+                                            {{ $pps->Responsible->last_name }}, {{ $pps->Responsible->first_name }}
+                                        @else
+                                            Sin asignar
+                                        @endif
+                                    </td>
                                 </tr>
+                        
                                 <tr>
                                     <td class="col-4"><b class="font-weight-bold">Profesor a cargo:</b></td>
-                                    @if ($pps->teacher_id != null)
-                                        <td>{{ $pps->Teacher->last_name }},
-                                            {{ $pps->Teacher->first_name }}</td>
-                                    @else
-                                        <td>Sin asignar</td>
-                                    @endif
-                                    
-                                </tr>
-                                <tr>
-                                    @if (auth()->user()->role_id == '3' && $pps->is_finished == 0)
-                                        <td class="col-4"><b class="font-weight-bold">Cambiar profesor:</b></td>
-                                        <td><select id="TeacherSelect" name="TeacherSelect" class="form-control">
-                                            @foreach($teachers as $teach)
-                                            <option value="{{ $teach->id }}">{{ $teach->first_name }} {{ $teach->last_name }}</option>
-                                            @endforeach
-                                            </select>
-                                        </td>
-                                    @endif
-                                </tr>
-                                <tr>
-                                    <td class="col-4"><b class="font-weight-bold">Fecha de inicio/fin:</b></td>
-                                    <td>{{ \Carbon\Carbon::parse($pps->start_date)->format('d/m/Y') }} -
-                                        {{ \Carbon\Carbon::parse($pps->finish_date)->format('d/m/Y') }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="col-4"><b class="font-weight-bold">Plan de trabajo</b></td>
                                     <td>
-                                        <a href="{{ Storage::url($pps->file_path) }}" target="_blank" class="btn btn-success btn-sm">
-                                        Ver archivo
-                                        </a>
-                                        @if (auth()->user()->role_id == '1' && $pps->is_finished == 0) 
-                                            <form id="uploadForm" action="{{ route('updatePps', ['id' => $pps->id]) }}" method="POST" enctype="multipart/form-data" class="border p-4 rounded shadow-sm">
-                                                @csrf
-                                                <div class="mb-3">
-                                                    <label for="fileInput" class="form-label">Selecciona un archivo</label>
-                                                    <input type="file" class="form-control" id="fileInput" name="file" accept=".pdf,.doc,.docx" required>
-                                                </div>
-                                                <button id="btnConfirmar" type="submit" class="btn btn-primary">
-                                                    Confirmar PDF
-                                                </button>
-                                            </form>
+                                        @if ($pps->teacher_id != null)
+                                            {{ $pps->Teacher->last_name }}, {{ $pps->Teacher->first_name }}
+                                        @else
+                                            Sin asignar
                                         @endif
                                     </td>
                                 </tr>
+                        
+                                @if (auth()->user()->role_id == '3' && $pps->is_finished == 0)
                                 <tr>
-                                    <td class="col-4"><b class="font-weight-bold">Descripción:</b></td>
-                                    <td>{{ $pps->description }}</td>
+                                    <td class="col-4"><b class="font-weight-bold">Cambiar profesor:</b></td>
+                                    <td>
+                                        <select id="TeacherSelect" name="TeacherSelect" class="form-control w-50">
+                                            @foreach($teachers as $teach)
+                                                <option value="{{ $teach->id }}">{{ $teach->first_name }} {{ $teach->last_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
                                 </tr>
+                                @endif
+
+                                {{-- Form para actualizar en caso de ser rechazado --}}
+                                <form action={{ route('pps.update', ['id' => $pps->id]) }} id="form_data" method="post" enctype="multipart/form-data">
+                                    @csrf
+                                    
+                                    <tr>
+                                        <td class="col-4"><b class="font-weight-bold">Fecha de inicio/fin:</b></td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($pps->start_date)->format('d/m/Y') }} -
+                                            {{ \Carbon\Carbon::parse($pps->finish_date)->format('d/m/Y') }}
+                                        </td>
+                                    </tr>
+                                    @if (auth()->user()->role_id == '1' && $pps->is_editable == true)
+                                    <tr>
+                                        <td class="col-4"><b class="font-weight-bold">Editar fechas:</b></td>
+                                        <td>
+                                            <label for="DatePickerFrom" class="mb-0">Fecha de inicio</label>
+                                            <input type="date" id="DatePickerFrom" class="form-control w-50" name="DatePickerFrom" />
+                                            <label for="DatePickerTo" class="mb-0 mt-2">Fecha de finalización</label>
+                                            <input type="date" id="DatePickerTo" name="DatePickerTo" class="form-control w-50" />
+                                        </td>
+                                    </tr>
+                                    @endif
+                            
+                                    <tr>
+                                        <td class="col-4"><b class="font-weight-bold">Plan de trabajo:</b></td>
+                                        <td>
+                                            <a href="{{ Storage::url($pps->WorkPlan->file_path) }}" target="_blank" class="btn btn-success btn-sm">
+                                                Ver archivo
+                                            </a>
+                                            @if (auth()->user()->role_id == '1' && $pps->is_editable == true) 
+                                            <div class="mt-2">
+                                                <label for="fileInput" class="form-label">Selecciona un archivo</label>
+                                                <input id="file" name="file" type="file" class="form-control w-75"  accept=".pdf" />
+                                            </div>
+                                            @endif
+                                        </td>
+                                    </tr>
+                            
+                                    <tr>
+                                        <td class="col-4"><b class="font-weight-bold">Descripción:</b></td>
+                                        <td>
+                                            {{ $pps->description }}
+                                            @if (auth()->user()->role_id == '1' && $pps->is_editable == true)
+                                            <textarea id="description" name="description" class="form-control mt-2 w-75" rows="3"></textarea>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                </form> 
+                                {{-- Fin del form --}}
+                        
                                 <tr>
-                                    <td class="col-4">
-                                        <b class="font-weight-bold">Observaciones:</b>
+                                    <td class="col-4"><b class="font-weight-bold">Observaciones:</b></td>
+                                    <td>
+                                        {{ $pps->observation != null ? $pps->observation : "-" }}
                                         @if (auth()->user()->role_id == '2' && $pps->is_finished === 1 && $pps->is_approved === 0)
-                                            <button class="btn btn-sm waves-effect waves-light" type="button"
-                                                    data-bs-toggle="modal" data-bs-target="#modalObservation">
-                                                <i class="bi bi-pencil-square"></i> Escribir observación
-                                            </button>
+                                        <button class="btn btn-sm waves-effect waves-light mt-2" type="button" data-bs-toggle="modal" data-bs-target="#modalObservation">
+                                            <i class="bi bi-pencil-square"></i> Escribir observación
+                                        </button>
                                         @endif
                                     </td>
-                                    <td>{{ $pps->observation != null ? $pps->observation : "-" }}</td>
                                 </tr>
+
                                 <tr>
                                     <td class="col-4"><b class="font-weight-bold">Estado de la solicitud inicial:</b></td>
-                                    @if ($pps->is_approved == true)
-                                            <td><span class="label label-success">Aprobada</span></td>
+                                    <td>
+                                        @if ($pps->is_approved == true)
+                                            <span class="label label-success">Aprobada</span>
                                         @else
-                                            <td><span class="label label-warning">Pendiente de aprobación</span></td>
-                                    @endif
+                                            <span class="label label-warning">Pendiente de aprobación</span>
+                                        @endif
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
+                        
                         {{-- <hr class="m-t-0 m-b-20"> --}}
-                        @if (auth()->user()->role_id == '3' && $pps->is_finished == false)
+                        @if (auth()->user()->role_id == '1' && $pps->is_editable == true)
+                            <button id="btnEditar" class="btn btn-primary waves-effect waves-light" data-id="{{$pps->id}}">Finalizar cambios</button>
+                            <hr class="m-t-0 m-b-20">
+                        @endif
+                        @if (auth()->user()->role_id == '3' && $pps->is_finished == false && $pps->is_editable == false)
                             <form id="form-finalizar">
                                 @csrf
                                 <input type="hidden" id="selectedTeacher" name="selectedTeacher" value="{{ $pps->teacher_id }}">
@@ -206,7 +240,7 @@
                             <hr class="m-t-0 m-b-20">
                         @endif
                         
-                        @if (auth()->user()->role_id == '2' && $pps->is_finished == true && $pps->is_approved == false)
+                        @if (auth()->user()->role_id == '2' && $pps->is_finished == true && $pps->is_approved == false && $pps->is_editable == false)
                             <div class="d-flex justify-content-end">
                                 <hr class="m-t-0 m-b-20">
                                 <button id="btnAprobar" class="btn btn-success waves-effect waves-light" data-id="{{$pps->id}}">Aprobar solicitud</button>
@@ -236,6 +270,11 @@
     </div>
 </div>
 
+<div id="loadingSpinner" class="d-none">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+    </div>
+</div>
 
 <script src="//unpkg.com/alpinejs" defer></script>
 
@@ -300,6 +339,8 @@ $(document).ready(function () {
         confirmButtonText: 'Sí, finalizar'
     }).then((result) => {
         if (result.isConfirmed) {
+            $("#loadingSpinner").removeClass('d-none');
+
             $.ajax({
                 url: `{{ route('assignTeacher', ':id') }}`.replace(':id', id),
                 method: 'POST',
@@ -322,6 +363,9 @@ $(document).ready(function () {
                         title: xhr.responseJSON?.title || 'Error!',
                         text: xhr.responseJSON?.message || 'Hubo un problema al finalizar la solicitud.',
                     });
+                },
+                complete: function () {
+                    $("#loadingSpinner").addClass('d-none');
                 }
             });
         }
@@ -344,6 +388,8 @@ $(document).ready(function () {
             confirmButtonText: 'Sí, tomar'
         }).then((result) => {
             if (result.isConfirmed) {
+                $("#loadingSpinner").removeClass('d-none');
+
                 $.ajax({
                     url: `{{ route('pps.approve', ':id') }}`.replace(':id', id),
                     method: 'POST',
@@ -365,6 +411,9 @@ $(document).ready(function () {
                             'Hubo un problema al aprobar la solicitud.',
                             'error'
                         );
+                    },
+                    complete: function() {
+                        $("#loadingSpinner").addClass('d-none');
                     }
                 });
             }
@@ -382,9 +431,11 @@ $(document).ready(function () {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, tomar'
+            confirmButtonText: 'Sí, rechazar'
         }).then((result) => {
             if (result.isConfirmed) {
+                $("#loadingSpinner").removeClass('d-none');
+
                 $.ajax({
                     url: `{{ route('pps.reject', ':id') }}`.replace(':id', id),
                     method: 'POST',
@@ -393,7 +444,7 @@ $(document).ready(function () {
                     },
                     success: function(response) {
                         Swal.fire(
-                            'Tomado!',
+                            'Rechazado!',
                             'La solicitud ha sido rechazada con éxito.',
                             'success'
                         ).then(() => {
@@ -406,8 +457,60 @@ $(document).ready(function () {
                             'Hubo un problema al rechazar la solicitud.',
                             'error'
                         );
+                    },
+                    complete: function() {
+                        $("#loadingSpinner").addClass('d-none');
                     }
                 });
+            }
+        });
+    });
+
+    $("#btnEditar").on("click", function () {
+        let form = $("#form_data");
+        let formData = new FormData();
+
+        let file = $("input[name='file']")[0].files[0];
+        formData.append('start_date', $('#DatePickerFrom').val());
+        formData.append('finish_date', $('#DatePickerTo').val());
+        formData.append('description', $("#description").val());
+        formData.append('_token', $("input[name='_token']").val());
+        if (file) {
+            formData.append('file', file);
+        }
+
+        $("#loadingSpinner").removeClass('d-none');
+
+        $.ajax({
+            url: $(form).attr('action'),
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                Swal.fire({
+                    title: response.message,
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#1e88e5',
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.reload();
+                    }
+                });
+            },
+            error: function (errorThrown) {
+                Swal.fire({
+                    icon: 'error',
+                    title: errorThrown.responseJSON?.title || 'Error',
+                    text: errorThrown.responseJSON?.message || 'Ocurrió un error inesperado.',
+                    confirmButtonColor: '#1e88e5',
+                });
+            },
+            complete: function () {
+                $("#loadingSpinner").addClass('d-none');
             }
         });
     });

@@ -15,7 +15,9 @@ class WeeklyTracking extends Model
 
     protected $fillable = [
         'pps_id',
+        'file_path',
         'is_accepted',
+        'is_editable',
     ];
 
     public function PPS()
