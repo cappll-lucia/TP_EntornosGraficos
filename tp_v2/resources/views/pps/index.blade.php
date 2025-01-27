@@ -54,6 +54,7 @@
                                     <th>Responsable</th>
                                     <th>Profesor</th>
                                     <th>Descripción</th>
+                                    <th>Fecha inicio</th>
                                     <th>Fecha fin</th>
                                     <th>Aprobada</th>
                                     <th>Finalizada</th>
@@ -75,6 +76,7 @@
                                             <td>{{ $app->Teacher->last_name }}, {{ $app->Teacher->first_name }}</td>
                                         @endif
                                         <td>{{ $app->description }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($app->start_date)->format('d/m/Y') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($app->finish_date)->format('d/m/Y') }}</td>
                                         <td class="text-center">
                                             @if ($app->FinalReport != null)
