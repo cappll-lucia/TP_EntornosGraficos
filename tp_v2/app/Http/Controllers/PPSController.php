@@ -326,6 +326,11 @@ class PPSController extends Controller
             $pps = Pps::where('teacher_id', auth()->user()->id)->get();
             $teacher = auth()->user(); // Obtener el profesor autenticado
 
+            foreach ($pps as $pp) {
+                // Aquí se cargan los seguimientos semanales asociados a cada PPS
+                $pps->weeklyTrackings = $pp->weeklyTrackings; // Esto obtiene los seguimientos para cada PPS
+            }
+
             // Usar DomPDF para generar el PDF
             $dompdf = new \Dompdf\Dompdf();
             $dompdf->loadHtml(view('pps.report', compact('pps', 'teacher'))->render());

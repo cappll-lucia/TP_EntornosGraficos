@@ -4,15 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Informe de PPS</title>
+    <title>Informe PPS</title>
     <style>
-        /* Agrega estilos aquí para que el PDF tenga un buen formato */
+        /* Estilos para el PDF */
         body {
             font-family: Arial, sans-serif;
-        }
-
-        h1 {
-            text-align: center;
         }
 
         table {
@@ -21,38 +17,47 @@
             margin-top: 20px;
         }
 
-        table,
         th,
         td {
-            border: 1px solid #ddd;
-        }
-
-        th,
-        td {
+            border: 1px solid #000;
             padding: 8px;
             text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
 
 <body>
-    <h1>Informe de PPS del Profesor {{ $teacher->first_name }}</h1>
+    <h1>Informe de Solicitudes PPS</h1>
+    <p>Profesor: {{ $teacher->first_name }} {{ $teacher->last_name }}</p>
+
+    <h2>Solicitudes</h2>
     <table>
         <thead>
             <tr>
                 <th>Estudiante</th>
                 <th>Descripción</th>
-                <th>Fecha de Fin</th>
-                <th>Aprobada</th>
+                <th>Semana</th>
+                <th>Fecha inicio</th>
+                <th>Fecha fin</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($pps as $app)
+            @foreach ($pps as $pp)
                 <tr>
-                    <td>{{ $app->Student->last_name }}, {{ $app->Student->first_name }}</td>
-                    <td>{{ $app->description }}</td>
-                    <td>{{ \Carbon\Carbon::parse($app->finish_date)->format('d/m/Y') }}</td>
-                    <td>{{ $app->FinalReport && $app->FinalReport->is_accepted ? 'Sí' : 'No' }}</td>
+                    <td>{{ $pp->Student->last_name }}, {{ $pp->Student->first_name }}</td>
+                    <td>{{ $pp->description }}</td>
+                    <td>
+                        @foreach ($pp->weeklyTrackings as $tracking)
+                            Semana {{ \Carbon\Carbon::parse($tracking->created_at)->format('W') }}:
+                            {{ $tracking->observation }}<br>
+                        @endforeach
+                    </td>
+                    <td>{{ \Carbon\Carbon::parse($pp->start_date)->format('d/m/Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($pp->finish_date)->format('d/m/Y') }}</td>
                 </tr>
             @endforeach
         </tbody>
