@@ -200,7 +200,7 @@
                                     class="btn btn-sm btn-success take-btn" 
                                     type="button" 
                                     data-id="{{ $pps->id }}">
-                                    Cerrar solicitud inicial
+                                    Aprobar solicitud inicial
                                 </button>
                             </form>                            
                             <hr class="m-t-0 m-b-20">
