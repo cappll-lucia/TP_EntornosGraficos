@@ -13,7 +13,8 @@ use App\Models\WeeklyTracking;
 
 class WeeklyTrackingController extends Controller
 {
-    public function index($id){
+    public function index($id)
+    {
 
         $pps = PPS::with('WeeklyTrackings')->findOrFail($id);
 
@@ -45,7 +46,7 @@ class WeeklyTrackingController extends Controller
                     'is_accepted' => 0,
                 ]);
             }
-    
+
             return redirect()->route('getWeeklyTrackings', ['id' => $pps->id]);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Ocurrió un error al generar los seguimientos: ' . $e->getMessage());
@@ -64,7 +65,7 @@ class WeeklyTrackingController extends Controller
         return view('weekly_trackings.details', compact('wt', 'pps'));
     }
 
-    public function delete(string $id)
+    /*public function delete(string $id)
     {
         try {
             $wt = WeeklyTracking::findOrFail($request->input('id'))->load('PPS');
@@ -92,7 +93,7 @@ class WeeklyTrackingController extends Controller
                 'error' => $e->getMessage()
             ], 400);
         }
-    }
+    }*/
 
     public function download($id)
     {

@@ -114,7 +114,8 @@ class ResponsiblesController extends Controller
         }
     }
 
-    public function assignTeacher(Request $request, $id) {
+    public function assignTeacher(Request $request, $id)
+    {
         try {
             $pps = PPS::with('Student')->findOrFail($id);
             $teacher = User::findOrFail($request->input('selectedTeacher'));
@@ -133,11 +134,11 @@ class ResponsiblesController extends Controller
                     'message' => 'El usuario no es un responsable',
                 ], 400);
             }
-            
+
             Mail::to($pps->Student->email)->send(
                 new AssignTeacherEmail(
-                    $pps->Student->first_name, 
-                    $teacher->last_name . ', ' . $teacher->first_name, 
+                    $pps->Student->first_name,
+                    $teacher->last_name . ', ' . $teacher->first_name,
                     $teacher->email
                 )
             );
@@ -146,7 +147,7 @@ class ResponsiblesController extends Controller
                 'teacher_id' => $teacher->id,
                 'is_finished' => 1,
             ]);
-            
+
             return response()->json([
                 'success' => true,
                 'title' => 'Finalizado',
@@ -163,10 +164,12 @@ class ResponsiblesController extends Controller
         }
     }
 
-    public function finishWholePPS($id) {
+    public function finishWholePPS($id)
+    {
         try {
             $pps = PPS::with('Teacher', 'Student', 'Responsible')->findOrFail($id);
             $fr = FinalReport::where('pps_id', $pps->id)->first();
+            $teacher = User::findOrFail($pps->teacher_id);
 
             if ($fr->is_accepted == false) {
                 return response()->json([
@@ -182,12 +185,12 @@ class ResponsiblesController extends Controller
                     'message' => 'El usuario no es un responsable',
                 ], 400);
             }
-            
+
             Mail::to($pps->Teacher->email)->send(
                 new FinishPPSEmail(
-                    $pps->Student->first_name . ', ' .$pps->Student->last_name, 
+                    $pps->Student->first_name . ', ' . $pps->Student->last_name,
                     $teacher->first_name,
-                    $pps->id, 
+                    $pps->id,
                     $pps->Responsible->email
                 )
             );
@@ -195,7 +198,7 @@ class ResponsiblesController extends Controller
             $fr->update([
                 'is_checked' => true,
             ]);
-            
+
             return response()->json([
                 'success' => true,
                 'title' => 'Finalizado',
