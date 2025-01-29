@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
-<div class=" font-sans page antialiased " style="--bs-bg-opacity:.5">
-  <div class="bg-gray-50 text-black/50 ">
+<div class=" font-sans page antialiased" style="--bs-bg-opacity:.5">
+  <div class="bg-gray-50 text-black/50">
     <div class="">
       <div class="">
         <div class=" d-flex justify-content-center align-items-start page-body" style="--bs-bg-opacity: .5">
@@ -17,7 +17,7 @@
         @endif
 
               </div>
-              <div class="card-body">
+              <div class="card-body ">
                 <div class="m-t-20 table-responsive">
                   <table class="table stylish-table">
                     <thead>
@@ -50,12 +50,12 @@
           <div class="modal-dialog">
             <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title h5" id="deleteStudentModalLabel">Eliminar Alumno</h5>
+            <h5 class="modal-title h5" id="deleteStudentModalLabel">Eliminar Docente</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"
             aria-label="Close"></button>
             </div>
             <div class="modal-body">
-            ¿Está seguro de eliminar el alumno <b>{{ $student->last_name }},
+            ¿Está seguro de eliminar el docente <b>{{ $student->last_name }},
             {{ $student->first_name }}</b>?
             </div>
             <div class="modal-footer">
@@ -86,15 +86,17 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title h1 fs-5" id="exampleModalLabel">Eliminar Alumno</h1>
+                  <h1 class="modal-title h1 fs-5" id="exampleModalLabel">Eliminar Docente</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                @if(isset($student))  
                   <span>
 
-                    ¿Está seguro de eliminar el alumno <b style="font-style: italic">{{$student->last_name}},
+                    ¿Está seguro de eliminar el docente <b style="font-style: italic">{{$student->last_name}},
                       {{$student->first_name}}</b>?
                   </span>
+                @endif  
                 </div>
                 <div class="modal-footer">
                   <a type="button" class="w-50 btn btn-outline-secondary me-1" href="{{ route('getStudents') }}">

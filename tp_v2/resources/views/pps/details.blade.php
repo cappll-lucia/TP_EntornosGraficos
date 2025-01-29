@@ -53,7 +53,7 @@
     <!-- ============================================================== -->
     <div class="row page-titles">
         <div class="col-md-5 col-8 align-self-center">
-            <h3 class="text-themecolor m-b-0 m-t-0">Solicitudes</h3>
+            <h3 class="m-b-0 m-t-0 text-themecolor">Solicitudes</h3>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Inicio</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('getPps') }}">Solicitudes</a></li>
@@ -137,11 +137,11 @@
                                         </td>
                                     </tr>
 
-                                    @if (auth()->user()->role_id == '3' && $pps->is_finished == 0 && $pps->is_editable == 1)
+                                    @if (auth()->user()->role_id == '3' && $pps->is_finished == 0 && $pps->is_editable == 0)
                                         <tr>
                                             <td class="col-4"><b class="font-weight-bold">Cambiar profesor:</b></td>
                                             <td>
-                                                <select id="TeacherSelect" name="TeacherSelect" class="form-control w-50">
+                                                <select id="TeacherSelect" name="TeacherSelect" class="w-50 form-control">
                                                     @foreach($teachers as $teach)
                                                         <option value="{{ $teach->id }}">{{ $teach->first_name }}
                                                             {{ $teach->last_name }}
@@ -169,12 +169,12 @@
                                                 <td class="col-4"><b class="font-weight-bold">Editar fechas:</b></td>
                                                 <td>
                                                     <label for="DatePickerFrom" class="mb-0">Fecha de inicio</label>
-                                                    <input type="date" id="DatePickerFrom" class="form-control w-50"
+                                                    <input type="date" id="DatePickerFrom" class="w-50 form-control"
                                                         name="DatePickerFrom" />
-                                                    <label for="DatePickerTo" class="mb-0 mt-2">Fecha de
+                                                    <label for="DatePickerTo" class="mt-2 mb-0">Fecha de
                                                         finalización</label>
                                                     <input type="date" id="DatePickerTo" name="DatePickerTo"
-                                                        class="form-control w-50" />
+                                                        class="w-50 form-control" />
                                                 </td>
                                             </tr>
                                         @endif
@@ -190,7 +190,7 @@
                                                     <div class="mt-2">
                                                         <label for="fileInput" class="form-label">Selecciona un
                                                             archivo</label>
-                                                        <input id="file" name="file" type="file" class="form-control w-75"
+                                                        <input id="file" name="file" type="file" class="w-75 form-control"
                                                             accept=".pdf" />
                                                     </div>
                                                 @endif
@@ -203,7 +203,7 @@
                                                 {{ $pps->description }}
                                                 @if (auth()->user()->role_id == '1' && $pps->is_editable == true)
                                                     <textarea id="description" name="description"
-                                                        class="form-control mt-2 w-75" rows="3"></textarea>
+                                                        class="mt-2 w-75 form-control" rows="3"></textarea>
                                                 @endif
                                             </td>
                                         </tr>
@@ -215,7 +215,7 @@
                                         <td>
                                             {{ $pps->observation != null ? $pps->observation : "-" }}
                                             @if (auth()->user()->role_id == '2' && $pps->is_finished === 1 && $pps->is_approved === 0)
-                                                <button class="btn btn-sm waves-effect waves-light mt-2" type="button"
+                                                <button class="mt-2 btn btn-sm waves-effect waves-light" type="button"
                                                     data-bs-toggle="modal" data-bs-target="#modalObservation">
                                                     <i class="bi bi-pencil-square"></i> Escribir observación
                                                 </button>
@@ -291,7 +291,7 @@
 </div>
 
 <div id="loadingSpinner" class="d-none">
-    <div class="spinner-border text-primary" role="status">
+    <div class="text-primary spinner-border" role="status">
         <span class="visually-hidden">Cargando...</span>
     </div>
 </div>
