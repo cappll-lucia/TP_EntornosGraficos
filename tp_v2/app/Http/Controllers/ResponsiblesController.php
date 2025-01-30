@@ -40,30 +40,32 @@ class ResponsiblesController extends Controller
         try {
             DB::beginTransaction();
 
-            $request->validate([
+            $validatedData = $request->validate([
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
                 'legajo' => ['required', 'numeric'],
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
             ]);
 
             $user = User::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'email' => $request->email,
-                'legajo' => $request->legajo,
-                'password' => Hash::make($request->password),
+                'first_name' => $validatedData['first_name'],
+                'last_name' => $validatedData['last_name'],
+                'email' => $validatedData['email'],
+                'legajo' => $validatedData['legajo'],
+                'password' => Hash::make($validatedData['password']),
                 'role_id' => 3,
             ]);
             DB::commit();
             $responsibles = User::where('role_id', 3)->get();
             return view('users.responsibles.index', ['responsibles' => $responsibles]);
-        } catch (\Exception $exep) {
+        } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
-            dd($exep->getMessage());
-            Log::error('Error al crear el responsable: ' . $exep->getMessage());
-            return view("error.index");
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            Log::error('Error al crear el responsable: ' . $ex->getMessage());
+            return redirect()->back()->with('error', 'Ocurrió un error al registrar el rsponsable. Inténtelo de nuevo.')->withInput();
         }
     }
 
@@ -95,7 +97,7 @@ class ResponsiblesController extends Controller
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
                 'legajo' => ['required', 'numeric'],
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255','unique:users,email'],
             ]);
             $user->update([
                 'first_name' => $request->first_name,
@@ -106,10 +108,34 @@ class ResponsiblesController extends Controller
             DB::commit();
             $responsibles = User::where('role_id', 3)->get();
             return view('users.responsibles.index', ['responsibles' => $responsibles]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors($e->validator)->withInput();    
         } catch (\Exception $exep) {
             DB::rollBack();
             dd($exep->getMessage());
-            Log::error('Error al crear el alumno: ' . $exep->getMessage());
+            Log::error('Error al crear el responsable: ' . $exep->getMessage());
+            return view("error.index");
+        }
+    }
+
+    public function destroy(string $id)
+    {
+        try {
+            DB::beginTransaction();
+            $user = User::findOrFail($id);
+            $user->delete();
+            DB::commit();
+            
+            $responsibles = User::where('role_id', 3)->get();
+            return redirect()->route('getResponsibles')->with([
+                'responsibles' => $responsibles, 
+                'success' => 'Responsable eliminado correctamente'
+            ]);
+        } catch (\Exception $exep) {
+            DB::rollBack();
+            dd($exep->getMessage());
+            Log::error('Error al eliminar el responsable: ' . $exep->getMessage());
             return view("error.index");
         }
     }
