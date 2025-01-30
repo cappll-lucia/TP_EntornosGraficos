@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+
 <div class=" font-sans page antialiased" style="--bs-bg-opacity:.5">
   <div class="bg-gray-50 text-black/50">
     <div class="">
@@ -50,12 +51,12 @@
           <div class="modal-dialog">
             <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title h5" id="deleteStudentModalLabel">Eliminar Docente</h5>
+            <h5 class="modal-title h5" id="deleteStudentModalLabel">Eliminar Alumno</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"
             aria-label="Close"></button>
             </div>
             <div class="modal-body">
-            ¿Está seguro de eliminar el docente <b>{{ $student->last_name }},
+            ¿Está seguro de eliminar el alumno <b>{{ $student->last_name }},
             {{ $student->first_name }}</b>?
             </div>
             <div class="modal-footer">
@@ -86,14 +87,14 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title h1 fs-5" id="exampleModalLabel">Eliminar Docente</h1>
+                  <h1 class="modal-title h1 fs-5" id="exampleModalLabel">Eliminar Alumno</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                 @if(isset($student))  
                   <span>
 
-                    ¿Está seguro de eliminar el docente <b style="font-style: italic">{{$student->last_name}},
+                    ¿Está seguro de eliminar el alumno <b style="font-style: italic">{{$student->last_name}},
                       {{$student->first_name}}</b>?
                   </span>
                 @endif  
@@ -110,5 +111,4 @@
                 </div>
               </div>
             </div>
-
-            @endsection
+@endsection

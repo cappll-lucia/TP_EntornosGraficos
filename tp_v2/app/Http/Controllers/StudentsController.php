@@ -42,32 +42,37 @@ class StudentsController extends Controller
         try {
             DB::beginTransaction();
 
-            $request->validate([
+            $validatedData = $request->validate([
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
                 'legajo' => ['required', 'numeric'],
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
             ]);
 
             $user = User::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'email' => $request->email,
-                'legajo' => $request->legajo,
-                'password' => Hash::make($request->password),
+                'first_name' => $validatedData['first_name'],
+                'last_name' => $validatedData['last_name'],
+                'email' => $validatedData['email'],
+                'legajo' => $validatedData['legajo'],
+                'password' => Hash::make($validatedData['password']),
                 'role_id' => 1,
             ]);
+
             DB::commit();
+
             $students = User::where('role_id', 1)->get();
             return view('users.students.index', ['students' => $students]);
-        } catch (\Exception $exep) {
+        } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
-            dd($exep->getMessage());
-            Log::error('Error al crear el alumno: ' . $exep->getMessage());
-            return view("error.index");
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            Log::error('Error al crear el alumno: ' . $ex->getMessage());
+            return redirect()->back()->with('error', 'Ocurrió un error al registrar el alumno. Inténtelo de nuevo.')->withInput();
         }
     }
+
 
     /**
      * Display the specified resource.
@@ -97,7 +102,7 @@ class StudentsController extends Controller
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
                 'legajo' => ['required', 'numeric'],
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255','unique:users,email'],
             ]);
             $user->update([
                 'first_name' => $request->first_name,
@@ -108,6 +113,9 @@ class StudentsController extends Controller
             DB::commit();
             $students = User::where('role_id', 1)->get();
             return view('users.students.index', ['students' => $students]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors($e->validator)->withInput();    
         } catch (\Exception $exep) {
             DB::rollBack();
             dd($exep->getMessage());
@@ -126,8 +134,12 @@ class StudentsController extends Controller
             $user = User::findOrFail($id);
             $user->delete();
             DB::commit();
+            
             $students = User::where('role_id', 1)->get();
-            return view('users.students.index', ['students' => $students]);
+            return redirect()->route('getStudents')->with([
+                'students' => $students, 
+                'success' => 'Alumno eliminado correctamente'
+            ]);
         } catch (\Exception $exep) {
             DB::rollBack();
             dd($exep->getMessage());
