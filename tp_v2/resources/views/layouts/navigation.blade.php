@@ -17,41 +17,42 @@
         </div>
 
         @if(Auth::check())
-        <!-- Buttons logueado -->
-        <div class="px-4 dropdown usr-menu justify-content-md-end">
-          <span class="px-5">Bienvenido, {{Auth::user()->first_name}}!</span>
-          <button class="btn usr-menu-btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            <i class="fa-solid fa-user"></i>
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-              <a href="{{ route('profile.edit') }}">
-                {{ __('Perfil') }}
-              </a>
-            </li>
-            <li>
-              <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <a href="route('logout')" onclick="event.preventDefault();
-                this.closest('form').submit();">
-                  {{ __('Cerrar sesión') }}
-                </a>
-              </form>
-            </li>
-          </ul>
-        </div>
-        @else
-        <!-- Buttons no logueado -->
-        <div class="container-fluid gap-2 d-grid d-md-flex justify-content-md-end">
-          <a type="button" class="btn btn-outline-primary" href="{{ route('login') }}">
-            {{ __('Ingresar') }}
+      <!-- Buttons logueado -->
+      <div class="px-4 dropdown usr-menu justify-content-md-end">
+        <span class="px-5">Bienvenido, {{Auth::user()->first_name}}!</span>
+        <button class="btn usr-menu-btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+        aria-expanded="false" style="color: white;">
+        <!-- Contenido del botón -->
+        <i class="fa-solid fa-user"></i>
+        </button>
+        <ul class="dropdown-menu">
+        <li>
+          <a style="p-3; text-decoration: none !important;" href="{{ route('profile.edit') }}">
+          {{ __('Perfil') }}
           </a>
-          <a type="button" class="btn btn-outline-primary" href="{{ route('register') }}">
-            {{ __('Registrarse') }}
+        </li>
+        <li>
+          <form method="POST" action="{{ route('logout') }}">
+          @csrf
+          <a style="text-decoration: none !important;" href="route('logout')" onclick="event.preventDefault();
+      this.closest('form').submit();">
+            {{ __('Cerrar sesión') }}
           </a>
-        </div>
-        @endif
+          </form>
+        </li>
+        </ul>
+      </div>
+    @else
+    <!-- Buttons no logueado -->
+    <div class="container-fluid gap-2 d-grid d-md-flex justify-content-md-end">
+      <a type="button" class="btn btn-outline-primary" href="{{ route('login') }}">
+      {{ __('Ingresar') }}
+      </a>
+      <a type="button" class="btn btn-outline-primary" href="{{ route('register') }}">
+      {{ __('Registrarse') }}
+      </a>
+    </div>
+  @endif
       </div>
     </div>
 
@@ -64,25 +65,25 @@
         <div class="navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{{ route('welcome') }}">Inicio</a>
+              <a class="nav-link" aria-current="page" href="{{ route('welcome') }}">Inicio</a>
             </li>
 
             @if(Auth::check())
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('getPps') }}">Solicitudes</a>
-            </li>
-            @if(Auth::user()->role_id == '4')
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('getTeachers') }}">Docentes</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('getStudents') }}">Alumnos</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('getResponsibles') }}">Responsables</a>
-            </li>
-            @endif
-            @endif
+        <li class="nav-item">
+          <a class="nav-link" href="{{ route('getPps') }}">Solicitudes</a>
+        </li>
+        @if(Auth::user()->role_id == '4')
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('getTeachers') }}">Docentes</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('getStudents') }}">Alumnos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('getResponsibles') }}">Responsables</a>
+      </li>
+    @endif
+      @endif
           </ul>
         </div>
       </div>
@@ -103,7 +104,7 @@
 
     <div class="right text-end">
       <h2>Contacto</h2>
-      <a href="#">lorem ipsum</a>
+      <p> 0341 - 4481871</p>
     </div>
   </footer>
 </div>

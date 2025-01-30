@@ -11,23 +11,22 @@
         </header>
 
         <div class="card-body">
-            <form id="send-verification" method="post" action="{{ route('verification.send') }}">
-                @csrf
-            </form>
 
-            <form id="profile-update-form" method="patch" action="{{ route('profile.update') }}" class="space-y-6 mt-6">
+            <form id="profile-update-form" method="post" action="{{ route('profile.update') }}" class="space-y-6 mt-6">
                 @csrf
                 @method('patch')
 
                 <div>
                     <x-input-label for="first_name" :value="__('Nombre')" />
-                    <x-text-input id="first_name" name="first_name" type="text" class="mt-1 w-100 block" :value="old('first_name', $user->first_name)" required autofocus autocomplete="first_name" />
+                    <x-text-input id="first_name" name="first_name" type="text" class="mt-1 w-100 block"
+                        :value="old('first_name', $user->first_name)" required autofocus autocomplete="first_name" />
                     <x-input-error class="mt-2" :messages="$errors->get('first_name')" />
                 </div>
 
                 <div>
                     <x-input-label for="last_name" :value="__('Apellido')" />
-                    <x-text-input id="last_name" name="last_name" type="text" class="mt-1 w-100 block" :value="old('last_name', $user->last_name)" required autofocus autocomplete="last_name" />
+                    <x-text-input id="last_name" name="last_name" type="text" class="mt-1 w-100 block"
+                        :value="old('last_name', $user->last_name)" required autofocus autocomplete="last_name" />
                     <x-input-error class="mt-2" :messages="$errors->get('last_name')" />
                 </div>
 
@@ -36,7 +35,7 @@
                     <x-text-input id="email" name="email" type="email" class="mt-1 w-100 block" :value="old('email', $user->email)" required autocomplete="username" />
                     <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
-                    @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
+                    <!-- @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
                         <div>
                             <p class="mt-2 text-sm text-gray-800 ">
                                 {{ __('Su dirección de correo electrónico no está verificada.') }}
@@ -49,9 +48,9 @@
                                 <p class="font-medium mt-2 text-sm text-green-600">
                                     {{ __('Se ha enviado un nuevo enlace de verificación a su dirección de correo electrónico.') }}
                                 </p>
-                            @endif
-                        </div>
-                    @endif
+                            @endif 
+                        </div> 
+                    @endif -->
                 </div>
 
                 <!-- Separar el botón de guardar del último textbox -->
@@ -61,13 +60,8 @@
 
                 <!-- Mostrar mensaje de éxito cuando se guarda -->
                 @if (session('status') === 'profile-updated')
-                    <p
-                        x-data="{ show: true }"
-                        x-show="show"
-                        x-transition
-                        x-init="setTimeout(() => show = false, 2000)"
-                        class="mt-2 text-sm text-green-600"
-                    >{{ __('Cambios realizados con éxito') }}</p>
+                    <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 3000)"
+                        class="mt-2 text-md text-green-600">{{ __('Cambios realizados con éxito') }}</p>
                 @endif
             </form>
         </div>

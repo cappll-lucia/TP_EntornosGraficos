@@ -11,11 +11,8 @@
         </header>
 
         <div class="card-body">
-            <button
-                x-data=""
-                x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
-                class="w-100 btn btn-danger"
-            >
+            <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
+                class="w-100 btn btn-danger">
                 {{ __('Eliminar cuenta') }}
             </button>
 
@@ -24,7 +21,7 @@
                     @csrf
                     @method('delete')
 
-                    <h2 class="font-medium text-lg text-gray-600">
+                    <h2 class="mt-4 font-medium text-lg text-gray-600">
                         {{ __('¿Estás seguro de que quieres eliminar tu cuenta?') }}
                     </h2>
 
@@ -36,23 +33,18 @@
                     <div class="mt-6">
                         <x-input-label for="password" value="{{ __('Contraseña') }}" class="sr-only" />
 
-                        <x-text-input
-                            id="password"
-                            name="password"
-                            type="password"
-                            class="mt-1 w-3/4 block"
-                            placeholder="{{ __('Contraseña') }}"
-                        />
+                        <x-text-input id="password" name="password" type="password" class="mt-1 mb-3 w-3/4 block"
+                            placeholder="{{ __('Contraseña') }}" />
 
                         <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
                     </div>
 
-                    <div class="flex mt-6 justify-end">
+                    <div class="d-flex justify-content-end mt-6">
                         <x-secondary-button x-on:click="$dispatch('close')" class="me-3">
                             {{ __('Cancelar') }}
                         </x-secondary-button>
 
-                        <x-danger-button class="ms-3">
+                        <x-danger-button class="btn btn-danger text-white ms-3">
                             {{ __('Eliminar cuenta') }}
                         </x-danger-button>
                     </div>

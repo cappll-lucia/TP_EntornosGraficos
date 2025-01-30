@@ -359,7 +359,9 @@ class PPSController extends Controller
             require_once public_path('dompdf/autoload.inc.php');  // Ajusta la ruta según donde hayas colocado 'dompdf'
 
             // Obtener las PPS del profesor autenticado
-            $pps = Pps::where('teacher_id', auth()->user()->id)->get();
+            $pps = Pps::where('teacher_id', auth()->user()->id)
+                ->whereNotNull('responsible_id') // Validar que responsible_id no sea null
+                ->get();
             $teacher = auth()->user(); // Obtener el profesor autenticado
 
             foreach ($pps as $pp) {
@@ -368,7 +370,7 @@ class PPSController extends Controller
             }
 
             // Usar DomPDF para generar el PDF
-            $dompdf = new \Dompdf\Dompdf();
+            $dompdf = new Dompdf();
             $dompdf->loadHtml(view('pps.report', compact('pps', 'teacher'))->render());
 
             // (Opcional) Configurar el tamaño del papel y orientación

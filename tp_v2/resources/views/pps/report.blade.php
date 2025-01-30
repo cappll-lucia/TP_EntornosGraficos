@@ -47,18 +47,23 @@
         </thead>
         <tbody>
             @foreach ($pps as $pp)
-                <tr>
-                    <td>{{ $pp->Student->last_name }}, {{ $pp->Student->first_name }}</td>
-                    <td>{{ $pp->description }}</td>
-                    <td>
-                        @foreach ($pp->weeklyTrackings as $tracking)
-                            Semana {{ \Carbon\Carbon::parse($tracking->created_at)->format('W') }}:
-                            {{ $tracking->observation }}<br>
-                        @endforeach
-                    </td>
-                    <td>{{ \Carbon\Carbon::parse($pp->start_date)->format('d/m/Y') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($pp->finish_date)->format('d/m/Y') }}</td>
-                </tr>
+                        <tr>
+                            <td>{{ $pp->Student->last_name }}, {{ $pp->Student->first_name }}</td>
+                            <td>{{ $pp->description }}</td>
+                            <td>
+                                @php
+                                    $numSemanasCargadas = $pp->weeklyTrackings->whereNotNull('file_path')->count();
+                                @endphp
+
+                                @if ($numSemanasCargadas > 0)
+                                    {{ $numSemanasCargadas }}
+                                @else
+                                    0
+                                @endif
+                            </td>
+                            <td>{{ \Carbon\Carbon::parse($pp->start_date)->format('d/m/Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($pp->finish_date)->format('d/m/Y') }}</td>
+                        </tr>
             @endforeach
         </tbody>
     </table>
