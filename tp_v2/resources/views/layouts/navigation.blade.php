@@ -2,7 +2,7 @@
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 
-<div class="d-flex flex-column min-vh-100">
+<div class="flex-column min-vh-100 d-flex">
   <nav x-data="{ open: false }" class="bg-light border-b border-gray-100 header">
     <!-- Primary Navigation Menu -->
     <div class="bg-light  px-1 header-line sm:px-6 lg:px-8">
