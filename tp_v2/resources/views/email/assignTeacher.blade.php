@@ -134,34 +134,50 @@
 
 <body class="clean-body u_body"
     style="margin: 0;padding: 0;-webkit-text-size-adjust: 100%;background-color: #e7e7e7;color: #000000">
-    <table id="u_body" style="border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;min-width: 320px;Margin: 0 auto;background-color: #e7e7e7;width:100%" cellpadding="0" cellspacing="0">
+    <table id="u_body"
+        style="border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;min-width: 320px;Margin: 0 auto;background-color: #e7e7e7;width:100%"
+        cellpadding="0" cellspacing="0">
         <tbody>
             <tr style="vertical-align: top">
                 <td style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
                     <div class="u-row-container" style="padding: 0px;background-color: transparent">
-                        <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
-                            <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-                                <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
+                        <div class="u-row"
+                            style="margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
+                            <div
+                                style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
+                                <div class="u-col u-col-100"
+                                    style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
                                     <div style="background-color: #ffffff;height: 100%;width: 100% !important;">
-                                        <div style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
-                                            <table id="u_content_heading_1" style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%">
+                                        <div
+                                            style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
+                                            <table id="u_content_heading_1"
+                                                style="font-family:arial,helvetica,sans-serif;" role="presentation"
+                                                cellpadding="0" cellspacing="0" width="100%">
                                                 <tbody>
                                                     <tr>
-                                                        <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:40px 10px 10px;font-family:arial,helvetica,sans-serif;">
-                                                            <h1 class="v-font-size" style="margin: 0px; line-height: 140%; text-align: center; word-wrap: break-word; font-size: 17px; font-weight: 400;"> I N F O R M A C I Ó N    I M P O R T A N T E</h1>
+                                                        <td class="v-container-padding-padding"
+                                                            style="overflow-wrap:break-word;word-break:break-word;padding:40px 10px 10px;font-family:arial,helvetica,sans-serif;">
+                                                            <h1 class="v-font-size"
+                                                                style="margin: 0px; line-height: 140%; text-align: center; word-wrap: break-word; font-size: 17px; font-weight: 400;">
+                                                                I N F O R M A C I Ó N    I M P O R T A N T E</h1>
                                                         </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
 
-                                            <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%">
+                                            <table style="font-family:arial,helvetica,sans-serif;" role="presentation"
+                                                cellpadding="0" cellspacing="0" width="100%">
                                                 <tbody>
                                                     <tr>
-                                                        <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:30px;font-family:arial,helvetica,sans-serif;">
+                                                        <td class="v-container-padding-padding"
+                                                            style="overflow-wrap:break-word;word-break:break-word;padding:30px;font-family:arial,helvetica,sans-serif;">
                                                             <table width="100%" cellpadding="0" cellspacing="0">
                                                                 <tr>
                                                                     <td style="padding-right: 0px;padding-left: 0px;">
-                                                                        <img src="https://www.utn.edu.ar/images/logo-utn.png" alt="UTN"title="UTN"style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 540px;"width="540" />
+                                                                        <img src="https://www.utn.edu.ar/images/logo-utn.png"
+                                                                            alt="UTN" title="UTN"
+                                                                            style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 540px;"
+                                                                            width="540" />
                                                                     </td>
                                                                 </tr>
                                                             </table>
@@ -176,28 +192,43 @@
                         </div>
                     </div>
                     <div class="u-row-container" style="padding: 0px;background-color: transparent">
-                        <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
-                            <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-                                <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
-                                    <div style="background-color: #ffffff;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                                        <div style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                                            <table id="u_content_heading_2"style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%">
+                        <div class="u-row"
+                            style="margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
+                            <div
+                                style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
+                                <div class="u-col u-col-100"
+                                    style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
+                                    <div
+                                        style="background-color: #ffffff;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+                                        <div
+                                            style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+                                            <table id="u_content_heading_2"
+                                                style="font-family:arial,helvetica,sans-serif;" role="presentation"
+                                                cellpadding="0" cellspacing="0" width="100%">
                                                 <tbody>
                                                     <tr>
-                                                        <td class="v-container-padding-padding"style="overflow-wrap:break-word;word-break:break-word;padding:20px 10px 10px 60px;font-family:arial,helvetica,sans-serif;">
-                                                            <h1 class="v-font-size" style="margin: 0px; color: #242424; line-height: 140%; text-align: left; word-wrap: break-word; font-size: 27px; font-weight: 700;">
-                                                                <span data-metadata="&lt;!--(figmeta)eyJmaWxlS2V5IjoiU2U5SHB1R01sNXhHYjZ2dHZSTU1mdyIsInBhc3RlSUQiOjQ4NTg2NTcxMiwiZGF0YVR5cGUiOiJzY2VuZSJ9Cg==(/figmeta)--&gt;"></span><span>SYSACAD</span>
+                                                        <td class="v-container-padding-padding"
+                                                            style="overflow-wrap:break-word;word-break:break-word;padding:20px 10px 10px 60px;font-family:arial,helvetica,sans-serif;">
+                                                            <h1 class="v-font-size"
+                                                                style="margin: 0px; color: #242424; line-height: 140%; text-align: left; word-wrap: break-word; font-size: 27px; font-weight: 700;">
+                                                                <span
+                                                                    data-metadata="&lt;!--(figmeta)eyJmaWxlS2V5IjoiU2U5SHB1R01sNXhHYjZ2dHZSTU1mdyIsInBhc3RlSUQiOjQ4NTg2NTcxMiwiZGF0YVR5cGUiOiJzY2VuZSJ9Cg==(/figmeta)--&gt;"></span><span>SYSACAD</span>
                                                             </h1>
                                                         </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
 
-                                            <table id="u_content_divider_1"style="font-family:arial,helvetica,sans-serif;" role="presentation"cellpadding="0" cellspacing="0" width="100%">
+                                            <table id="u_content_divider_1"
+                                                style="font-family:arial,helvetica,sans-serif;" role="presentation"
+                                                cellpadding="0" cellspacing="0" width="100%">
                                                 <tbody>
                                                     <tr>
-                                                        <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px 48px;font-family:arial,helvetica,sans-serif;">
-                                                            <table height="0px" cellpadding="0" cellspacing="0" width="100%"style="border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;border-top: 1px solid #000000;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%">
+                                                        <td class="v-container-padding-padding"
+                                                            style="overflow-wrap:break-word;word-break:break-word;padding:10px 48px;font-family:arial,helvetica,sans-serif;">
+                                                            <table height="0px" cellpadding="0" cellspacing="0"
+                                                                width="100%"
+                                                                style="border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;border-top: 1px solid #000000;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%">
                                                                 <tbody>
                                                                     <tr style="vertical-align: top">
                                                                         <td
@@ -213,24 +244,32 @@
                                                 </tbody>
                                             </table>
 
-                                            <table id="u_content_text_1"style="font-family:arial,helvetica,sans-serif;" role="presentation"cellpadding="0" cellspacing="0" width="100%">
+                                            <table id="u_content_text_1" style="font-family:arial,helvetica,sans-serif;"
+                                                role="presentation" cellpadding="0" cellspacing="0" width="100%">
                                                 <tbody>
                                                     <tr>
-                                                        <td class="v-container-padding-padding"style="overflow-wrap:break-word;word-break:break-word;padding:20px 90px 30px 60px;font-family:arial,helvetica,sans-serif;">
-                                                            <div class="v-font-size"style="font-size: 14px; line-height: 140%; text-align: left; word-wrap: break-word;">
-                                                                <p style="line-height: 140%;"><span data-metadata="&lt;!--(figmeta)eyJmaWxlS2V5IjoiU2U5SHB1R01sNXhHYjZ2dHZSTU1mdyIsInBhc3RlSUQiOjE2MzgzMzEwMzIsImRhdGFUeXBlIjoic2NlbmUifQo=(/figmeta)--&gt;" style="line-height: 19.6px;"></span>
-                                                                <span style="line-height: 19.6px;">Hola, {{$student_name}}</span>
+                                                        <td class="v-container-padding-padding"
+                                                            style="overflow-wrap:break-word;word-break:break-word;padding:20px 90px 30px 60px;font-family:arial,helvetica,sans-serif;">
+                                                            <div class="v-font-size"
+                                                                style="font-size: 14px; line-height: 140%; text-align: left; word-wrap: break-word;">
+                                                                <p style="line-height: 140%;"><span
+                                                                        data-metadata="&lt;!--(figmeta)eyJmaWxlS2V5IjoiU2U5SHB1R01sNXhHYjZ2dHZSTU1mdyIsInBhc3RlSUQiOjE2MzgzMzEwMzIsImRhdGFUeXBlIjoic2NlbmUifQo=(/figmeta)--&gt;"
+                                                                        style="line-height: 19.6px;"></span>
+                                                                    <span style="line-height: 19.6px;">Hola,
+                                                                        {{$student_name}}</span>
                                                                 </p>
                                                                 <p style="line-height: 140%;"> </p>
                                                                 <p style="line-height: 140%;"> </p>
                                                                 <p style="line-height: 140%;">
                                                                     <span style="line-height: 19.6px;">
-                                                                        Se ha asignado a {{$teacher_name}} como profesor responsable de tu solicitud.
+                                                                        Se ha asignado a {{$teacher_name}} como docente
+                                                                        responsable de tu solicitud.
                                                                     </span>
                                                                 </p>
                                                                 <p style="line-height: 140%;">
                                                                     <span style="line-height: 19.6px;">
-                                                                        Para ver mas detalles ingresa a la página o contáctate con {{$teacher_email}}.
+                                                                        Para ver mas detalles ingresa a la página o
+                                                                        contáctate con {{$teacher_email}}.
                                                                     </span>
                                                                 </p>
                                                             </div>
@@ -239,10 +278,13 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            <table id="u_content_button_1" style="font-family:arial,helvetica,sans-serif;" role="presentation"cellpadding="0" cellspacing="0" width="100%">
+                                            <table id="u_content_button_1"
+                                                style="font-family:arial,helvetica,sans-serif;" role="presentation"
+                                                cellpadding="0" cellspacing="0" width="100%">
                                                 <tbody>
                                                     <tr>
-                                                        <td class="v-container-padding-padding"style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 50px 60px;font-family:arial,helvetica,sans-serif;">
+                                                        <td class="v-container-padding-padding"
+                                                            style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 50px 60px;font-family:arial,helvetica,sans-serif;">
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -255,17 +297,25 @@
                         </div>
                     </div>
                     <div class="u-row-container" style="padding: 0px;background-color: transparent">
-                        <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
-                            <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-                                <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
-                                    <div style="background-color: #242424;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                                        <div style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                                            <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                        <div class="u-row"
+                            style="margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
+                            <div
+                                style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
+                                <div class="u-col u-col-100"
+                                    style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
+                                    <div
+                                        style="background-color: #242424;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+                                        <div
+                                            style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+                                            <table style="font-family:arial,helvetica,sans-serif;" role="presentation"
+                                                cellpadding="0" cellspacing="0" width="100%" border="0">
                                                 <tbody>
                                                     <tr>
-                                                        <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:40px;font-family:arial,helvetica,sans-serif;">
+                                                        <td class="v-container-padding-padding"
+                                                            style="overflow-wrap:break-word;word-break:break-word;padding:40px;font-family:arial,helvetica,sans-serif;">
                                                             <div>
-                                                                <p style="color: white">Todos los derechos reservados © {{ $today->format('Y') }} - SYSACAD</p>
+                                                                <p style="color: white">Todos los derechos reservados ©
+                                                                    {{ $today->format('Y') }} - SYSACAD</p>
                                                             </div>
                                                         </td>
                                                     </tr>

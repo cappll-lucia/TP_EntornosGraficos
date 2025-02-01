@@ -52,7 +52,7 @@
                                 <tr>
                                     <th>Estudiante</th>
                                     <th>Responsable</th>
-                                    <th>Profesor</th>
+                                    <th>Docente</th>
                                     <th>Descripción</th>
                                     <th>Fecha inicio</th>
                                     <th>Fecha fin</th>

@@ -359,11 +359,11 @@ class PPSController extends Controller
             // Incluir el autoloader de dompdf
             require_once public_path('dompdf/autoload.inc.php');  // Ajusta la ruta según donde hayas colocado 'dompdf'
 
-            // Obtener las PPS del profesor autenticado
+            // Obtener las PPS del docente autenticado
             $pps = Pps::where('teacher_id', auth()->user()->id)
                 ->whereNotNull('responsible_id') // Validar que responsible_id no sea null
                 ->get();
-            $teacher = auth()->user(); // Obtener el profesor autenticado
+            $teacher = auth()->user(); // Obtener el docente autenticado
 
             foreach ($pps as $pp) {
                 // Aquí se cargan los seguimientos semanales asociados a cada PPS

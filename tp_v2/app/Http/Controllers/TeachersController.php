@@ -102,7 +102,7 @@ class TeachersController extends Controller
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
                 'legajo' => ['required', 'numeric'],
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255','unique:users,email'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
             ]);
             $user->update([
                 'first_name' => $request->first_name,
@@ -115,7 +115,7 @@ class TeachersController extends Controller
             return view('users.teachers.index', ['teachers' => $teachers]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
-            return redirect()->back()->withErrors($e->validator)->withInput();    
+            return redirect()->back()->withErrors($e->validator)->withInput();
         } catch (\Exception $exep) {
             DB::rollBack();
             dd($exep->getMessage());
@@ -136,7 +136,7 @@ class TeachersController extends Controller
             DB::commit();
             $teachers = User::where('role_id', 2)->get();
             return redirect()->route('getTeachers')->with([
-                'teachers' => $teachers, 
+                'teachers' => $teachers,
                 'success' => 'Docente eliminado correctamente'
             ]);
         } catch (\Exception $exep) {
@@ -147,7 +147,8 @@ class TeachersController extends Controller
         }
     }
 
-    public function editObservationPPS(Request $request, $id) {
+    public function editObservationPPS(Request $request, $id)
+    {
         try {
             $pps = PPS::findOrFail($id);
 
@@ -170,18 +171,19 @@ class TeachersController extends Controller
         }
     }
 
-    public function approvePps(Request $request, $id) {
+    public function approvePps(Request $request, $id)
+    {
         try {
             $pps = PPS::with('Student', 'Teacher')->findOrFail($id);
-    
+
             if (auth()->user()->role_id != 2) {
                 return response()->json([
                     'success' => false,
                     'title' => 'Error al aprobar la solicitud',
-                    'message' => 'El usuario no es un profesor',
+                    'message' => 'El usuario no es un docente',
                 ], 400);
             }
-    
+
             if (auth()->user()->role_id == 2 && $pps->teacher_id != auth()->user()->id) {
                 return response()->json([
                     'success' => false,
@@ -189,7 +191,7 @@ class TeachersController extends Controller
                     'message' => 'No tiene permisos para aprobar la solicitud',
                 ], 400);
             }
-    
+
             if ($pps->is_finished == 0) {
                 return response()->json([
                     'success' => false,
@@ -197,11 +199,11 @@ class TeachersController extends Controller
                     'message' => 'La solicitud no está finalizada',
                 ], 400);
             }
-    
+
             $pps->update([
                 'is_approved' => 1,
             ]);
-    
+
             Mail::to($pps->Student->email)->send(
                 new ApprovePPSEmail(
                     $pps->Student->first_name,
@@ -209,7 +211,7 @@ class TeachersController extends Controller
                     $pps->Teacher->email
                 )
             );
-    
+
             return response()->json([
                 'success' => true,
                 'title' => 'PPS aprobada con éxito',
@@ -225,10 +227,11 @@ class TeachersController extends Controller
         }
     }
 
-    public function rejectPps(Request $request, $id) {
+    public function rejectPps(Request $request, $id)
+    {
         try {
             $pps = PPS::with('Student', 'Teacher')->findOrFail($id);
-    
+
             if (auth()->user()->role_id != 2 || $pps->teacher_id != auth()->user()->id) {
                 return response()->json([
                     'success' => false,
@@ -236,12 +239,12 @@ class TeachersController extends Controller
                     'message' => 'No tiene permisos para rechazar esta solicitud',
                 ], 403);
             }
-    
+
             $pps->update([
                 'is_approved' => false,
                 'is_editable' => true,
             ]);
-    
+
             Mail::to($pps->Student->email)->send(
                 new RejectPPSEmail(
                     $pps->Student->first_name,
@@ -250,12 +253,12 @@ class TeachersController extends Controller
                     $pps->Teacher->email,
                 )
             );
-    
+
             return response()->json([
                 'success' => true,
                 'message' => 'Solicitud rechazada correctamente. El estudiante ha sido notificado.',
             ], 200);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -265,7 +268,7 @@ class TeachersController extends Controller
             ], 500);
         }
     }
-        
+
     public function editObservationWT(Request $request, $id)
     {
         try {
@@ -293,9 +296,9 @@ class TeachersController extends Controller
 
             if ($wt->id == $pps->weeklyTrackings()->first()->id) {
                 $wt->update([
-                    'is_accepted' => 1,  
+                    'is_accepted' => 1,
                 ]);
-                
+
                 return response()->json([
                     'success' => true,
                     'title' => 'Aprobado!',
@@ -331,11 +334,12 @@ class TeachersController extends Controller
         }
     }
 
-    public function rejectWT(Request $request, $id) {
+    public function rejectWT(Request $request, $id)
+    {
         try {
 
             $request->validate([
-                'observation' => 'required|string', 
+                'observation' => 'required|string',
             ]);
 
             $wt = WeeklyTracking::findOrFail($id);
@@ -348,13 +352,13 @@ class TeachersController extends Controller
                     'message' => 'No tiene permisos para rechazar esta solicitud',
                 ], 403);
             }
-    
+
             $wt->update([
                 'is_accepted' => false,
                 'is_editable' => true,
-                'observation' => $request->input('observation'), 
+                'observation' => $request->input('observation'),
             ]);
-    
+
             Mail::to($pps->Student->email)->send(
                 new RejectWTEmail(
                     $pps->Student->first_name,
@@ -362,12 +366,12 @@ class TeachersController extends Controller
                     $pps->Teacher->email,
                 )
             );
-    
+
             return response()->json([
                 'success' => true,
                 'message' => 'Seguimiento rechazado correctamente. El estudiante ha sido notificado.',
             ], 200);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -395,7 +399,7 @@ class TeachersController extends Controller
                 'error' => $e->getMessage()
             ], 400);
         }
-        
+
     }
 
     public function approveFR(Request $request, $id)
@@ -408,7 +412,7 @@ class TeachersController extends Controller
                 return response()->json([
                     'success' => false,
                     'title' => 'Error al aprobar la solicitud',
-                    'message' => 'El usuario no es un profesor',
+                    'message' => 'El usuario no es un docente',
                 ], 400);
             }
 
@@ -444,15 +448,16 @@ class TeachersController extends Controller
         }
     }
 
-    public function rejectFR(Request $request, $id) {
+    public function rejectFR(Request $request, $id)
+    {
         try {
             $pps = PPS::with('Student', 'Teacher')->findOrFail($id);
             $fr = FinalReport::where('pps_id', $pps->id)->first();
 
             $request->validate([
-                'observation' => 'required|string', 
+                'observation' => 'required|string',
             ]);
-    
+
             if (auth()->user()->role_id != 2 || $pps->teacher_id != auth()->user()->id) {
                 return response()->json([
                     'success' => false,
@@ -460,13 +465,13 @@ class TeachersController extends Controller
                     'message' => 'No tiene permisos para rechazar esta solicitud',
                 ], 403);
             }
-    
+
             $fr->update([
                 'is_accepted' => false,
                 'is_editable' => true,
-                'observation' => $request->input('observation'), 
+                'observation' => $request->input('observation'),
             ]);
-    
+
             Mail::to($pps->Student->email)->send(
                 new RejectRFEmail(
                     $pps->Student->first_name,
@@ -474,12 +479,12 @@ class TeachersController extends Controller
                     $pps->Teacher->email,
                 )
             );
-    
+
             return response()->json([
                 'success' => true,
                 'message' => 'Reporte final rechazado correctamente. El estudiante ha sido notificado.',
             ], 200);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -492,10 +497,10 @@ class TeachersController extends Controller
 
     public function getObservationWT($id)
     {
-        $tracking = WeeklyTracking::findOrFail($id);  
-        
+        $tracking = WeeklyTracking::findOrFail($id);
+
         return response()->json([
-            'observation' => $tracking->observation,  
+            'observation' => $tracking->observation,
         ]);
     }
 }

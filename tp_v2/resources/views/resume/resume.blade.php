@@ -2,14 +2,16 @@
 @section('content')
 
 <div class="card mb-4">
-    <div class="card-header"><h4>Detalles de PPS</h4></div>
+    <div class="card-header">
+        <h4>Detalles de PPS</h4>
+    </div>
     <div class="card-body">
         <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Nombre</th>
-                    <th>Profesor/a</th>
+                    <th>Docente/a</th>
                     <th>Responsable</th>
                     <th>Fecha de creación</th>
                     <th>Archivo</th>
@@ -31,7 +33,9 @@
 </div>
 
 <div class="card mb-4">
-    <div class="card-header"><h4>Detalles del Reporte Final</h4></div>
+    <div class="card-header">
+        <h4>Detalles del Reporte Final</h4>
+    </div>
     <div class="card-body">
         <table class="table table-bordered">
             <thead>
