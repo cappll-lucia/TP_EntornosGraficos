@@ -132,14 +132,18 @@
                                         <tr>
                                             <td class="col-4"><b class="font-weight-bold">Docente a cargo:</b></td>
                                             <td>
-                                                <select id="TeacherSelect" name="TeacherSelect" class="w-50 form-control">
-                                                    @foreach($teachers as $teach)
-                                                        <option value="{{ $teach->id }}" @if($teach->id == $pps->teacher_id)
-                                                        selected @endif>
-                                                            {{ $teach->first_name }} {{ $teach->last_name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                                @if ($pps->responsible_id != null)
+                                                    <select id="TeacherSelect" name="TeacherSelect" class="w-50 form-control">
+                                                        @foreach($teachers as $teach)
+                                                            <option value="{{ $teach->id }}" @if($teach->id == $pps->teacher_id)
+                                                            selected @endif>
+                                                                {{ $teach->first_name }} {{ $teach->last_name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                @else
+                                                    Sin asignar
+                                                @endif
                                             </td>
                                         </tr>
                                     @else
@@ -154,6 +158,33 @@
                                             </td>
                                         </tr>
                                     @endif
+
+                                    <tr>
+                                        <td class="col-4"><b class="font-weight-bold">Plan de trabajo:</b></td>
+                                        <td>
+                                            <form action="{{ Storage::url($pps->WorkPlan->file_path) }}" method="GET"
+                                                target="_blank">
+                                                @csrf
+                                                @if($pps->responsible_id != null)
+                                                    <button id="btnViewFile" class="btn btn-success">
+                                                        Ver archivo
+                                                    </button>
+                                                @else
+                                                    <button id="btnViewFile" class="btn btn-secondary" disabled>
+                                                        Ver archivo
+                                                    </button>
+                                                @endif
+                                            </form>
+                                            @if (auth()->user()->role_id == '1' && $pps->is_editable == true)
+                                                <div class="mt-2">
+                                                    <label for="fileInput" class="form-label">Selecciona un
+                                                        archivo</label>
+                                                    <input id="file" name="file" type="file" class="w-75 form-control"
+                                                        accept=".pdf" />
+                                                </div>
+                                            @endif
+                                        </td>
+                                    </tr>
 
                                     {{-- Form para actualizar en caso de ser rechazado --}}
                                     <form action={{ route('pps.update', ['id' => $pps->id]) }} id="form_data"
@@ -192,8 +223,8 @@
                                                     <td>
                                                         <textarea id="description" name="description"
                                                             class="mt-2 w-75 form-control" rows="3">
-                                                                                                                                    {{ $pps->description }}
-                                                                                                                                </textarea>
+                                                                                                                                                                                                                                                                                                    {{ $pps->description }}
+                                                                                                                                                                                                                                                                                                </textarea>
 
                                                     </td>
                                                 </tr>
@@ -255,12 +286,13 @@
                             @if (auth()->user()->role_id == '2' && $pps->is_finished == true && $pps->is_approved == false && $pps->is_editable == false)
                                 <div class="d-flex justify-content-end">
                                     <hr class="m-t-0 m-b-20">
-                                    <button id="btnAprobar" class="mb-2 btn btn-success waves-effect waves-light me-2"
+                                    <button id="btnAprobar" class="btn btn-success waves-effect waves-light me-2"
                                         data-id="{{$pps->id}}">Aprobar solicitud</button>
-                                    <button id="btnRechazar" class="mb-2 btn btn-danger waves-effect waves-light me-2"
+                                    <button id="btnRechazar" class="btn btn-danger waves-effect waves-light me-2"
                                         data-id="{{$pps->id}}">Rechazar solicitud</button>
                                     <hr class="m-t-0 m-b-20">
                                 </div>
+                                <hr class="m-t-0 m-b-20">
                             @endif
                             @if(session('success'))
                                 <div class="alert alert-success">

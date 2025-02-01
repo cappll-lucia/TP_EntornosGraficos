@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\AssignTeacherEmail;
 use App\Models\FinalReport;
 use App\Mail\FinishPPSEmail;
+use Illuminate\Validation\Rule;
+
 
 class ResponsiblesController extends Controller
 {
@@ -93,11 +95,15 @@ class ResponsiblesController extends Controller
         try {
             DB::beginTransaction();
             $user = User::findOrFail($id);
+            $emailRule = ['required', 'string', 'lowercase', 'email', 'max:255'];
+            if ($user->email !== $request->email) {
+                $emailRule[] = Rule::unique('users', 'email');
+            }
             $request->validate([
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
                 'legajo' => ['required', 'numeric'],
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255','unique:users,email'],
+                'email' => $emailRule,
             ]);
             $user->update([
                 'first_name' => $request->first_name,
@@ -110,7 +116,7 @@ class ResponsiblesController extends Controller
             return view('users.responsibles.index', ['responsibles' => $responsibles]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
-            return redirect()->back()->withErrors($e->validator)->withInput();    
+            return redirect()->back()->withErrors($e->validator)->withInput();
         } catch (\Exception $exep) {
             DB::rollBack();
             dd($exep->getMessage());
@@ -126,10 +132,10 @@ class ResponsiblesController extends Controller
             $user = User::findOrFail($id);
             $user->delete();
             DB::commit();
-            
+
             $responsibles = User::where('role_id', 3)->get();
             return redirect()->route('getResponsibles')->with([
-                'responsibles' => $responsibles, 
+                'responsibles' => $responsibles,
                 'success' => 'Responsable eliminado correctamente'
             ]);
         } catch (\Exception $exep) {

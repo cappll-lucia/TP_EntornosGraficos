@@ -17,6 +17,8 @@ use App\Mail\ApproveFinalReportEmail;
 use App\Mail\RejectPPSEmail;
 use App\Mail\RejectWTEmail;
 use App\Mail\RejectRFEmail;
+use Illuminate\Validation\Rule;
+
 
 class TeachersController extends Controller
 {
@@ -98,11 +100,15 @@ class TeachersController extends Controller
         try {
             DB::beginTransaction();
             $user = User::findOrFail($id);
+            $emailRule = ['required', 'string', 'lowercase', 'email', 'max:255'];
+            if ($user->email != $request->email) {
+                $emailRule[] = Rule::unique('users', 'email');
+            }
             $request->validate([
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
                 'legajo' => ['required', 'numeric'],
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+                'email' => $emailRule,
             ]);
             $user->update([
                 'first_name' => $request->first_name,
@@ -423,19 +429,19 @@ class TeachersController extends Controller
                 ], 400);
             }
 
-             $fr->update([
-                 'is_accepted' => 1,
-             ]);
+            $fr->update([
+                'is_accepted' => 1,
+            ]);
 
-             Mail::to($pps->Student->email)->send(
-                 new ApproveFinalReportEmail(
-                     $pps->Student->first_name,
-                     $pps->id,
-                     $pps->Teacher->email
-                 )
-             );
+            Mail::to($pps->Student->email)->send(
+                new ApproveFinalReportEmail(
+                    $pps->Student->first_name,
+                    $pps->id,
+                    $pps->Teacher->email
+                )
+            );
 
-             return redirect()->route('fr.details', ['id' => $fr->id])->with('success', 'Reporte final aprobado correctamente');
+            return redirect()->route('fr.details', ['id' => $fr->id])->with('success', 'Reporte final aprobado correctamente');
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -451,7 +457,7 @@ class TeachersController extends Controller
         try {
             $fr = FinalReport::findOrFail($id);
             $pps = PPS::with('Student', 'Teacher')->findOrFail($fr->pps_id);
-            
+
             $request->validate([
                 'observation' => 'required|string',
             ]);
@@ -504,10 +510,10 @@ class TeachersController extends Controller
 
     public function getObservationFR($id)
     {
-        $report = FinalReport::findOrFail($id);  
-        
+        $report = FinalReport::findOrFail($id);
+
         return response()->json([
-            'observation' => $report->observation,  
+            'observation' => $report->observation,
         ]);
     }
 }

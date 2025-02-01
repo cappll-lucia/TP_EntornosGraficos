@@ -14,6 +14,7 @@ use App\Models\FinalReport;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UploadWeeklyTrackingEmail;
 use App\Mail\UploadFinalReportEmail;
+use Illuminate\Validation\Rule;
 
 class StudentsController extends Controller
 {
@@ -98,11 +99,15 @@ class StudentsController extends Controller
         try {
             DB::beginTransaction();
             $user = User::findOrFail($id);
+            $emailRule = ['required', 'string', 'lowercase', 'email', 'max:255'];
+            if ($user->email !== $request->email) {
+                $emailRule[] = Rule::unique('users', 'email');
+            }
             $request->validate([
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
                 'legajo' => ['required', 'numeric'],
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+                'email' => $emailRule,
             ]);
             $user->update([
                 'first_name' => $request->first_name,
@@ -200,7 +205,7 @@ class StudentsController extends Controller
 
                 $fr->file_path = $path;
                 $fr->is_editable = false;
-                
+
                 $fr->save();
 
                 Mail::to($pps->Teacher->email)->send(
@@ -212,7 +217,7 @@ class StudentsController extends Controller
                     )
                 );
 
-                return redirect()->route('fr.details', ['id' => $fr->id,'created_at'=> $fr->created_at])->with('success', 'Archivo cargado exitosamente.');
+                return redirect()->route('fr.details', ['id' => $fr->id, 'created_at' => $fr->created_at])->with('success', 'Archivo cargado exitosamente.');
             }
 
             return response()->json(['success' => false]);
