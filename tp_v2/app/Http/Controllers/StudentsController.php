@@ -217,7 +217,7 @@ class StudentsController extends Controller
                     )
                 );
 
-                return redirect()->route('fr.details', ['id' => $fr->id, 'created_at' => $fr->created_at])->with('success', 'Archivo cargado exitosamente.');
+                return view('final_report.details', compact('pps', 'fr'))->with('success', 'Reporte final aprobado correctamente');
             }
 
             return response()->json(['success' => false]);
@@ -227,7 +227,7 @@ class StudentsController extends Controller
                 'success' => false,
                 'title' => 'Error al guardar el archivo',
                 'message' => 'Intente nuevamente o comuníquese para soporte',
-                'error' => $e->getMessage()
+                'error' => $exep->getMessage()
             ], 400);
         }
     }

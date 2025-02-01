@@ -441,7 +441,8 @@ class TeachersController extends Controller
                 )
             );
 
-            return redirect()->route('fr.details', ['id' => $fr->id])->with('success', 'Reporte final aprobado correctamente');
+            return view('final_report.details', compact('pps', 'fr'))->with('success', 'Reporte final aprobado correctamente');
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

@@ -281,20 +281,6 @@ class PPSController extends Controller
 
             $user = User::where('id', auth()->user()->id)->first();
 
-            if ($pps->student_id != $user->id && auth()->user()->role_id != 1) {
-                return response()->json([
-                    'success' => false,
-                    'title' => 'Error al descargar el plan de trabajo',
-                    'message' => 'No está autorizado a realizar esta descarga'
-                ], 400);
-            } else if ($pps->teacher_id != $user->id && auth()->user()->role_id != 2) {
-                return response()->json([
-                    'success' => false,
-                    'title' => 'Error al descargar el plan de trabajo',
-                    'message' => 'No está autorizado a realizar esta descarga'
-                ], 400);
-            }
-
             $work_plan = WorkPlan::where('pps_id', $pps->id)->first();
 
             if (Storage::exists($work_plan->file_path)) {
