@@ -32,3 +32,66 @@
 </body>
 
 </html>
+
+<style>
+    /*@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/regular';
+@import '~@fortawesome/fontawesome-free/scss/brands';
+@import '~@fortawesome/fontawesome-free/scss/solid';*/
+
+.footer {
+    width: 100%;
+    position: relative;
+    bottom: 0;
+    background-color: #cfcccc;
+}
+
+.page-body {
+    min-height: 70vh;
+}
+
+.navbar {
+    background-color: rgb(34, 167, 211);
+}
+
+.usr-menu-btn {
+    color: blue;
+}
+
+.header {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.modal-content {
+    color: black;
+}
+
+.usr-menu ul {
+    padding: 0;
+    overflow: hidden;
+}
+.usr-menu ul li {
+    padding: 1rem;
+}
+
+.usr-menu ul li:hover {
+    background-color: rgb(219, 218, 218);
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+  
+.min-vh-100 {
+    min-height: 100vh;
+}
+  
+.flex-grow-1 {
+    flex-grow: 1;
+}
+
+  
+
+</style>
