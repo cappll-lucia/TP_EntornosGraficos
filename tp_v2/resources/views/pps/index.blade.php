@@ -70,7 +70,7 @@
                                         @else
                                             <td>{{ $app->Responsible->last_name }}, {{ $app->Responsible->first_name }}</td>
                                         @endif
-                                        @if ($app->Teacher == null)
+                                        @if ($app->WorkPlan->is_accepted == 0)
                                             <td>-</td>
                                         @else
                                             <td>{{ $app->Teacher->last_name }}, {{ $app->Teacher->first_name }}</td>

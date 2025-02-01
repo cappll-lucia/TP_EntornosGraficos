@@ -129,7 +129,7 @@
                                     <tr>
                                         <td class="col-4"><b class="font-weight-bold">Profesor a cargo:</b></td>
                                         <td>
-                                            @if ($pps->teacher_id != null)
+                                            @if ($pps->responsible_id != null)
                                                 {{ $pps->Teacher->last_name }}, {{ $pps->Teacher->first_name }}
                                             @else
                                                 Sin asignar
@@ -279,23 +279,23 @@
                             @endif
                         </div>
                         <div>
-                        @if (!$wts)
-                        <form id="generate-wt-form" action="{{ route('wt.generate', $pps->id) }}" method="POST">
-                            @csrf
-                            <button id="btnGeneratewts" class="btn btn-secondary" disabled>
-                            Ir a seguimientos
-                            semanales
-                            </button>
-                        </form>                           
-                        @else
-                            <form id="seguimientos" action="{{ route('getWeeklyTrackings', $pps->id) }}" method="GET">
-                                @csrf
-                                <button id="btnGeneratewts" class="btn btn-secondary" disabled>
-                                Ir a seguimientos
-                                semanales
-                                </button>
-                            </form> 
-                        @endif
+                            @if (!$wts)
+                                <form id="generate-wt-form" action="{{ route('wt.generate', $pps->id) }}" method="POST">
+                                    @csrf
+                                    <button id="btnGeneratewts" class="btn btn-secondary" disabled>
+                                        Ir a seguimientos
+                                        semanales
+                                    </button>
+                                </form>
+                            @else
+                                <form id="seguimientos" action="{{ route('getWeeklyTrackings', $pps->id) }}" method="GET">
+                                    @csrf
+                                    <button id="btnGeneratewts" class="btn btn-secondary" disabled>
+                                        Ir a seguimientos
+                                        semanales
+                                    </button>
+                                </form>
+                            @endif
                         </div>
                     </div>
                 </div>
