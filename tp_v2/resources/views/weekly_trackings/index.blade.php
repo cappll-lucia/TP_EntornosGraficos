@@ -9,7 +9,7 @@
 
 <div class="container-fluid">
     <div class="col-md-5 col-8 align-self-center">
-        <h3 class="text-themecolor m-b-0 m-t-0">Seguimientos semanales</h3>
+        <h3 class="m-b-0 m-t-0 text-themecolor">Seguimientos semanales</h3>
         @if (auth()->user()->role_id == '3' && !$wts)
             <div class="mb-3">
                 <form id="generate-wt-form" action="{{ route('wt.generate', $pps->id) }}" method="POST">
@@ -31,11 +31,6 @@
             @endif
         @endif
     </div>
-    @if (!$wts)
-        <div class="alert alert-warning" role="alert">
-            Los seguimientos semanales aún no han sido generados. Por favor, espera a que el responsable los cree.
-        </div>
-    @else
         <table id="DataTable" class="table table-striped">
             <thead>
                 <tr>
@@ -90,7 +85,6 @@
             <br>
             <hr class="m-t-0 m-b-20">
         </div>
-    @endif
 
 <script>
 

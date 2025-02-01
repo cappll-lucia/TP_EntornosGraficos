@@ -27,7 +27,7 @@
 <div class="container mt-4">
     <h2>Detalles del seguimiento</h2>
 
-    <div class="card mb-4">
+    <div class="mb-4 card">
         <div class="card-body">
             <table class="table no-border">
                 <tbody>
@@ -47,7 +47,7 @@
                             @endif
                             @if (auth()->user()->role_id == '1' && $wt->is_editable == 1)
                                     <br>
-                                    <form id="uploadForm" action="{{ route('wt.saveFile', ['id' => $wt->id]) }}" method="POST" enctype="multipart/form-data" class="border p-4 rounded shadow-sm">
+                                    <form id="uploadForm" action="{{ route('wt.saveFile', ['id' => $wt->id]) }}" method="POST" enctype="multipart/form-data" class="border rounded shadow-sm p-4">
                                         @csrf
                                         <div class="mb-3">
                                             <label for="fileInput" class="form-label">Selecciona un archivo</label>
@@ -106,7 +106,7 @@
         <a href="{{ route('getWeeklyTrackings', ['id' => $pps->id]) }}" class="btn btn-link">Volver</a>
     </div>
     <div id="loadingSpinner" class="d-none">
-        <div class="spinner-border text-primary" role="status">
+        <div class="text-primary spinner-border" role="status">
             <span class="visually-hidden">Cargando...</span>
         </div>
     </div>
@@ -186,9 +186,9 @@
     });
 
     $(document).on("click", "#btnAprobar", function () {
-        event.stopPropagation();
+        event.preventDefault();
         const id = $(this).data('id');
-        
+
         Swal.fire({
             title: '¿Está seguro?',
             text: `¿Desea aprobar el seguimiento semanal?`,
@@ -232,50 +232,83 @@
     });
 
     $(document).on("click", "#btnRechazar", function () {
-        event.stopPropagation();
-        const id = $(this).data('id');
-        
-        Swal.fire({
-            title: '¿Está seguro?',
-            text: `¿Desea rechazar el seguimiento semanal?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, rechazar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $("#loadingSpinner").removeClass('d-none');
+    event.stopPropagation();  
 
-                $.ajax({
-                    url: `{{ route('wt.reject', ':id') }}`.replace(':id', id),
-                    method: 'POST',
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                    },
-                    success: function (response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: '¡Éxito!',
-                            text: response.message || 'El seguimiento ha sido rechazado correctamente.',
-                        }).then(() => {
-                            window.location.reload();
-                        });
-                    },
-                    error: function (xhr) {
+    const id = $(this).data('id');
+
+    
+    $.ajax({
+        url: `{{ route('wt.getObservation', ':id') }}`.replace(':id', id),  
+        method: 'GET',
+        success: function (response) {
+            const observation = response.observation || ""; 
+
+
+            $("textarea[name='observation']").val(observation);  
+
+            Swal.fire({
+                title: '¿Está seguro?',
+                text: '¿Desea rechazar el seguimiento semanal?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, rechazar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const updatedObservation = $("textarea[name='observation']").val().trim(); 
+
+                    if (!updatedObservation) {
                         Swal.fire({
                             icon: 'error',
-                            title: xhr.responseJSON?.title || 'Error!',
-                            text: xhr.responseJSON?.message || 'Hubo un problema al rechazar el seguimiento.',
+                            title: 'Error',
+                            text: 'Debes ingresar una observación antes de rechazar.',
                         });
-                    },
-                    complete: function () {
-                        $("#loadingSpinner").addClass('d-none');
+                        return;  
                     }
-                });
-            }
-        });
+
+                    $("#loadingSpinner").removeClass('d-none');  
+
+                    
+                    $.ajax({
+                        url: `{{ route('wt.reject', ':id') }}`.replace(':id', id),
+                        method: 'POST',
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            observation: updatedObservation, 
+                        },
+                        success: function (response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '¡Éxito!',
+                                text: response.message || 'El seguimiento ha sido rechazado correctamente.',
+                            }).then(() => {
+                                location.reload();  
+                            });
+                        },
+                        error: function (xhr) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: xhr.responseJSON?.title || 'Error!',
+                                text: xhr.responseJSON?.message || 'Hubo un problema al rechazar el seguimiento.',
+                            });
+                        },
+                        complete: function () {
+                            $("#loadingSpinner").addClass('d-none');  
+                        }
+                    });
+                }
+            });
+        },
+        error: function (xhr) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al cargar la observación',
+                text: 'No se pudo cargar la observación desde la base de datos.',
+            });
+        }
     });
+});
 
 </script>
 

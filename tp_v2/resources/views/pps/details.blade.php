@@ -279,8 +279,23 @@
                             @endif
                         </div>
                         <div>
-                            <button id="btnSeguimiento" class="btn btn-secondary" disabled>Ir a seguimientos
-                                semanales</button>
+                        @if (!$wts)
+                        <form id="generate-wt-form" action="{{ route('wt.generate', $pps->id) }}" method="POST">
+                            @csrf
+                            <button id="btnGeneratewts" class="btn btn-secondary" disabled>
+                            Ir a seguimientos
+                            semanales
+                            </button>
+                        </form>                           
+                        @else
+                            <form id="seguimientos" action="{{ route('getWeeklyTrackings', $pps->id) }}" method="GET">
+                                @csrf
+                                <button id="btnGeneratewts" class="btn btn-secondary" disabled>
+                                Ir a seguimientos
+                                semanales
+                                </button>
+                            </form> 
+                        @endif
                         </div>
                     </div>
                 </div>
@@ -536,14 +551,10 @@
         });
 
         if ("{{ $pps->is_approved }}" == true) {
-            $("#btnSeguimiento").prop('disabled', false).removeClass('btn-secondary').addClass('btn-success');
+            $("#btnGeneratewts").prop('disabled', false).removeClass('btn-secondary').addClass('btn-success');
         } else {
-            $("#btnSeguimiento").prop('disabled', true).removeClass('btn-success').addClass('btn-secondary');
+            $("#btnGeneratewts").prop('disabled', true).removeClass('btn-success').addClass('btn-secondary');
         }
-
-        $("#btnSeguimiento").on("click", function () {
-            window.location.href = "{{ route('getWeeklyTrackings', ['id' => $pps->id]) }}";
-        });
     });
 </script>
 

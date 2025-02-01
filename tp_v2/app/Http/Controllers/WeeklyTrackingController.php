@@ -31,13 +31,6 @@ class WeeklyTrackingController extends Controller
         try {
             $pps = PPS::findOrFail($id);
 
-            if (auth()->user()->role_id != 3) {
-                return redirect()->back()->with('error', 'No tienes permisos para realizar esta acción.');
-            }
-
-            if ($pps->WeeklyTrackings()->count() > 0) {
-                return redirect()->back()->with('error', 'Los seguimientos semanales ya fueron generados.');
-            }
 
             for ($i = 1; $i <= 10; $i++) {
                 WeeklyTracking::create([

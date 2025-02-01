@@ -1,7 +1,11 @@
+@extends('layouts.app')
+@section('content')
+
+
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+    <div class="text-sm mb-4 text-gray-600 dark:text-gray-400">
         {{ __('
-¿Olvidaste tu contraseña? Ningún problema. Simplemente háganos saber su dirección de correo electrónico y le enviaremos un enlace para restablecer su contraseña que le permitirá elegir una nueva.') }}
+¿Olvidaste tu contraseña? Simplemente hacenos saber tu dirección de correo electrónico y te enviaremos un enlace para restablecer tu contraseña.') }}
     </div>
 
     <!-- Session Status -->
@@ -13,15 +17,17 @@
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
+            <x-text-input id="email" class="mt-1 w-full block" type="email" name="email" :value="old('email')" required
                 autofocus />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
+        <div class="flex mt-4 items-center justify-end">
             <x-primary-button>
-                {{ __('Reestablecer contraseña') }}
+                {{ __('Restablecer contraseña') }}
             </x-primary-button>
         </div>
     </form>
 </x-guest-layout>
+
+@endsection

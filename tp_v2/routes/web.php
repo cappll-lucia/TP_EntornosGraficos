@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pps/{id}/resume', [PPSController::class, 'finalResume'])->name('resume');
     Route::get('/pps/{id}/resume/wp/download', [PPSController::class, 'downloadWorkPlan'])->name('wp.download');
     Route::get('/pps/{id}/resume/fr/download', [FinalReportController::class, 'download'])->name('fr.download');
+    Route::post('/pps/{id}/weeklyTracking/generate', [WeeklyTrackingController::class, 'generateWT'])->name('wt.generate');
 });
 
 
@@ -86,13 +87,13 @@ Route::group(['middleware' => ['auth', StudentsRoutes::class]], function () {
 Route::group(['middleware' => ['auth', RespRoutes::class]], function () {
     Route::patch('/pps/{id}/tomar', [PPSController::class, 'tomar'])->name('pps.tomar');
     Route::post('/pps/{id}/assignTeacher', [ResponsiblesController::class, 'assignTeacher'])->name('assignTeacher');
-    Route::post('/pps/{id}/weeklyTracking/generate', [WeeklyTrackingController::class, 'generateWT'])->name('wt.generate');
     Route::post('/finalReports/{id}/create', [FinalReportController::class, 'createFR'])->name('fr.generate');
     Route::post('/finalReports/{id}/finish', [ResponsiblesController::class, 'finishWholePPS'])->name('fr.finish');
 });
 
 Route::group(['middleware' => ['auth', TeacherRoutes::class]], function () {
     Route::post('/pps/{id}/editObservation', [TeachersController::class, 'editObservationPPS'])->name('pps.editObservation');
+    Route::get('/weeklyTracking/{id}/getObservation', [TeachersController::class, 'getObservationWT'])->name('wt.getObservation');
     Route::post('/pps/{id}/approve', [TeachersController::class, 'approvePps'])->name('pps.approve');
     Route::post('/pps/{id}/reject', [TeachersController::class, 'rejectPps'])->name('pps.reject');
     Route::get('/studentsReport', [PPSController::class, 'downloadStudentsReport'])->name('studentsReport');

@@ -293,7 +293,7 @@ class TeachersController extends Controller
 
             if ($wt->id == $pps->weeklyTrackings()->first()->id) {
                 $wt->update([
-                    'is_accepted' => 1,
+                    'is_accepted' => 1,  
                 ]);
                 
                 return response()->json([
@@ -301,17 +301,6 @@ class TeachersController extends Controller
                     'title' => 'Aprobado!',
                     'message' => 'Semana aprobada correctamente.',
                 ], 200);
-            }
-
-            $previousWT = $pps->weeklyTrackings()->where('id', '<', $wt->id)->orderBy('id', 'desc')->first();
-
-            if ($previousWT && !$previousWT->is_accepted) {
-                return response()->json([
-                    'success' => false,
-                    'title' => 'Error al aprobar la solicitud',
-                    'message' => 'El seguimiento anterior no ha sido aprobado',
-                    'error' => $e->getMessage()
-                ], 400);
             }
 
             $wt->update([
@@ -344,9 +333,14 @@ class TeachersController extends Controller
 
     public function rejectWT(Request $request, $id) {
         try {
+
+            $request->validate([
+                'observation' => 'required|string', 
+            ]);
+
             $wt = WeeklyTracking::findOrFail($id);
             $pps = PPS::with('Student', 'Teacher')->findOrFail($wt->pps_id);
-    
+
             if (auth()->user()->role_id != 2 || $pps->teacher_id != auth()->user()->id) {
                 return response()->json([
                     'success' => false,
@@ -358,6 +352,7 @@ class TeachersController extends Controller
             $wt->update([
                 'is_accepted' => false,
                 'is_editable' => true,
+                'observation' => $request->input('observation'), 
             ]);
     
             Mail::to($pps->Student->email)->send(
@@ -453,6 +448,10 @@ class TeachersController extends Controller
         try {
             $pps = PPS::with('Student', 'Teacher')->findOrFail($id);
             $fr = FinalReport::where('pps_id', $pps->id)->first();
+
+            $request->validate([
+                'observation' => 'required|string', 
+            ]);
     
             if (auth()->user()->role_id != 2 || $pps->teacher_id != auth()->user()->id) {
                 return response()->json([
@@ -465,6 +464,7 @@ class TeachersController extends Controller
             $fr->update([
                 'is_accepted' => false,
                 'is_editable' => true,
+                'observation' => $request->input('observation'), 
             ]);
     
             Mail::to($pps->Student->email)->send(
@@ -488,5 +488,14 @@ class TeachersController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function getObservationWT($id)
+    {
+        $tracking = WeeklyTracking::findOrFail($id);  
+        
+        return response()->json([
+            'observation' => $tracking->observation,  
+        ]);
     }
 }

@@ -91,7 +91,8 @@ class PPSController extends Controller
 
             $user = User::where('id', auth()->user()->id)->first();
             $wp = WorkPlan::where('pps_id', $pps->id)->first();
-
+            $wts = $pps->WeeklyTrackings()->exists();
+            
             if (
                 ($user->role_id == 1 && $user->id != $pps->student_id) || ($user->role_id == 2 && $user->id != $pps->teacher_id)
                 || ($user->role_id == 3 && $user->id != $pps->responsible_id)
@@ -114,7 +115,7 @@ class PPSController extends Controller
                 }
             }
 
-            return view('pps.details', compact('pps', 'teachers', 'wp'));
+            return view('pps.details', compact('pps', 'teachers', 'wp','wts'));
         } catch (\Exception $e) {
             $error = new \stdClass();
             $error->code = 500;
