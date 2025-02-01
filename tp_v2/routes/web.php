@@ -103,6 +103,7 @@ Route::group(['middleware' => ['auth', TeacherRoutes::class]], function () {
     Route::post('/finalReport/{id}/editObservation', [TeachersController::class, 'editObservationFR'])->name('fr.editObservation');
     Route::post('/finalReport/{id}/approve', [TeachersController::class, 'approveFR'])->name('fr.approve');
     Route::post('/finalReport/{id}/reject', [TeachersController::class, 'rejectFR'])->name('fr.reject');
+    Route::get('/finalReport/{id}/getObservation', [TeachersController::class, 'getObservationFR'])->name('fr.getObservation');
 });
 
 

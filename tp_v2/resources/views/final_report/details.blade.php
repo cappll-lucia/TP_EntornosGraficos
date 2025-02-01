@@ -36,7 +36,7 @@
                                     <tr>
                                         <td class="col-4"><b class="font-weight-bold">Reporte final del estudiante:</b></td>
                                         <td>
-                                            @if ($fr->file_path != null)
+                                            @if ($fr->file_path != null && $fr->is_editable == false)
                                                 <a href="{{ Storage::url($fr->file_path) }}" target="_blank" class="btn btn-success btn-sm">
                                                     Ver archivo
                                                 </a>
@@ -63,7 +63,7 @@
                                             <b class="font-weight-bold">Observaciones:</b>
                                         </td>
                                         <td>{{ $fr->observation != null ? $fr->observation : "-" }}
-                                            @if (auth()->user()->role_id == '2' && $fr->is_accepted === 0)
+                                            @if (auth()->user()->role_id == '2' && $fr->is_accepted === 0 && $fr->is_editable == false)
                                                 <button class="btn btn-sm waves-effect waves-light" type="button"
                                                         data-bs-toggle="modal" data-bs-target="#modalObservation">
                                                     <i class="bi bi-pencil-square"></i> Escribir observación
@@ -81,10 +81,10 @@
                             @if (auth()->user()->role_id == '2' && $fr->is_accepted === 0)
                                 @if ($fr->file_path && $fr->is_editable == false)
                                     <div class="d-flex justify-content-end">
-                                            <button id="btnAprobar" class="btn btn-success waves-effect waves-light"
-                                                data-id="{{$pps->id}}">Aprobar solicitud</button>
-                                                <button id="btnRechazar" class="btn btn-danger waves-effect waves-light" 
-                                                data-id="{{$pps->id}}">Rechazar solicitud</button>
+                                            <button id="btnAprobar" class="mb-2 btn btn-success waves-effect waves-light me-2"
+                                                data-id="{{$fr->id}}">Aprobar solicitud</button>
+                                                <button id="btnRechazar" class="mb-2 btn btn-danger waves-effect waves-light me-2" 
+                                                data-id="{{$fr->id}}">Rechazar solicitud</button>
                                         <hr class="m-t-0 m-b-20">
                                     </div>
                                 @else
@@ -105,27 +105,33 @@
 
                         <!-- Modal para agregar observaciones -->
                         @if (auth()->user()->role_id == '2')
-                        <div class="modal fade" id="modalObservation" tabindex="-1" aria-labelledby="modalObservationLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <form id="observationForm" action="{{ route('fr.editObservation', $pps->id) }}" method="POST">
-                                        @csrf
-                                        <div class="modal-header">
-                                            <br>
-                                            <h5 class="modal-title" id="modalObservationLabel">Agregar Observación</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <textarea name="observation" class="form-control" rows="4" placeholder="Escribe tu observación aquí"></textarea>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                            <button id="btnSaveObservation" type="submit" class="btn btn-primary">Guardar</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
+                        <!-- Modal para agregar observaciones -->
+    <div class="modal fade" id="modalObservation" tabindex="-1" aria-labelledby="modalObservationLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalObservationLabel">Escriba Observaciones</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="observationForm" method="post" action="{{ route('fr.editObservation', $fr->id) }}">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="observationInput" class="form-label">Observación</label>
+                            <textarea class="form-control" id="observationInput" name="observation" rows="3"
+                                required>{{ old('observation', $fr->observation) }}</textarea>
                         </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
                         @endif
                 </div>
                 <div id="loadingSpinner" class="d-none">
@@ -139,6 +145,18 @@
 </div>
 
 <script>
+
+    $(document).ready(function () {
+        $("#btnConfirmar").prop('disabled', true);
+        $("#fileInput").change(function () {
+            if ($(this).val() != '') {
+                $("#btnConfirmar").prop('disabled', false);
+            } else {
+                $("#btnConfirmar").prop('disabled', true);
+            }
+        });
+    });
+    
     $("#btnConfirmar").on("click", function () {
         event.preventDefault();
             Swal.fire({
@@ -233,50 +251,83 @@
     });
 
     $(document).on("click", "#btnRechazar", function () {
-        event.stopPropagation();
-        const id = $(this).data('id');
-        
-        Swal.fire({
-            title: '¿Está seguro?',
-            text: `¿Desea rechazar el reporte final?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, rechazar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $("#loadingSpinner").removeClass('d-none');
+    event.stopPropagation();  
 
-                $.ajax({
-                    url: `{{ route('fr.reject', ':id') }}`.replace(':id', id),
-                    method: 'POST',
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                    },
-                    success: function (response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: '¡Éxito!',
-                            text: response.message || 'El reporte ha sido rechazado correctamente.',
-                        }).then(() => {
-                            window.location.reload();
-                        });
-                    },
-                    error: function (xhr) {
+    const id = $(this).data('id');
+
+    
+    $.ajax({
+        url: `{{ route('fr.getObservation', ':id') }}`.replace(':id', id),  
+        method: 'GET',
+        success: function (response) {
+            const observation = response.observation || ""; 
+
+
+            $("textarea[name='observation']").val(observation);  
+
+            Swal.fire({
+                title: '¿Está seguro?',
+                text: '¿Desea rechazar el reporte final?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, rechazar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const updatedObservation = $("textarea[name='observation']").val().trim(); 
+
+                    if (!updatedObservation) {
                         Swal.fire({
                             icon: 'error',
-                            title: xhr.responseJSON?.title || 'Error!',
-                            text: xhr.responseJSON?.message || 'Hubo un problema al rechazar el reporte.',
+                            title: 'Error',
+                            text: 'Debes ingresar una observación antes de rechazar.',
                         });
-                    },
-                    complete: function () {
-                        $("#loadingSpinner").addClass('d-none');
+                        return;  
                     }
-                });
-            }
-        });
+
+                    $("#loadingSpinner").removeClass('d-none');  
+
+                    
+                    $.ajax({
+                        url: `{{ route('fr.reject', ':id') }}`.replace(':id', id),
+                        method: 'POST',
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            observation: updatedObservation, 
+                        },
+                        success: function (response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '¡Éxito!',
+                                text: response.message || 'El reporte final ha sido rechazado correctamente.',
+                            }).then(() => {
+                                location.reload();  
+                            });
+                        },
+                        error: function (xhr) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: xhr.responseJSON?.title || 'Error!',
+                                text: xhr.responseJSON?.message || 'Hubo un problema al rechazar el reporte final.',
+                            });
+                        },
+                        complete: function () {
+                            $("#loadingSpinner").addClass('d-none');  
+                        }
+                    });
+                }
+            });
+        },
+        error: function (xhr) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al cargar la observación',
+                text: 'No se pudo cargar la observación desde la base de datos.',
+            });
+        }
     });
+});
 
     $("#btnResumen").on("click", function () {
         window.location.href = "{{ route('resume', ['id' => $pps->id]) }}";

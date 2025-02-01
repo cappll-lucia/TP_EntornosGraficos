@@ -261,9 +261,9 @@
                             @if (auth()->user()->role_id == '2' && $pps->is_finished == true && $pps->is_approved == false && $pps->is_editable == false)
                                 <div class="d-flex justify-content-end">
                                     <hr class="m-t-0 m-b-20">
-                                    <button id="btnAprobar" class="btn btn-success waves-effect waves-light"
+                                    <button id="btnAprobar" class="mb-2 btn btn-success waves-effect waves-light me-2"
                                         data-id="{{$pps->id}}">Aprobar solicitud</button>
-                                    <button id="btnRechazar" class="btn btn-danger waves-effect waves-light"
+                                    <button id="btnRechazar" class="mb-2 btn btn-danger waves-effect waves-light me-2"
                                         data-id="{{$pps->id}}">Rechazar solicitud</button>
                                     <hr class="m-t-0 m-b-20">
                                 </div>
@@ -297,6 +297,7 @@
                                     </button>
                                 </form>
                             @endif
+                            <hr class="m-t-0 m-b-20">
                         </div>
                     </div>
                 </div>

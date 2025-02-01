@@ -16,7 +16,7 @@ class ApproveFinalReportEmail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(private $student_name, private $pps_number, private $teacher_email)
     {
         //
     }
@@ -37,7 +37,7 @@ class ApproveFinalReportEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'email.approvFinalReport',
+            view: 'email.approveFinalReport',
             with: [
                 'student_name' => $this->student_name,
                 'pps_number' => $this->pps_number,

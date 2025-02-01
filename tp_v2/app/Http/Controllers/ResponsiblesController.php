@@ -221,6 +221,15 @@ class ResponsiblesController extends Controller
                 )
             );
 
+            Mail::to($pps->Student->email)->send(
+                new FinishPPSEmail(
+                    $pps->Student->first_name . ', ' . $pps->Student->last_name,
+                    $teacher->first_name,
+                    $pps->id,
+                    $pps->Responsible->email
+                )
+            );
+
             $fr->update([
                 'is_checked' => true,
             ]);

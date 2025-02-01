@@ -387,7 +387,6 @@ class TeachersController extends Controller
 
             return redirect()->back()->with('success', 'Observación guardada con éxito');
         } catch (\Exception $e) {
-            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'title' => 'Error al aprobar la solicitud',
@@ -420,25 +419,24 @@ class TeachersController extends Controller
                 ], 400);
             }
 
-            $fr->update([
-                'is_accepted' => 1,
-            ]);
+             $fr->update([
+                 'is_accepted' => 1,
+             ]);
 
-            Mail::to($pps->Student->email)->send(
-                new ApproveFinalReportEmail(
-                    $pps->Student->first_name,
-                    $pps->id,
-                    $pps->Teacher->email
-                )
-            );
+             Mail::to($pps->Student->email)->send(
+                 new ApproveFinalReportEmail(
+                     $pps->Student->first_name,
+                     $pps->id,
+                     $pps->Teacher->email
+                 )
+             );
 
-            return redirect()->route('fr.details', ['id' => $pps->id])->with('success', 'Reporte final aprobado correctamente');
+             return redirect()->route('fr.details', ['id' => $fr->id])->with('success', 'Reporte final aprobado correctamente');
         } catch (\Exception $e) {
-            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'title' => 'Error al aprobar la solicitud',
-                'message' => 'Intente nuevamente o comuníquese para soporte',
+                'message' => 'Intente nuevamente o comuníquese con soporte',
                 'error' => $e->getMessage()
             ], 500);
         }
@@ -446,9 +444,9 @@ class TeachersController extends Controller
 
     public function rejectFR(Request $request, $id) {
         try {
-            $pps = PPS::with('Student', 'Teacher')->findOrFail($id);
-            $fr = FinalReport::where('pps_id', $pps->id)->first();
-
+            $fr = FinalReport::findOrFail($id);
+            $pps = PPS::with('Student', 'Teacher')->findOrFail($fr->pps_id);
+            
             $request->validate([
                 'observation' => 'required|string', 
             ]);
@@ -496,6 +494,15 @@ class TeachersController extends Controller
         
         return response()->json([
             'observation' => $tracking->observation,  
+        ]);
+    }
+
+    public function getObservationFR($id)
+    {
+        $report = FinalReport::findOrFail($id);  
+        
+        return response()->json([
+            'observation' => $report->observation,  
         ]);
     }
 }

@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="card mb-4">
+<div class="d-flex justify-content-center">
+<div class="mt-2 mb-4 w-75 card">
     <div class="card-header"><h4>Detalles de PPS</h4></div>
     <div class="card-body">
         <table class="table table-bordered">
@@ -29,8 +30,10 @@
         </table>
     </div>
 </div>
+</div>
 
-<div class="card mb-4">
+<div class="d-flex justify-content-center">
+<div class="mb-4 w-75 card">
     <div class="card-header"><h4>Detalles del Reporte Final</h4></div>
     <div class="card-body">
         <table class="table table-bordered">
@@ -51,5 +54,5 @@
         </table>
     </div>
 </div>
-
+</div>
 @endsection

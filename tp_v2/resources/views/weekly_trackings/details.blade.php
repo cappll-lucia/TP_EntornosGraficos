@@ -137,6 +137,18 @@
 @endif
 
 <script>
+    $(document).ready(function () {
+        $("#btnConfirmar").prop('disabled', true);
+        $("#fileInput").change(function () {
+            if ($(this).val() != '') {
+                $("#btnConfirmar").prop('disabled', false);
+            } else {
+                $("#btnConfirmar").prop('disabled', true);
+            }
+        });
+    });
+
+
     $("#btnConfirmar").on("click", function () {
         event.preventDefault();
             Swal.fire({
