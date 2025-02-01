@@ -22,7 +22,9 @@ class WeeklyTrackingController extends Controller
         $wts = $pps->WeeklyTrackings()->exists();
 
         $lastWt = $pps->WeeklyTrackings->last();
-        $isLastWtApproved = $lastWt ? $lastWt->is_accepted : false;
+        $isLastWtApproved = $pps->WeeklyTrackings->isNotEmpty()
+            ? $pps->WeeklyTrackings->every(fn($wt) => $wt->is_accepted)
+            : false;
         $existsFR = FinalReport::where('pps_id', $id)->exists();
 
         return view('weekly_trackings.index', compact('pps', 'wts', 'isLastWtApproved', 'existsFR'));
