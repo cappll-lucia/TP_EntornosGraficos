@@ -37,7 +37,7 @@
                     <tr>
                         <td class="col-4"><b class="font-weight-bold">Archivo:</b></td>
                         <td>
-                            @if ($wt->file_path != null)
+                            @if ($wt->file_path != null && $wt->is_editable == 0)
                                 <a href="{{ Storage::url($wt->file_path) }}" target="_blank" class="btn btn-success btn-sm">
                                     Ver archivo
                                 </a>

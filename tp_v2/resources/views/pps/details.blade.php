@@ -162,10 +162,11 @@
                                     <tr>
                                         <td class="col-4"><b class="font-weight-bold">Plan de trabajo:</b></td>
                                         <td>
+                                            @if ($pps->is_editable==false)
                                             <form action="{{ Storage::url($pps->WorkPlan->file_path) }}" method="GET"
                                                 target="_blank">
                                                 @csrf
-                                                @if($pps->responsible_id != null)
+                                                @if($pps->responsible_id != null && $pps->is_editable == false)
                                                     <button id="btnViewFile" class="btn btn-success">
                                                         Ver archivo
                                                     </button>
@@ -175,6 +176,8 @@
                                                     </button>
                                                 @endif
                                             </form>
+                                            @endif
+
                                             @if (auth()->user()->role_id == '1' && $pps->is_editable == true)
                                                 <div class="mt-2">
                                                     <label for="fileInput" class="form-label">Selecciona un
@@ -185,12 +188,10 @@
                                             @endif
                                         </td>
                                     </tr>
-
-                                    {{-- Form para actualizar en caso de ser rechazado --}}
-                                    <form action={{ route('pps.update', ['id' => $pps->id]) }} id="form_data"
-                                        method="post" enctype="multipart/form-data">
-                                        @csrf
-                                        @if (auth()->user()->role_id == '1' && $pps->is_editable == true)
+                                    @if (auth()->user()->role_id == '1' && $pps->is_editable == true)
+                                        <form action={{ route('pps.update', ['id' => $pps->id]) }} id="form_data"
+                                            method="post" enctype="multipart/form-data">
+                                            @csrf
                                                 <tr>
                                                     <td class="col-4"><b class="font-weight-bold">Fechas:</b></td>
                                                     <td>
@@ -205,16 +206,6 @@
                                                         <input type="date" id="DatePickerTo" name="DatePickerTo"
                                                             class="w-50 form-control"
                                                             value="{{Carbon::parse($pps->finish_date)->format('Y-m-d') }}" />
-                                                    </td>
-                                                </tr>
-
-                                                <tr>
-                                                    <td class="col-4"><b class="font-weight-bold">Plan de trabajo:</b></td>
-                                                    <td>
-                                                        <div class="mt-2">
-                                                            <input id="file" name="file" type="file" class="w-75 form-control"
-                                                                accept=".pdf" />
-                                                        </div>
                                                     </td>
                                                 </tr>
 
