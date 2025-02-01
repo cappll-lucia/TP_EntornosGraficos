@@ -244,6 +244,7 @@
                                     data-id="{{$pps->id}}">Finalizar cambios</button>
                                 <hr class="m-t-0 m-b-20">
                             @endif
+                            <hr class="m-t-0 m-b-20">
                             @if (auth()->user()->role_id == '3' && $pps->is_finished == false && $pps->is_editable == false)
                                 <form id="form-finalizar">
                                     @csrf

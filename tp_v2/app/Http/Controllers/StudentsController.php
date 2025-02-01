@@ -102,7 +102,7 @@ class StudentsController extends Controller
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
                 'legajo' => ['required', 'numeric'],
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255','unique:users,email'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
             ]);
             $user->update([
                 'first_name' => $request->first_name,
@@ -115,10 +115,9 @@ class StudentsController extends Controller
             return view('users.students.index', ['students' => $students]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
-            return redirect()->back()->withErrors($e->validator)->withInput();    
+            return redirect()->back()->withErrors($e->validator)->withInput();
         } catch (\Exception $exep) {
             DB::rollBack();
-            dd($exep->getMessage());
             Log::error('Error al crear el alumno: ' . $exep->getMessage());
             return view("error.index");
         }
@@ -134,15 +133,14 @@ class StudentsController extends Controller
             $user = User::findOrFail($id);
             $user->delete();
             DB::commit();
-            
+
             $students = User::where('role_id', 1)->get();
             return redirect()->route('getStudents')->with([
-                'students' => $students, 
+                'students' => $students,
                 'success' => 'Alumno eliminado correctamente'
             ]);
         } catch (\Exception $exep) {
             DB::rollBack();
-            dd($exep->getMessage());
             Log::error('Error al eliminar el alumno: ' . $exep->getMessage());
             return view("error.index");
         }
@@ -153,28 +151,28 @@ class StudentsController extends Controller
         try {
             $wt = WeeklyTracking::find($id);
             $pps = PPS::with('Student', 'Teacher')->findOrFail($wt->pps_id);
-                
+
             $file = $request->file('file');
-                
-                if ($file && $file->isValid()) {
-                    $content = file_get_contents($file->getRealPath());
-                    $path = $file->storeAs('public/weekly_trackings', $file->getClientOriginalName());
 
-                    $wt->file_path = $path;
-                    $wt->is_editable = false;
-                    $wt->save();
+            if ($file && $file->isValid()) {
+                $content = file_get_contents($file->getRealPath());
+                $path = $file->storeAs('public/weekly_trackings', $file->getClientOriginalName());
 
-                    Mail::to($pps->Teacher->email)->send(
-                        new UploadWeeklyTrackingEmail(
-                            $pps->Student->last_name . ', ' . $pps->Student->first_name,
-                            $pps->Student->email,
-                            $pps->id,
-                            $pps->Teacher->first_name
-                        )
-                    );
+                $wt->file_path = $path;
+                $wt->is_editable = false;
+                $wt->save();
 
-                    return redirect()->route('wt.details', ['id' => $wt->id])->with('success', 'Archivo cargado exitosamente.');
-                }
+                Mail::to($pps->Teacher->email)->send(
+                    new UploadWeeklyTrackingEmail(
+                        $pps->Student->last_name . ', ' . $pps->Student->first_name,
+                        $pps->Student->email,
+                        $pps->id,
+                        $pps->Teacher->first_name
+                    )
+                );
+
+                return redirect()->route('wt.details', ['id' => $wt->id])->with('success', 'Archivo cargado exitosamente.');
+            }
 
             return response()->json(['success' => false]);
         } catch (\Exception $exep) {
@@ -193,9 +191,9 @@ class StudentsController extends Controller
         try {
             $fr = FinalReport::find($id);
             $pps = PPS::with('Student', 'Teacher')->findOrFail($fr->pps_id);
-            
+
             $file = $request->file('file');
-            
+
             if ($file && $file->isValid()) {
                 $content = file_get_contents($file->getRealPath());
                 $path = $file->storeAs('public/final_report', $file->getClientOriginalName());
