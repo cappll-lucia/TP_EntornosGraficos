@@ -95,7 +95,7 @@ class PPSController extends Controller
 
             if (
                 ($user->role_id == 1 && $user->id != $pps->student_id) || ($user->role_id == 2 && $user->id != $pps->teacher_id)
-                || ($user->role_id == 3 && $user->id != $pps->responsible_id)
+
             ) {
                 $error = new \stdClass();
                 $error->code = 403;

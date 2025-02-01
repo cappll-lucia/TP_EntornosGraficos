@@ -182,10 +182,20 @@
                                         <tr>
                                             <td class="col-4"><b class="font-weight-bold">Plan de trabajo:</b></td>
                                             <td>
-                                                <a href="{{ Storage::url($pps->WorkPlan->file_path) }}" target="_blank"
-                                                    class="btn btn-success btn-sm">
-                                                    Ver archivo
-                                                </a>
+                                                <form action="{{ Storage::url($pps->WorkPlan->file_path) }}"
+                                                    method="GET" target="_blank">
+                                                    @csrf
+                                                    @if($pps->responsible_id != null)
+                                                        <button id="btnViewFile" class="btn btn-success">
+                                                            Ver archivo
+                                                        </button>
+                                                    @else
+                                                        <button id="btnViewFile" class="btn btn-secondary" disabled>
+                                                            Ver archivo
+                                                        </button>
+                                                    @endif
+                                                </form>
+
                                                 @if (auth()->user()->role_id == '1' && $pps->is_editable == true)
                                                     <div class="mt-2">
                                                         <label for="fileInput" class="form-label">Selecciona un
@@ -244,18 +254,20 @@
                                     data-id="{{$pps->id}}">Finalizar cambios</button>
                                 <hr class="m-t-0 m-b-20">
                             @endif
-                            <hr class="m-t-0 m-b-20">
-                            @if (auth()->user()->role_id == '3' && $pps->is_finished == false && $pps->is_editable == false)
-                                <form id="form-finalizar">
-                                    @csrf
-                                    <input type="hidden" id="selectedTeacher" name="selectedTeacher"
-                                        value="{{ $pps->teacher_id }}">
-                                    <button id="btnFinalizar" class="btn btn-sm btn-success take-btn" type="button"
-                                        data-id="{{ $pps->id }}">
-                                        Asignar docente
-                                    </button>
-                                </form>
-                                <hr class="m-t-0 m-b-20">
+                            @if (
+                                    auth()->user()->role_id == '3' && $pps->is_finished == false && $pps->is_editable == false &&
+                                    $pps->responsible_id != null
+                                )
+                                                            <form id="form-finalizar">
+                                                                @csrf
+                                                                <input type="hidden" id="selectedTeacher" name="selectedTeacher"
+                                                                    value="{{ $pps->teacher_id }}">
+                                                                <button id="btnFinalizar" class="btn btn-success take-btn" type="button"
+                                                                    data-id="{{ $pps->id }}">
+                                                                    Asignar docente
+                                                                </button>
+                                                            </form>
+                                                            <hr class="m-t-0 m-b-20">
                             @endif
 
                             @if (auth()->user()->role_id == '2' && $pps->is_finished == true && $pps->is_approved == false && $pps->is_editable == false)
@@ -550,6 +562,7 @@
                 }
             });
         });
+
 
         if ("{{ $pps->is_approved }}" == true) {
             $("#btnGeneratewts").prop('disabled', false).removeClass('btn-secondary').addClass('btn-success');
