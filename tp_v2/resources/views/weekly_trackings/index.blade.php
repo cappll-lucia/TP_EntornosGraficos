@@ -10,26 +10,6 @@
 <div class="container-fluid">
     <div class="col-md-5 col-8 align-self-center">
         <h3 class="m-b-0 m-t-0 text-themecolor">Seguimientos semanales</h3>
-        @if (auth()->user()->role_id == '3' && !$wts)
-            <div class="mb-3">
-                <form id="generate-wt-form" action="{{ route('wt.generate', $pps->id) }}" method="POST">
-                    @csrf
-                    <button id="btnGeneratewts" class="btn btn-primary">
-                        Generar Seguimientos Semanales
-                    </button>
-                </form>
-            </div>
-            @if(session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
-            @if(session('error'))
-                <div class="alert alert-danger">
-                    {{ session('error') }}
-                </div>
-            @endif
-        @endif
     </div>
         <table id="DataTable" class="table table-striped">
             <thead>
@@ -79,12 +59,23 @@
                 
             </tbody>
         </table>
-        <div>
             <hr class="m-t-0 m-b-20">
-            <button id="btnSeguimiento" class="btn btn-secondary" disabled>Ir a Acta de Finalización</button>
-            <br>
+                @if(!$existsFR)
+                <form id="generate-fr-form" action="{{ route('fr.generate', $pps->id) }}" method="POST">
+                    @csrf
+                    <button id="btnSeguimiento" class="btn btn-primary">
+                        Ir a acta de finalización
+                    </button>
+                </form>
+                @else
+                <form id="generate-fr-form" action="{{ route('fr.details', $pps->id) }}" method="GET">
+                    @csrf
+                    <button id="btnSeguimiento" class="btn btn-primary">
+                        Ir a acta de finalización
+                    </button>
+                </form>
+                @endif
             <hr class="m-t-0 m-b-20">
-        </div>
 
 <script>
 

@@ -1,3 +1,6 @@
+@php
+    $contador = 1;
+@endphp
 @extends('layouts.app')
 
 @section('content')
@@ -31,10 +34,6 @@
         <div class="card-body">
             <table class="table no-border">
                 <tbody>
-                    <tr>
-                        <td class="col-4"><b class="font-weight-bold">Semana:</b></td>
-                        <td>{{ $wt->id }}</td>
-                    </tr>
                     <tr>
                         <td class="col-4"><b class="font-weight-bold">Archivo:</b></td>
                         <td>

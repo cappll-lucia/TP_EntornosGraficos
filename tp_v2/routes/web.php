@@ -44,6 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pps/{id}/resume/wp/download', [PPSController::class, 'downloadWorkPlan'])->name('wp.download');
     Route::get('/pps/{id}/resume/fr/download', [FinalReportController::class, 'download'])->name('fr.download');
     Route::post('/pps/{id}/weeklyTracking/generate', [WeeklyTrackingController::class, 'generateWT'])->name('wt.generate');
+    Route::post('/finalReports/{id}/create', [FinalReportController::class, 'createFR'])->name('fr.generate');
 });
 
 
@@ -87,7 +88,6 @@ Route::group(['middleware' => ['auth', StudentsRoutes::class]], function () {
 Route::group(['middleware' => ['auth', RespRoutes::class]], function () {
     Route::patch('/pps/{id}/tomar', [PPSController::class, 'tomar'])->name('pps.tomar');
     Route::post('/pps/{id}/assignTeacher', [ResponsiblesController::class, 'assignTeacher'])->name('assignTeacher');
-    Route::post('/finalReports/{id}/create', [FinalReportController::class, 'createFR'])->name('fr.generate');
     Route::post('/finalReports/{id}/finish', [ResponsiblesController::class, 'finishWholePPS'])->name('fr.finish');
 });
 

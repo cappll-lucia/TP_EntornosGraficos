@@ -29,21 +29,6 @@
                 <div class="card-body">
                     <div class="form-body">
                         <h2 class="box-title">Reporte final</h2>
-                        @if (auth()->user()->role_id == '3' && !$existsFR)
-                            <div class="mb-3">
-                                <form id="generate-fr-form" action="{{ route('fr.generate', $pps->id) }}" method="POST">
-                                    @csrf
-                                    <button id="btnGenerateFR" class="btn btn-primary">
-                                        Generar reporte final
-                                    </button>
-                                </form>
-                            </div>
-                        @endif
-                        @if (!$existsFR)
-                            <div class="alert alert-warning" role="alert">
-                                El reporte final aún no han sido generado. Por favor, espera a que el responsable lo cree.
-                            </div>
-                        @else
                             <p class="box-subtitle">{{ $fr->created_at->format('d/m/Y') }}</p>
                             <hr class="m-t-0 m-b-20">
                             <table class="table no-border">
@@ -60,7 +45,7 @@
                                             @endif
                                             @if (auth()->user()->role_id == '1' && $fr->is_editable == true)
                                                     <br>
-                                                    <form id="uploadForm" action="{{ route('fr.saveFile', ['id' => $fr->id]) }}" method="POST" enctype="multipart/form-data" class="border p-4 rounded shadow-sm">
+                                                    <form id="uploadForm" action="{{ route('fr.saveFile', ['id' => $fr->id]) }}" method="POST" enctype="multipart/form-data" class="border rounded shadow-sm p-4">
                                                         @csrf
                                                         <div class="mb-3">
                                                             <label for="fileInput" class="form-label">Selecciona un archivo</label>
@@ -93,11 +78,6 @@
                                 </tbody>
                             </table>
                             {{-- <hr class="m-t-0 m-b-20"> --}}
-                            @if(session('success'))
-                                <div class="alert alert-success">
-                                    {{ session('success') }}
-                                </div>
-                            @endif
                             @if (auth()->user()->role_id == '2' && $fr->is_accepted === 0)
                                 @if ($fr->file_path && $fr->is_editable == false)
                                     <div class="d-flex justify-content-end">
@@ -147,11 +127,9 @@
                             </div>
                         </div>
                         @endif
-
-                    @endif
                 </div>
                 <div id="loadingSpinner" class="d-none">
-                    <div class="spinner-border text-primary" role="status">
+                    <div class="text-primary spinner-border" role="status">
                         <span class="visually-hidden">Cargando...</span>
                     </div>
                 </div>

@@ -251,7 +251,7 @@
                                         value="{{ $pps->teacher_id }}">
                                     <button id="btnFinalizar" class="btn btn-sm btn-success take-btn" type="button"
                                         data-id="{{ $pps->id }}">
-                                        Aprobar solicitud inicial
+                                        Asignar docente
                                     </button>
                                 </form>
                                 <hr class="m-t-0 m-b-20">

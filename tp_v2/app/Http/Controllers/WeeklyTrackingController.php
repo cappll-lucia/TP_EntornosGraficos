@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use PhpParser\Node\Stmt\TryCatch;
 use App\Models\WeeklyTracking;
+use App\Models\FinalReport;
 
 class WeeklyTrackingController extends Controller
 {
@@ -22,8 +23,9 @@ class WeeklyTrackingController extends Controller
 
         $lastWt = $pps->WeeklyTrackings->last();
         $isLastWtApproved = $lastWt ? $lastWt->is_accepted : false;
+        $existsFR = FinalReport::where('pps_id', $id)->exists();
 
-        return view('weekly_trackings.index', compact('pps', 'wts', 'isLastWtApproved'));
+        return view('weekly_trackings.index', compact('pps', 'wts', 'isLastWtApproved', 'existsFR'));
     }
 
     public function generateWT(Request $request, $id)

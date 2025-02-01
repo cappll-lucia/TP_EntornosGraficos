@@ -25,13 +25,8 @@ class FinalReportController extends Controller
     public function createFR($id)
     {
         try {
-            if (auth()->user()->role_id != 3) {
-                return response()->json([
-                    'success' => false,
-                    'title' => 'Error al crear el reporte',
-                    'message' => 'No está autorizado para realizar esta acción',
-                ], 400);
-            }
+            
+            
 
             $pps = PPS::findOrFail($id);
     
@@ -45,7 +40,7 @@ class FinalReportController extends Controller
             return redirect()
             ->route('fr.details', ['id' => $pps->id])
             ->with('success', 'El reporte final se ha creado exitosamente.');
-
+        
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
