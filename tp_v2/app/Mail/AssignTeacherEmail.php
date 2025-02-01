@@ -27,7 +27,7 @@ class AssignTeacherEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'SYSACAD - Información de asignación de profesor',
+            subject: 'SYSACAD - Información de asignación de docente',
         );
     }
 

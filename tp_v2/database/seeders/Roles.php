@@ -18,7 +18,7 @@ class Roles extends Seeder
         ]);
 
         Role::create([
-            'name' => 'Profesor',
+            'name' => 'Docente',
         ]);
 
         Role::create([

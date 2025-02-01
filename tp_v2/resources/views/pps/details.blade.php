@@ -126,28 +126,31 @@
                                         </td>
                                     </tr>
 
-                                    <tr>
-                                        <td class="col-4"><b class="font-weight-bold">Profesor a cargo:</b></td>
-                                        <td>
-                                            @if ($pps->responsible_id != null)
-                                                {{ $pps->Teacher->last_name }}, {{ $pps->Teacher->first_name }}
-                                            @else
-                                                Sin asignar
-                                            @endif
-                                        </td>
-                                    </tr>
+
 
                                     @if (auth()->user()->role_id == '3' && $pps->is_finished == 0 && $pps->is_editable == 0)
                                         <tr>
-                                            <td class="col-4"><b class="font-weight-bold">Cambiar profesor:</b></td>
+                                            <td class="col-4"><b class="font-weight-bold">Docente a cargo:</b></td>
                                             <td>
                                                 <select id="TeacherSelect" name="TeacherSelect" class="w-50 form-control">
                                                     @foreach($teachers as $teach)
-                                                        <option value="{{ $teach->id }}">{{ $teach->first_name }}
-                                                            {{ $teach->last_name }}
+                                                        <option value="{{ $teach->id }}" @if($teach->id == $pps->teacher_id)
+                                                        selected @endif>
+                                                            {{ $teach->first_name }} {{ $teach->last_name }}
                                                         </option>
                                                     @endforeach
                                                 </select>
+                                            </td>
+                                        </tr>
+                                    @else
+                                        <tr>
+                                            <td class="col-4"><b class="font-weight-bold">Docente a cargo:</b></td>
+                                            <td>
+                                                @if ($pps->responsible_id != null)
+                                                    {{ $pps->Teacher->last_name }}, {{ $pps->Teacher->first_name }}
+                                                @else
+                                                    Sin asignar
+                                                @endif
                                             </td>
                                         </tr>
                                     @endif
@@ -156,58 +159,47 @@
                                     <form action={{ route('pps.update', ['id' => $pps->id]) }} id="form_data"
                                         method="post" enctype="multipart/form-data">
                                         @csrf
-
-                                        <tr>
-                                            <td class="col-4"><b class="font-weight-bold">Fecha de inicio/fin:</b></td>
-                                            <td>
-                                                {{ \Carbon\Carbon::parse($pps->start_date)->format('d/m/Y') }} -
-                                                {{ \Carbon\Carbon::parse($pps->finish_date)->format('d/m/Y') }}
-                                            </td>
-                                        </tr>
                                         @if (auth()->user()->role_id == '1' && $pps->is_editable == true)
-                                            <tr>
-                                                <td class="col-4"><b class="font-weight-bold">Editar fechas:</b></td>
-                                                <td>
-                                                    <label for="DatePickerFrom" class="mb-0">Fecha de inicio</label>
-                                                    <input type="date" id="DatePickerFrom" class="w-50 form-control"
-                                                        name="DatePickerFrom" />
-                                                    <label for="DatePickerTo" class="mt-2 mb-0">Fecha de
-                                                        finalización</label>
-                                                    <input type="date" id="DatePickerTo" name="DatePickerTo"
-                                                        class="w-50 form-control" />
-                                                </td>
-                                            </tr>
+                                                <tr>
+                                                    <td class="col-4"><b class="font-weight-bold">Fechas:</b></td>
+                                                    <td>
+                                                        <label for="DatePickerFrom" class="mb-0">Fecha de inicio</label>
+                                                        <input type="date" id="DatePickerFrom" class="w-50 form-control"
+                                                            name="DatePickerFrom"
+                                                            value="{{Carbon::parse($pps->start_date)->format('Y-m-d') }}" />
+
+
+                                                        <label for="DatePickerTo" class="mt-2 mb-0">Fecha de
+                                                            finalización</label>
+                                                        <input type="date" id="DatePickerTo" name="DatePickerTo"
+                                                            class="w-50 form-control"
+                                                            value="{{Carbon::parse($pps->finish_date)->format('Y-m-d') }}" />
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td class="col-4"><b class="font-weight-bold">Plan de trabajo:</b></td>
+                                                    <td>
+                                                        <div class="mt-2">
+                                                            <input id="file" name="file" type="file" class="w-75 form-control"
+                                                                accept=".pdf" />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td class="col-4"><b class="font-weight-bold">Descripción:</b></td>
+                                                    <td>
+                                                        <textarea id="description" name="description"
+                                                            class="mt-2 w-75 form-control" rows="3">
+                                                                                                                                    {{ $pps->description }}
+                                                                                                                                </textarea>
+
+                                                    </td>
+                                                </tr>
+                                            </form>
+
                                         @endif
-
-                                        <tr>
-                                            <td class="col-4"><b class="font-weight-bold">Plan de trabajo:</b></td>
-                                            <td>
-                                                <a href="{{ Storage::url($pps->WorkPlan->file_path) }}" target="_blank"
-                                                    class="btn btn-success btn-sm">
-                                                    Ver archivo
-                                                </a>
-                                                @if (auth()->user()->role_id == '1' && $pps->is_editable == true)
-                                                    <div class="mt-2">
-                                                        <label for="fileInput" class="form-label">Selecciona un
-                                                            archivo</label>
-                                                        <input id="file" name="file" type="file" class="w-75 form-control"
-                                                            accept=".pdf" />
-                                                    </div>
-                                                @endif
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td class="col-4"><b class="font-weight-bold">Descripción:</b></td>
-                                            <td>
-                                                {{ $pps->description }}
-                                                @if (auth()->user()->role_id == '1' && $pps->is_editable == true)
-                                                    <textarea id="description" name="description"
-                                                        class="mt-2 w-75 form-control" rows="3"></textarea>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    </form>
                                     {{-- Fin del form --}}
 
                                     <tr>
@@ -244,18 +236,20 @@
                                     data-id="{{$pps->id}}">Finalizar cambios</button>
                                 <hr class="m-t-0 m-b-20">
                             @endif
-                            <hr class="m-t-0 m-b-20">
-                            @if (auth()->user()->role_id == '3' && $pps->is_finished == false && $pps->is_editable == false)
-                                <form id="form-finalizar">
-                                    @csrf
-                                    <input type="hidden" id="selectedTeacher" name="selectedTeacher"
-                                        value="{{ $pps->teacher_id }}">
-                                    <button id="btnFinalizar" class="btn btn-sm btn-success take-btn" type="button"
-                                        data-id="{{ $pps->id }}">
-                                        Asignar docente
-                                    </button>
-                                </form>
-                                <hr class="m-t-0 m-b-20">
+                            @if (
+                                    auth()->user()->role_id == '3' && $pps->is_finished == false && $pps->is_editable == false &&
+                                    $pps->responsible_id != null
+                                )
+                                                            <form id="form-finalizar">
+                                                                @csrf
+                                                                <input type="hidden" id="selectedTeacher" name="selectedTeacher"
+                                                                    value="{{ $pps->teacher_id }}">
+                                                                <button id="btnFinalizar" class="btn btn-success take-btn" type="button"
+                                                                    data-id="{{ $pps->id }}">
+                                                                    Asignar docente
+                                                                </button>
+                                                            </form>
+                                                            <hr class="m-t-0 m-b-20">
                             @endif
 
                             @if (auth()->user()->role_id == '2' && $pps->is_finished == true && $pps->is_approved == false && $pps->is_editable == false)
@@ -551,6 +545,7 @@
                 }
             });
         });
+
 
         if ("{{ $pps->is_approved }}" == true) {
             $("#btnGeneratewts").prop('disabled', false).removeClass('btn-secondary').addClass('btn-success');

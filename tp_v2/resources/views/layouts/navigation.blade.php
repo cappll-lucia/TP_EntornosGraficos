@@ -17,31 +17,31 @@
         </div>
 
         @if(Auth::check())
-      <!-- Buttons logueado -->
-      <div class="px-4 dropdown usr-menu justify-content-md-end">
-        <span class="px-5">Bienvenido, {{Auth::user()->first_name}}!</span>
-        <button class="btn usr-menu-btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-        aria-expanded="false" style="color: white;">
-        <!-- Contenido del botón -->
-        <i class="fa-solid fa-user"></i>
-        </button>
-        <ul class="dropdown-menu">
-        <li>
-          <a style="p-3; text-decoration: none !important;" href="{{ route('profile.edit') }}">
-          {{ __('Perfil') }}
-          </a>
-        </li>
-        <li>
-          <form method="POST" action="{{ route('logout') }}">
-          @csrf
-          <a style="text-decoration: none !important;" href="route('logout')" onclick="event.preventDefault();
-      this.closest('form').submit();">
-            {{ __('Cerrar sesión') }}
-          </a>
-          </form>
-        </li>
-        </ul>
-      </div>
+        <!-- Buttons logueado -->
+        <div class="px-4 dropdown usr-menu justify-content-md-end">
+          <span class="px-5">Bienvenido, {{Auth::user()->first_name}}!</span>
+          <button class="btn usr-menu-btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+          aria-expanded="false" style="color: white;">
+          <!-- Contenido del botón -->
+          <i class="fa-solid fa-user"></i>
+          </button>
+          <ul class="dropdown-menu">
+          <li>
+            <a href="{{ route('profile.edit') }}" class="d-block px-3 py-2 text-decoration-none">
+            {{ __('Perfil') }}
+            </a>
+          </li>
+          <li>
+            <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <a href="route('logout')" onclick="event.preventDefault();
+        this.closest('form').submit();" class="d-block px-3 py-2 text-decoration-none">
+              {{ __('Cerrar sesión') }}
+            </a>
+            </form>
+          </li>
+          </ul>
+        </div>
     @else
     <!-- Buttons no logueado -->
     <div class="container-fluid gap-2 d-grid d-md-flex justify-content-md-end">

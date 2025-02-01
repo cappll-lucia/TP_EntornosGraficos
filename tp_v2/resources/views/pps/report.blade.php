@@ -32,7 +32,7 @@
 
 <body>
     <h1>Informe de Solicitudes PPS</h1>
-    <p>Profesor: {{ $teacher->first_name }} {{ $teacher->last_name }}</p>
+    <p>Docente: {{ $teacher->first_name }} {{ $teacher->last_name }}</p>
 
     <h2>Solicitudes</h2>
     <table>
