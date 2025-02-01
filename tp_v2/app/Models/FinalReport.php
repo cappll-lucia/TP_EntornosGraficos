@@ -20,6 +20,7 @@ class FinalReport extends Model
         'observation',
         'is_checked',
         'is_editable',
+        'created_at',
     ];
 
     public function PPS()

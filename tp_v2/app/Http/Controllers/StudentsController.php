@@ -200,6 +200,7 @@ class StudentsController extends Controller
 
                 $fr->file_path = $path;
                 $fr->is_editable = false;
+                
                 $fr->save();
 
                 Mail::to($pps->Teacher->email)->send(
@@ -211,7 +212,7 @@ class StudentsController extends Controller
                     )
                 );
 
-                return redirect()->route('fr.details', ['id' => $fr->id])->with('success', 'Archivo cargado exitosamente.');
+                return redirect()->route('fr.details', ['id' => $fr->id,'created_at'=> $fr->created_at])->with('success', 'Archivo cargado exitosamente.');
             }
 
             return response()->json(['success' => false]);
