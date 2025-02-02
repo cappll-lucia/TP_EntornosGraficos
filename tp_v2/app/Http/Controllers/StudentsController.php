@@ -161,7 +161,7 @@ class StudentsController extends Controller
 
             if ($file && $file->isValid()) {
                 $content = file_get_contents($file->getRealPath());
-                $path = $file->storeAs('public/weekly_trackings', $file->getClientOriginalName());
+                $path = $file->storeAs('public', $file->getClientOriginalName());
 
                 $wt->file_path = $path;
                 $wt->is_editable = false;
@@ -201,7 +201,7 @@ class StudentsController extends Controller
 
             if ($file && $file->isValid()) {
                 $content = file_get_contents($file->getRealPath());
-                $path = $file->storeAs('public/final_report', $file->getClientOriginalName());
+                $path = $file->storeAs('public', $file->getClientOriginalName());
 
                 $fr->file_path = $path;
                 $fr->is_editable = false;

@@ -165,7 +165,7 @@ class PPSController extends Controller
 
             if ($file && $file->isValid()) {
                 $content = file_get_contents($file->getRealPath());
-                $path = $file->storeAs('public/work_plan', $file->getClientOriginalName());
+                $path = $file->storeAs('public', $file->getClientOriginalName());
                 WorkPlan::create([
                     'pps_id' => $pps->id,
                     'file_path' => $path,
@@ -227,7 +227,7 @@ class PPSController extends Controller
                 }
 
                 // Guardar nuevo archivo
-                $path = $file->storeAs('public/work_plan', $file->getClientOriginalName());
+                $path = $file->storeAs('public', $file->getClientOriginalName());
                 WorkPlan::create([
                     'pps_id' => $pps->id,
                     'file_path' => $path,
