@@ -49,7 +49,7 @@
                                                         @csrf
                                                         <div class="mb-3">
                                                             <label for="fileInput" class="form-label">Selecciona un archivo</label>
-                                                            <input type="file" class="form-control" id="fileInput" name="file" accept=".pdf" required>
+                                                            <input type="file" class="form-control" id="fileInput" name="file" accept=".pdf" data-max-file-size="2M" required>
                                                         </div>
                                                         <button id="btnConfirmar" type="submit" class="btn btn-primary">
                                                             Confirmar PDF
