@@ -61,6 +61,12 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "platform-dev": {
+            "php": "8.2.4"
+        },
+        "stability-flags": {
+            "my/package": "dev-master"
         }
     },
     "minimum-stability": "stable",
