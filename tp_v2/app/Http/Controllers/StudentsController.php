@@ -186,7 +186,7 @@ class StudentsController extends Controller
                 'success' => false,
                 'title' => 'Error al guardar el archivo',
                 'message' => 'Intente nuevamente o comuníquese para soporte',
-                'error' => $e->getMessage()
+                'error' => $exep->getMessage()
             ], 400);
         }
     }

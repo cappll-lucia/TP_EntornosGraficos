@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Storage;
 
 class FinalReportController extends Controller
 {
-    public function details($id){
+    public function details($id)
+    {
         $pps = PPS::findOrFail($id);
 
         $fr = FinalReport::where('pps_id', $id)->first();
@@ -25,22 +26,20 @@ class FinalReportController extends Controller
     public function createFR($id)
     {
         try {
-            
-            
 
             $pps = PPS::findOrFail($id);
-    
+
             $fr = FinalReport::create([
                 'pps_id' => $pps->id,
                 'file_path' => null,
                 'is_accepted' => false,
                 'observations' => '',
             ]);
-    
+
             return redirect()
-            ->route('fr.details', ['id' => $pps->id])
-            ->with('success', 'El reporte final se ha creado exitosamente.');
-        
+                ->route('fr.details', ['id' => $pps->id])
+                ->with('success', 'El reporte final se ha creado exitosamente.');
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

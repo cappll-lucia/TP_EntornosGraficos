@@ -73,7 +73,7 @@
                                         <div class="row col-md-15">
                                             <div class="col-md-4">
                                                 <div class="row form-group">
-                                                    <label class="text-md-right col-3 control-label">Nombre:</label>
+                                                    <label class="text-md-right col-4 control-label">Nombre:</label>
                                                     <div class="pr-0 col-7">
                                                         <p class="form-control-static">
                                                             {{ $student->first_name }}
@@ -84,7 +84,7 @@
                                             <!--/span-->
                                             <div class="col-md-4">
                                                 <div class="row form-group">
-                                                    <label class="text-md-right col-3 control-label">Apellido:</label>
+                                                    <label class="text-md-right col-4 control-label">Apellido:</label>
                                                     <div class="pr-0 col-7">
                                                         <p class="form-control-static">
                                                             {{ $student->last_name }}
@@ -98,7 +98,7 @@
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="row form-group">
-                                                    <label class="text-md-right col-3 control-label">Legajo:</label>
+                                                    <label class="text-md-right col-4 control-label">Legajo:</label>
                                                     <div class="pr-0 col-7">
                                                         <p class="form-control-static">
                                                             {{ $student->legajo }}
@@ -109,7 +109,7 @@
                                             <!--/span-->
                                             <div class="col-md-4">
                                                 <div class="row form-group">
-                                                    <label class="text-md-right col-3 control-label">Email:</label>
+                                                    <label class="text-md-right col-4 control-label">Email:</label>
                                                     <div class="pr-0 col-7">
                                                         <p class="form-control-static">
                                                             {{ $student->email }}
@@ -142,16 +142,19 @@
                                     <input type="date" id="DatePickerTo" name="DatePickerTo" class="form-control"
                                         placeholder="dd/mm/aaaa" />
                                 </div>
-                                
+
                                 <div class="mb-3 col-12 col-md-2">
                                     <label for="TeacherSelect" class="mb-0">Docente de tu preferencia</label>
                                     <select id="TeacherSelect" name="TeacherSelect" class="form-control">
                                         @foreach($teachers as $teach)
-                                        <option value="{{ $teach->id }}">{{ $teach->first_name }} {{ $teach->last_name }}</option>
+                                            <option value="{{ $teach->id }}">{{ $teach->first_name }}
+                                                {{ $teach->last_name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                     <small class="text-muted form-text">
-                                    Nota: Que este sea tu docente elegido no quiere decir que sea el asignado. Eso es decisión del responsable de las PPS.
+                                        Nota: Que este sea tu docente elegido no quiere decir que sea el asignado. Eso
+                                        es decisión del responsable de las PPS.
                                     </small>
                                 </div>
 
@@ -191,6 +194,16 @@
     #DataTable_wrapper>div:nth-child(2)>div>div>div.dataTables_scrollHead>div,
     #DataTable_wrapper>div:nth-child(2)>div>div>div.dataTables_scrollHead>div>table {
         width: 100% !important;
+    }
+
+    .dropify-wrapper .dropify-message p {
+        font-size: 15px !important;
+        padding: 2px !important;
+        margin: 0 !important;
+    }
+
+    .actions a {
+        margin-top: 15px !important;
     }
 </style>
 
@@ -233,23 +246,6 @@
         });
         return false;
     };
-
-    // No se usa porque ya trae la fecha bien
-    /* function formatDate(dateString) {
-
-        console.log('Fecha Original:', dateString);
-        if (!dateString) return null;
-
-        let dateParts = dateString.split("/");
-        if (dateParts.length !== 3) {
-            console.error('Formato de fecha incorrecto:', dateString);
-            return null;
-        }
-
-        let formattedDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
-        console.log('Fecha Formateada:', formattedDate);
-        return formattedDate;
-    }*/
 
     function sendForm() {
         let form = $("#form_data");
@@ -332,6 +328,7 @@
         });
     });
 </script>
+
 
 <script>
 </script>

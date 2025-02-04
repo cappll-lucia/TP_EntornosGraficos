@@ -32,10 +32,10 @@
     <!-- ============================================================== -->
     <div class="row">
         <div class="col-lg-12">
-            <div class="shadow card">
+            <div class="shadow card mb-3">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h2 class="mb-0 card-title fw-bold fs-4">Listado de solicitudes</h2>
+                        <h2 class="mb-0 card-title fw-bold fs-4">Listado de solicitudes </h2>
                         @if(auth()->user()->role_id == '1')
                             <a href="{{ route('pps.new') }}" class="btn btn-info btn-rounded waves-effect waves-light">Nueva
                                 solicitud</a>
@@ -50,6 +50,7 @@
                         <table id="DataTable" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
+                                    <th></th>
                                     <th>Estudiante</th>
                                     <th>Responsable</th>
                                     <th>Docente</th>
@@ -58,12 +59,26 @@
                                     <th>Fecha fin</th>
                                     <th>Aprobada</th>
                                     <th>Finalizada</th>
-                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody id="table_body">
                                 @foreach ($pps as $app)
                                     <tr data-id="{{ $app->id }}" class="clickable" data-url="/pps/details">
+                                        @if (auth()->user()->role_id == '3' && $app->Responsible == null)
+                                            <td>
+                                                <button id="tomarPPS" class="btn btn-sm btn-success take-btn"
+                                                    data-id="{{$app->id}}"
+                                                    data-student="{{ $app->Student->first_name }} {{ $app->Student->last_name }}">Tomar</button>
+                                            </td>
+                                        @else
+                                            @if ($app->FinalReport != null && $app->FinalReport->is_approved == true)
+                                                <td>
+                                                    <a href="{{ route('resume', $app->id) }}" class="btn btn-sm btn-info">Ver</a>
+                                                </td>
+                                            @else
+                                                <td>&nbsp;</td>
+                                            @endif
+                                        @endif
                                         <td>{{ $app->Student->last_name }}, {{ $app->Student->first_name }}</td>
                                         @if ($app->Responsible == null)
                                             <td>-</td>
@@ -100,21 +115,7 @@
                                                 <i class="bi bi-x-lg" style="font-size: 1.3rem"></i>
                                             @endif
                                         </td>
-                                        @if (auth()->user()->role_id == '3' && $app->Responsible == null)
-                                            <td>
-                                                <button id="tomarPPS" class="btn btn-sm btn-success take-btn"
-                                                    data-id="{{$app->id}}"
-                                                    data-student="{{ $app->Student->first_name }} {{ $app->Student->last_name }}">Tomar</button>
-                                            </td>
-                                        @else
-                                            @if ($app->FinalReport != null && $app->FinalReport->is_approved == true)
-                                                <td>
-                                                    <a href="{{ route('resume', $app->id) }}" class="btn btn-sm btn-info">Ver</a>
-                                                </td>
-                                            @else
-                                                <td>&nbsp;</td>
-                                            @endif
-                                        @endif
+
                                     </tr>
                                 @endforeach
                             </tbody>

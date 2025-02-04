@@ -1,0 +1,15 @@
+/* Por defecto, ocultar la versión móvil */
+.logo-mobile {
+    display: none;
+  }
+  
+  /* Mostrar la imagen móvil en pantallas de 768px o menos */
+  @media (max-width: 768px) {
+    .logo-desktop {
+      display: none; /* Oculta la imagen de escritorio */
+    }
+    .logo-mobile {
+      display: block; /* Muestra la imagen móvil */
+    }
+  }
+
