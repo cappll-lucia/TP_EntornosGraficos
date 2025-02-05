@@ -70,8 +70,8 @@ class PPSController extends Controller
             $all_teachers = User::where('role_id', 2)->get();
             $teachers = [];
             foreach ($all_teachers as $teach) {
-                $cant_pps = PPS::where('teacher_id', $teach->id)->where('is_finished', 0)->count();
-                if ($cant_pps <= 10) {
+                $cant_pps = PPS::where('teacher_id', $teach->id)->where('is_finished', false)->count();
+                if ($cant_pps < 10) {
                     $teachers[] = $teach;
                 }
             }
