@@ -209,7 +209,8 @@
                                                             finalización</label>
                                                         <input type="date" id="DatePickerTo" name="DatePickerTo"
                                                             class="w-50 form-control"
-                                                            value="{{ Carbon::parse($pps->finish_date)->format('Y-m-d') }}" />
+                                                            value="{{ Carbon::parse($pps->finish_date)->format('Y-m-d') }}"
+                                                            readonly />
                                                     </td>
                                                 </tr>
 
@@ -230,12 +231,13 @@
                                             <td class="col-4"><b class="font-weight-bold">Observaciones:</b></td>
                                             <td>
                                                 {{ $pps->observation != null ? $pps->observation : '-' }}
-                                                @if (auth()->user()->role_id == '2' && $pps->is_finished === 1 && $pps->is_approved === 0)
+                                                @if (auth()->user()->role_id == '2' && $pps->is_approved === 0 && $pps->is_editable === 0)
                                                     <button class="mt-2 btn btn-sm waves-effect waves-light"
                                                         type="button" data-bs-toggle="modal"
                                                         data-bs-target="#modalObservation">
                                                         <i class="bi bi-pencil-square"></i> Escribir observación
                                                     </button>
+                                                @else
                                                 @endif
                                             </td>
                                         </tr>
@@ -351,6 +353,32 @@
     </style>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let startDateInput = document.getElementById("DatePickerFrom");
+            let endDateInput = document.getElementById("DatePickerTo");
+
+            startDateInput.addEventListener("input", function() {
+                let startDate = new Date(this.value);
+                if (isNaN(startDate)) return; // Evita errores si la fecha es inválida
+
+                let daysAdded = 0;
+
+                while (daysAdded < 50) { // 10 semanas hábiles (5 días x 10 semanas)
+                    startDate.setDate(startDate.getDate() + 1);
+                    let dayOfWeek = startDate.getDay();
+                    if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Evitar sábados (6) y domingos (0)
+                        daysAdded++;
+                    }
+                }
+
+                let year = startDate.getFullYear();
+                let month = String(startDate.getMonth() + 1).padStart(2, '0');
+                let day = String(startDate.getDate()).padStart(2, '0');
+
+                endDateInput.value = `${year}-${month}-${day}`;
+            });
+        });
+
         $(document).ready(function() {
             $('#TeacherSelect').on('change', function() {
                 const selectedTeacher = $(this).val();

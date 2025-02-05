@@ -69,11 +69,12 @@
                                             <b class="font-weight-bold">Observaciones:</b>
                                         </td>
                                         <td>{{ $fr->observation != null ? $fr->observation : '-' }}
-                                            @if (auth()->user()->role_id == '2' && $fr->is_accepted === 0 && $fr->is_editable == false)
+                                            @if (auth()->user()->role_id == '2' && $fr->is_accepted === 0 && $fr->is_editable === 0)
                                                 <button class="btn btn-sm waves-effect waves-light" type="button"
                                                     data-bs-toggle="modal" data-bs-target="#modalObservation">
                                                     <i class="bi bi-pencil-square"></i> Escribir observación
                                                 </button>
+                                            @else
                                             @endif
                                         </td>
                                     </tr>
