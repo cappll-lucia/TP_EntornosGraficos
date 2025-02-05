@@ -92,6 +92,32 @@ class WeeklyTrackingController extends Controller
         }
     }*/
 
+    public function downloadWeeklyTracking($id)
+    {
+        try {
+
+            $user = User::where('id', auth()->user()->id)->first();
+            $wt = WeeklyTracking::find($id);
+
+            if (Storage::exists($wt->file_path)) {
+                return response()->download(storage_path('app/' . $wt->file_path));
+            }
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al descargar el seguimiento semanal',
+                'message' => 'El archivo no existe'
+            ], 400);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al descargar el seguimiento semanal',
+                'message' => 'Intente nuevamente o comuníquese para soporte',
+                'error' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+
     public function download($id)
     {
         try {

@@ -50,6 +50,31 @@ class FinalReportController extends Controller
         }
     }
 
+    public function downloadFinalReport($id)
+    {
+        try {
+
+            $user = User::where('id', auth()->user()->id)->first();
+            $fr = FinalReport::find($id);
+
+            if (Storage::exists($fr->file_path)) {
+                return response()->download(storage_path('app/' . $fr->file_path));
+            }
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al descargar el reporte final',
+                'message' => 'El archivo no existe'
+            ], 400);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Error al descargar el reporte final',
+                'message' => 'Intente nuevamente o comuníquese para soporte',
+                'error' => $e->getMessage()
+            ], 400);
+        }
+    }
+
     public function download($id)
     {
         try {
