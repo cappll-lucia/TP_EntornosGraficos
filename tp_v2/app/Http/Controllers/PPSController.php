@@ -31,11 +31,16 @@ class PPSController extends Controller
 
 
                 case 2:
-                    $pps = PPS::where('teacher_id', auth()->user()->id)->whereNotNull('responsible_id')->get();
+                    $pps = PPS::where('teacher_id', auth()->user()->id)
+                    ->whereNotNull('responsible_id')
+                    ->where('is_finished', 1)
+                    ->get();
                     break;
 
                 case 3:
-                    $pps = PPS::all();
+                    $pps = PPS::where('responsible_id', auth()->user()->id)
+                    ->orWhereNull('responsible_id')
+                    ->get();
                     break;
 
                 case 4:

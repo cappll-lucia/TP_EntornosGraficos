@@ -166,7 +166,11 @@
                                                     <form action="/pps/downloadWorkPlan/{{ $pps->id }}"
                                                         method="GET">
                                                         @csrf
-                                                        @if ($pps->responsible_id != null && $pps->is_editable == false)
+                                                        @if (
+                                                            (auth()->user()->role_id == 2 && $pps->responsible_id != null && $pps->is_editable == false) ||
+                                                                auth()->user()->role_id == 1 ||
+                                                                auth()->user()->role_id == 4 ||
+                                                                (auth()->user()->role_id == 3 && $pps->responsible_id != null && $pps->is_editable == false))
                                                             <button type="submit" class="btn btn-success">
                                                                 Ver archivo
                                                             </button>
