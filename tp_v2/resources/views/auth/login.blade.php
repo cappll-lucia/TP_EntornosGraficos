@@ -15,7 +15,7 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-12 col-sm-8 col-md-6 col-lg-4">
-                        <div class="bg-light mx-auto mt-5 mb-5 card">
+                        <div class="bg-light mx-auto mt-3 mb-5 card">
                             <div class="card-body">
                                 <div class="mt-3 text-center mb-2">
                                     <h4>Inicio de sesión</h4>

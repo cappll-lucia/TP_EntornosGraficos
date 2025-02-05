@@ -14,6 +14,6 @@ class AdminRoutes
             return $next($request);
         }
 
-        return redirect()->route('dashboard')->with('error', 'Acceso restringido a Administradores.');
+        return redirect()->route('welcome')->with('error', 'Acceso restringido a Administradores.');
     }
 }
