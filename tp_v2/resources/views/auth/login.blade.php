@@ -1,5 +1,10 @@
 @extends('layouts.app')
 @section('content')
+    <!-- Cartel Sistema de Gestión de PPS -->
+    <div class="mt-4 text-center alert alert-info" role="alert">
+        <h4>Sistema de Gestión de PPS</h4>
+        <p>Bienvenido al sistema para la gestión de las prácticas profesionales supervisadas.</p>
+    </div>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
