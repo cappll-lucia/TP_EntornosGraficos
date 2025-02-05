@@ -163,7 +163,7 @@
                                             <td class="col-4"><b class="font-weight-bold">Plan de trabajo:</b></td>
                                             <td>
                                                 @if ($pps->is_editable == false)
-                                                    <form action="/PPS/downloadWorkPlan/{{ $pps->id }}"
+                                                    <form action="/pps/downloadWorkPlan/{{ $pps->id }}"
                                                         method="GET">
                                                         @csrf
                                                         @if ($pps->responsible_id != null && $pps->is_editable == false)

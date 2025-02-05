@@ -36,7 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pps', [PPSController::class, 'index'])->name('getPps');
     Route::get('/pps/details/{id}', [PPSController::class, 'details'])->name('pps.details');
     Route::post('/pps/approve/{id}', [TeacherController::class, 'approveApplication']);
-    Route::get('/pps/downloadWorkPlan', [PPSController::class, 'downloadWorkPlan']);
+    Route::get('/pps/downloadWorkPlan/{id}', [PPSController::class, 'downloadWorkPlan']);
     Route::get('/pps/{id}/weeklyTracking', [WeeklyTrackingController::class, 'index'])->name('getWeeklyTrackings');
     Route::get('/weeklyTracking/{id}', [WeeklyTrackingController::class, 'details'])->name('wt.details');
     Route::get('/finalReport/{id}', [FinalReportController::class, 'details'])->name('fr.details');
