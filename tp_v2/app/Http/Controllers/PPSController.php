@@ -17,6 +17,8 @@ use PhpParser\Node\Stmt\TryCatch;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use DomPDF\Facade as PDF;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NotifyPPSEmail;
 
 class PPSController extends Controller
 {
@@ -130,7 +132,6 @@ class PPSController extends Controller
 
     public function create(Request $request)
     {
-        // TODO: Enviar mail a responsable
         $today = Carbon::now(new \DateTimeZone('America/Argentina/Buenos_Aires'));
         try {
             $student = User::where('id', auth()->user()->id)->first();
@@ -176,10 +177,19 @@ class PPSController extends Controller
                     'file_path' => $path,
                     'is_accepted' => 0
                 ]);
-            } else {
-
             }
+
             DB::commit();
+
+            $all_responsibles = User::where('role_id', 3)->get();
+
+            foreach ($all_responsibles as $responsible) {
+                Mail::to($responsible->email)->send(
+                    new NotifyPPSEmail(
+                        $responsible->first_name
+                    )
+                );
+            }
 
             return response()->json([
                 'success' => true,
