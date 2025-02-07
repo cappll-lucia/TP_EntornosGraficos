@@ -9,14 +9,14 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class AssignTeacherEmail extends Mailable
+class NotifyTeacherEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(private $student_name, private $teacher_name, private $teacher_email)
+    public function __construct(private $teacher_name, private $student_name, private $responsible_email)
     {
         //
     }
@@ -27,7 +27,7 @@ class AssignTeacherEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'SYSACAD - Información de asignación a PPS',
+            subject: 'SYSACAD - Notificación de nueva PPS',
         );
     }
 
@@ -37,11 +37,11 @@ class AssignTeacherEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'email.assignTeacher',
+            view: 'email.notifyTeacher',
             with: [
-                'student_name' => $this->student_name,
                 'teacher_name' => $this->teacher_name,
-                'teacher_email' => $this->teacher_email,
+                'student_name' => $this->student_name,
+                'responsible_email' => $this->responsible_email,
             ],
         );
     }

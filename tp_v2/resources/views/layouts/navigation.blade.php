@@ -13,8 +13,8 @@
                     <div class="container mr-100 mb-10 ml-1">
                         <a class="navbar-brand" href="{{ route('welcome') }}">
                             <!-- Imagen para pantallas grandes -->
-                            <img src="{{ asset('logo-utn.png') }}" alt="UTN Logo" class="logo-desktop" height="80"
-                                width="400">
+                            <img src="{{ asset('logo-utn.png') }}" alt="UTN Logo" class="logo-desktop" height="60"
+                                width="300">
                             <!-- Imagen para dispositivos móviles -->
                             <img src="{{ asset('utn-logo-mobile.png') }}" alt="UTN Logo Mobile" class="logo-mobile"
                                 height="60" width="60">

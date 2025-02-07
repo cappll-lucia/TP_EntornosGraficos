@@ -13,6 +13,7 @@ use App\Mail\AssignTeacherEmail;
 use App\Models\FinalReport;
 use App\Mail\FinishPPSEmail;
 use Illuminate\Validation\Rule;
+use App\Mail\NotifyTeacherEmail;
 
 
 class ResponsiblesController extends Controller
@@ -172,6 +173,14 @@ class ResponsiblesController extends Controller
                     $pps->Student->first_name,
                     $teacher->last_name . ', ' . $teacher->first_name,
                     $teacher->email
+                )
+            );
+
+            Mail::to($teacher->email)->send(
+                new AssignTeacherEmail(
+                    $teacher->first_name,
+                    $pps->Student->last_name . ', ' . $pps->Student->first_name,
+                    $pps->Responsible->email
                 )
             );
 
