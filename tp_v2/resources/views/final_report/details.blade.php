@@ -101,6 +101,16 @@
                                 @endif
                             @endif
                         </div>
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        @if (session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
                         @if (isset($fr) && $fr->is_accepted)
                             <button id="btnResumen" class="btn btn-success">Ir a resumen</button>
                         @endif

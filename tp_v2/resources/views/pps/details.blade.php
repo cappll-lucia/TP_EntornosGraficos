@@ -171,7 +171,7 @@
                                                                 auth()->user()->role_id == 1 ||
                                                                 auth()->user()->role_id == 4 ||
                                                                 (auth()->user()->role_id == 3 && $pps->responsible_id != null && $pps->is_editable == false))
-                                                            <button type="submit" class="btn btn-success">
+                                                            <button type="submit" class="btn btn-success" data-id="{{ $pps->id }}">
                                                                 Ver archivo
                                                             </button>
                                                         @else
@@ -615,6 +615,7 @@
                 $("#btnGeneratewts").prop('disabled', true).removeClass('btn-success').addClass('btn-secondary');
             }
         });
+
     </script>
 
 @endsection

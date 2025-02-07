@@ -99,14 +99,20 @@ class WeeklyTrackingController extends Controller
             $user = User::where('id', auth()->user()->id)->first();
             $wt = WeeklyTracking::find($id);
 
+            $previousUrl = url()->previous(); 
+            if (strpos($previousUrl, "pps/{$id}/weeklyTracking") !== false) {
+                $view = 'getWeeklyTrackings';
+            } else {
+                $view = 'wt.details';
+            }
+
             if (Storage::exists($wt->file_path)) {
                 return response()->download(storage_path('app/' . $wt->file_path));
-            }
-            return response()->json([
-                'success' => false,
-                'title' => 'Error al descargar el seguimiento semanal',
-                'message' => 'El archivo no existe'
-            ], 400);
+            } else {
+                return redirect()
+                ->route($view, ['id' => $wt->id])
+                ->with('error', 'El archivo no existe, comuníquese con soporte.');
+            };
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

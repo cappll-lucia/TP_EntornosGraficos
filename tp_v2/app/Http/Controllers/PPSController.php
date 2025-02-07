@@ -300,12 +300,11 @@ class PPSController extends Controller
 
             if (Storage::exists($work_plan->file_path)) {
                 return response()->download(storage_path('app/' . $work_plan->file_path));
+            } else {
+                return redirect()
+                ->route('pps.details', ['id' => $pps->id])
+                ->with('error', 'El archivo no existe, comuníquese con soporte.');
             }
-            return response()->json([
-                'success' => false,
-                'title' => 'Error al descargar el plan de trabajo',
-                'message' => 'El archivo no existe'
-            ], 400);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

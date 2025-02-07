@@ -59,12 +59,11 @@ class FinalReportController extends Controller
 
             if (Storage::exists($fr->file_path)) {
                 return response()->download(storage_path('app/' . $fr->file_path));
-            }
-            return response()->json([
-                'success' => false,
-                'title' => 'Error al descargar el reporte final',
-                'message' => 'El archivo no existe'
-            ], 400);
+            } else {
+                return redirect()
+                ->route('fr.details', ['id' => $fr->id])
+                ->with('error', 'El archivo no existe, comuníquese con soporte.');
+            };
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

@@ -33,7 +33,7 @@
                                         @if ($wt->file_path == null)
                                             <span class="text-danger">No se ha subido el archivo</span>
                                         @else
-                                            <a href="{{ url('/weeklyTracking/downloadWeeklyTracking/' . $wt->id) }}"
+                                            <a href="{{ route('downloadWeeklyTracking', ['id' => $wt->id]) }}"
                                                 class="btn btn-success btn-sm">
                                                 Ver archivo
                                             </a>
@@ -64,6 +64,16 @@
                     </table>
                 </div>
             </div>
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
             <hr class="m-t-0 m-b-20">
             @if (!$existsFR)
                 <form id="generate-fr-form" action="{{ route('fr.generate', $pps->id) }}" method="POST">
