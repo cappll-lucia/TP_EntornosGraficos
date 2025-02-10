@@ -27,7 +27,7 @@ Este sitio web permite a los alumnos solicitar el inicio de sus Prácticas Profe
 3. Instalar dependencias:
     ```bash
     composer install
-    npm install && npm run dev
+    npm install && npm run build && npm run dev
     ```
 4. Generar la clave de la aplicación:
     ```bash
