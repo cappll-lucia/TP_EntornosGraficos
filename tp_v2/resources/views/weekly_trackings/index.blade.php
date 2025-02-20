@@ -10,7 +10,13 @@
         <div class="col-lg-12">
             <div class="shadow-lg m-2 card-body">
                 <div class="col-md-5 col-8 align-self-center">
-                    <h3 class="m-b-0 m-t-0 text-themecolor">Seguimientos semanales</h3>
+                    <h3 class="m-b-0 m-t-0 text-themecolor ms-2">Seguimientos semanales</h3>
+                    <ol class="breadcrumb ms-2">
+                        <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('getPps') }}">Solicitudes</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('pps.details', ['id' => $pps->id]) }}">Detalles</a></li>
+                        <li class="breadcrumb-item active">Seguimientos semanales</li>
+                    </ol>
                 </div>
                 <div class="mt-1 table-responsive">
                     <table id="DataTable" class="table table-bordered table-striped">

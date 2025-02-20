@@ -1,7 +1,14 @@
 @extends('layouts.app')
 @section('content')
 
+<ol class="breadcrumb ms-4">
+    <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Inicio</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('getPps') }}">Solicitudes</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('pps.details', ['id' => $pps->id]) }}">Detalles</a></li>
+    <li class="breadcrumb-item active">Resumen</li>
+</ol>
 <div class="d-flex justify-content-center">
+    
     <div class="mt-2 mb-4 w-75 card">
         <div class="card-header">
             <h4>Detalles de PPS</h4>

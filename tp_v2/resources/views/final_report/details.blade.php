@@ -25,6 +25,13 @@
     <div class="container">
         <div class="row">
             <div class="col-12 col-lg-6">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('getPps') }}">Solicitudes</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('pps.details', ['id' => $pps->id]) }}">Detalles</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('getWeeklyTrackings', ['id' => $pps->id]) }}">Seguimientos</a></li>
+                    <li class="breadcrumb-item active">Reporte final</li>
+                </ol>
                 <div class="card">
                     <div class="card-body">
                         <div class="form-body">

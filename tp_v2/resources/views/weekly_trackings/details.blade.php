@@ -29,6 +29,13 @@
 
     <div class="container mt-4">
         <h2>Detalles del seguimiento</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('getPps') }}">Solicitudes</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('pps.details', ['id' => $pps->id]) }}">Detalles</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('getWeeklyTrackings', ['id' => $pps->id]) }}">Seguimientos</a></li>
+            <li class="breadcrumb-item active">Seguimiento</li>
+        </ol>
 
         <div class="mb-4 card">
             <div class="card-body">

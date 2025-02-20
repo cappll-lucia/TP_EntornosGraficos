@@ -6,8 +6,12 @@
       <div class="">
         <div class=" d-flex justify-content-center align-items-start page-body" style="--bs-bg-opacity: .5">
           <div class="container mt-3">
-
+            <ol class="breadcrumb ms-2">
+              <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Inicio</a></li>
+              <li class="breadcrumb-item active">Docentes</li>
+          </ol>
             <div class="bg-light mx-auto mb-3 card">
+
               <div class="flex-row card-header d-flex justify-content-between align-items-center ">
                 <h3 class=" mt-2 text-center card-title h3">Docentes</h3>
                 @if(Auth::check() && Auth::user()->role_id === 4)
