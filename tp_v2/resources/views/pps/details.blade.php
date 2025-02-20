@@ -84,8 +84,8 @@
                                 <textarea class="form-control" id="observationInput" name="observation" rows="3" required>{{ old('observation', $pps->observation) }}</textarea>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" title="Cerrar">Cerrar</button>
+                                <button type="submit" class="btn btn-primary" title="Guardar">Guardar</button>
                             </div>
                         </form>
                     </div>
@@ -171,11 +171,11 @@
                                                                 auth()->user()->role_id == 1 ||
                                                                 auth()->user()->role_id == 4 ||
                                                                 (auth()->user()->role_id == 3 && $pps->responsible_id != null && $pps->is_editable == false))
-                                                            <button type="submit" class="btn btn-success" data-id="{{ $pps->id }}">
+                                                            <button type="submit" class="btn btn-success" title="Ver archivo" data-id="{{ $pps->id }}">
                                                                 Ver archivo
                                                             </button>
                                                         @else
-                                                            <button id="btnViewFile" class="btn btn-secondary" disabled>
+                                                            <button id="btnViewFile" class="btn btn-secondary" title="Ver archivo" disabled>
                                                                 Ver archivo
                                                             </button>
                                                         @endif
@@ -260,7 +260,7 @@
                             <hr class="m-t-0 m-b-20"> --}}
                                 @if (auth()->user()->role_id == '1' && $pps->is_editable == true)
                                     <button id="btnEditar" class="btn btn-primary waves-effect waves-light"
-                                        data-id="{{ $pps->id }}">Finalizar cambios</button>
+                                        data-id="{{ $pps->id }}" title="Finalizar cambios">Finalizar cambios</button>
                                     <hr class="m-t-0 m-b-20">
                                 @endif
                                 @if (auth()->user()->role_id == '3' &&
@@ -272,7 +272,7 @@
                                         <input type="hidden" id="selectedTeacher" name="selectedTeacher"
                                             value="{{ $pps->teacher_id }}">
                                         <button id="btnFinalizar" class="btn btn-success take-btn" type="button"
-                                            data-id="{{ $pps->id }}">
+                                            data-id="{{ $pps->id }}" title="Asignar docente">
                                             Asignar docente
                                         </button>
                                     </form>
@@ -286,9 +286,9 @@
                                     <div class="d-flex justify-content-end">
                                         <hr class="m-t-0 m-b-20">
                                         <button id="btnAprobar" class="btn btn-success waves-effect waves-light me-2"
-                                            data-id="{{ $pps->id }}">Aprobar solicitud</button>
+                                            data-id="{{ $pps->id }}" title="Aprobar">Aprobar solicitud</button>
                                         <button id="btnRechazar" class="btn btn-danger waves-effect waves-light me-2"
-                                            data-id="{{ $pps->id }}">Rechazar solicitud</button>
+                                            data-id="{{ $pps->id }}" title="Rechazar">Rechazar solicitud</button>
                                         <hr class="m-t-0 m-b-20">
                                     </div>
                                     <hr class="m-t-0 m-b-20">
@@ -309,7 +309,7 @@
                                     <form id="generate-wt-form" action="{{ route('wt.generate', $pps->id) }}"
                                         method="POST">
                                         @csrf
-                                        <button id="btnGeneratewts" class="btn btn-secondary" disabled>
+                                        <button id="btnGeneratewts" class="btn btn-secondary" title="Seguimientos" disabled>
                                             Ir a seguimientos
                                             semanales
                                         </button>
@@ -318,7 +318,7 @@
                                     <form id="seguimientos" action="{{ route('getWeeklyTrackings', $pps->id) }}"
                                         method="GET">
                                         @csrf
-                                        <button id="btnGeneratewts" class="btn btn-secondary" disabled>
+                                        <button id="btnGeneratewts" class="btn btn-secondary" title="Seguimientos" disabled>
                                             Ir a seguimientos
                                             semanales
                                         </button>

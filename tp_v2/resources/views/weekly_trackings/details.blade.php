@@ -46,7 +46,7 @@
                             <td>
                                 @if ($wt->file_path != null && $wt->is_editable == 0)
                                     <a href="{{ url('/weeklyTracking/downloadWeeklyTracking/' . $wt->id) }}"
-                                        class="btn btn-success btn-sm">
+                                        class="btn btn-success btn-sm" title="Ver archivo">
                                         Ver archivo
                                     </a>
                                 @else
@@ -62,7 +62,7 @@
                                             <input type="file" class="form-control" id="fileInput" name="file"
                                                 accept=".pdf" data-max-file-size="2M" required>
                                         </div>
-                                        <button id="btnConfirmar" type="submit" class="btn btn-primary">
+                                        <button id="btnConfirmar" type="submit" class="btn btn-primary" title="Confirmar">
                                             Confirmar PDF
                                         </button>
                                     </form>
@@ -76,7 +76,7 @@
                                 @if (auth()->user()->role_id == '2' && $wt->is_editable === 0)
                                     <button class="btn btn-sm waves-effect waves-light" type="button"
                                         data-bs-toggle="modal" data-bs-target="#modalObservation">
-                                        <i class="bi bi-pencil-square"></i> Escribir observación
+                                        <i class="bi bi-pencil-square" aria-hidden="true"></i> Escribir observación
                                     </button>
                                 @endif
                             </td>
@@ -90,9 +90,9 @@
                 @if (auth()->user()->role_id == '2' && $wt->is_accepted == false)
                     @if ($wt->file_path && $wt->is_editable == false)
                         <button id="btnAprobar" class="btn btn-success waves-effect waves-light"
-                            data-id="{{ $wt->id }}">Aprobar</button>
+                            data-id="{{ $wt->id }}" title="Aprobar">Aprobar</button>
                         <button id="btnRechazar" class="btn btn-danger waves-effect waves-light"
-                            data-id="{{ $wt->id }}">Rechazar</button>
+                            data-id="{{ $wt->id }}" title="Rechazar">Rechazar</button>
                     @else
                         <div class="alert alert-warning" role="alert">
                             No se ha subido el seguimiento semanal en PDF.
@@ -114,7 +114,7 @@
         </div>
 
         <div>
-            <a href="{{ route('getWeeklyTrackings', ['id' => $pps->id]) }}" class="btn btn-link">Volver</a>
+            <a href="{{ route('getWeeklyTrackings', ['id' => $pps->id]) }}" class="btn btn-link" title="Volver">Volver</a>
         </div>
         <div id="loadingSpinner" class="d-none">
             <div class="text-primary spinner-border" role="status">
@@ -140,8 +140,8 @@
                             <textarea name="observation" class="form-control" rows="4" placeholder="Escribe tu observación aquí"></textarea>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <button id="btnSaveObservation" type="submit" class="btn btn-primary">Guardar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" title="Cerrar">Cerrar</button>
+                            <button id="btnSaveObservation" type="submit" class="btn btn-primary" title="Guardar">Guardar</button>
                         </div>
                     </form>
                 </div>

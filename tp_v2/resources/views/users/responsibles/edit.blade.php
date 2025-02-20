@@ -47,10 +47,10 @@
         <div class="mt-5 d-flex justify-content-end align-items-center ">
 
           <div class="w-100 d-flex justify-content-between">
-            <a type="button" class="w-50 btn btn-outline-primary me-1" href="{{ route('getResponsibles') }}">
+            <a type="button" class="w-50 btn btn-outline-primary me-1" href="{{ route('getResponsibles') }}" title="Cancelar">
                 Cancelar
             </a>
-            <button type="submit ml-3" class="w-50 btn btn-primary ms-1">
+            <button type="submit ml-3" class="w-50 btn btn-primary ms-1" title="Guardar">
             <a class="text-sm text-gray-600 underline" href="{{ route('storeNewResponsible') }}">
             </a>
               Guardar Cambios

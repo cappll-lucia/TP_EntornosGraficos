@@ -63,7 +63,7 @@
 
                 {{-- Botón Enviar --}}
                 <div class="mt-3 d-flex justify-content-end">
-                    <button type="submit" class="btn btn-primary">Crear</button>
+                    <button type="submit" class="btn btn-primary" title="Crear">Crear</button>
                 </div>
             </div>
         </div>

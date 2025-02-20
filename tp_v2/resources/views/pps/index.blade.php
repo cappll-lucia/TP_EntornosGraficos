@@ -38,12 +38,12 @@
                             <h2 class="mb-0 card-title fw-bold fs-4">Listado de solicitudes </h2>
                             @if (auth()->user()->role_id == '1')
                                 <a href="{{ route('pps.new') }}"
-                                    class="btn btn-info btn-rounded waves-effect waves-light">Nueva
+                                    class="btn btn-info btn-rounded waves-effect waves-light" title="Nueva solicitud">Nueva
                                     solicitud</a>
                             @endif
                             @if (auth()->user()->role_id == '2')
                                 <a href="{{ route('studentsReport') }}"
-                                    class="btn btn-info btn-rounded waves-effect waves-light">Descargar
+                                    class="btn btn-info btn-rounded waves-effect waves-light" title="Descargar">Descargar
                                     informe</a>
                             @endif
                         </div>
@@ -74,18 +74,18 @@
                                                 <td>
                                                     <button id="tomarPPS" class="btn btn-sm btn-success take-btn"
                                                         data-id="{{ $app->id }}"
-                                                        data-student="{{ $app->Student->first_name }} {{ $app->Student->last_name }}">Tomar</button>
+                                                        data-student="{{ $app->Student->first_name }} {{ $app->Student->last_name }}" title="Tomar">Tomar</button>
                                                 </td>
                                             @elseif(auth()->user()->role_id == '3' && $app->Responsible != null)
                                                 <td>
-                                                    <button id="tomarPPS" class="btn btn-sm btn-secondary" disabled>
+                                                    <button id="tomarPPS" class="btn btn-sm btn-secondary" title="Tomar" disabled>
                                                         Tomar
                                                     </button>
                                                 </td>
                                             @elseif($app->FinalReport != null && $app->FinalReport->is_approved == true)
                                                 <td>
                                                     <a href="{{ route('resume', $app->id) }}"
-                                                        class="btn btn-sm btn-info">Resumen</a>
+                                                        class="btn btn-sm btn-info" title="Resumen">Resumen</a>
                                                 </td>
                                             @else
                                                 <td style="display:none;">&nbsp;</td>

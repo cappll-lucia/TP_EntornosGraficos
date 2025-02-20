@@ -51,13 +51,13 @@
                                     @if (Route::has('password.request'))
                                         <div class="me-4">
                                             <a class="text-sm text-gray-600 underline"
-                                                href="{{ route('password.request') }}">
-                                                {{ __('Olvidaste tu contraseña?') }}
+                                                href="{{ route('password.request') }}" title="Olvidaste tu contraseña?">
+                                                {{ __('Olvidaste tu contraseña?') }} 
                                             </a>
                                         </div>
                                     @endif
 
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" title="Iniciar sesion" class="btn btn-primary">
                                         {{ __('Iniciar sesion') }}
                                     </button>
                                 </div>

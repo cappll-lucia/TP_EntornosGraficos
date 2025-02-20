@@ -55,7 +55,7 @@
 
                 <!-- Separar el botón de guardar del último textbox -->
                 <div class="mt-4">
-                    <button type="submit" class="btn btn-primary">{{ __('Guardar') }}</button>
+                    <button type="submit" class="btn btn-primary" title="Guardar">{{ __('Guardar') }}</button>
                 </div>
 
                 <!-- Mostrar mensaje de éxito cuando se guarda -->

@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="mt-4">
-                    <button type="submit" class="btn btn-primary">{{ __('Guardar') }}</button>
+                    <button type="submit" class="btn btn-primary" title="Guardar">{{ __('Guardar') }}</button>
                 </div>
 
                 @if (session('status') === 'password-updated')

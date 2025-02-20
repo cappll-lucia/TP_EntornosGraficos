@@ -12,7 +12,7 @@
 
         <div class="card-body">
             <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
-                class="w-100 btn btn-danger">
+                class="w-100 btn btn-danger" title="Eliminar cuenta">
                 {{ __('Eliminar cuenta') }}
             </button>
 

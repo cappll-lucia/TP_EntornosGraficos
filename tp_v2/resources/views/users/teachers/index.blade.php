@@ -15,7 +15,7 @@
               <div class="flex-row card-header d-flex justify-content-between align-items-center ">
                 <h3 class=" mt-2 text-center card-title h3">Docentes</h3>
                 @if(Auth::check() && Auth::user()->role_id === 4)
-          <a href="{{ route('createTeacher') }}" class="right-0 btn btn-success d-block">
+          <a href="{{ route('createTeacher') }}" class="right-0 btn btn-success d-block" title="Crear docente">
             <i class="fa-solid fa-plus"></i>
           </a>
         @endif
@@ -44,9 +44,9 @@
               <td>{{ $teacher->email }}</td>
               @if(Auth::check() && Auth::user()->role_id === 4)
           <td class="d-flex justify-content-between align-items-center pe-4">
-          <a href="{{route('editTeacher', ['id' => $teacher->id])}}"><i class="fa-solid fa-pen"></i></a>
+          <a href="{{route('editTeacher', ['id' => $teacher->id])}}" title="Editar"><i class="fa-solid fa-pen"></i></a>
           <a class="btn" data-bs-toggle="modal"
-          data-bs-target="#deleteTeacherModal{{ $teacher->id }}"><i class="fa-solid fa-trash"></i></a>
+          data-bs-target="#deleteTeacherModal{{ $teacher->id }}" title="Eliminar"><i class="fa-solid fa-trash"></i></a>
 
           <!-- Modal -->
           <div class="modal fade" id="deleteTeacherModal{{ $teacher->id }}" tabindex="-1"
@@ -64,11 +64,11 @@
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-outline-secondary"
-            data-bs-dismiss="modal">Cancelar</button>
+            data-bs-dismiss="modal" title="Cancelar">Cancelar</button>
             <form action="{{ route('deleteTeacher', ['id' => $teacher->id]) }}" method="POST">
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+            <button type="submit" class="btn btn-outline-danger" title="Eliminar">Eliminar</button>
             </form>
             </div>
             </div>
@@ -103,10 +103,10 @@
                 @endif  
                 </div>
                 <div class="modal-footer">
-                  <a type="button" class="w-50 btn btn-outline-secondary me-1" href="{{ route('getTeachers') }}">
+                  <a type="button" class="w-50 btn btn-outline-secondary me-1" href="{{ route('getTeachers') }}" title="Cancelar">
                     Cancelar
                   </a>
-                  <button type="submit ml-3" class="w-50 btn btn-outline-primary ms-1">
+                  <button type="submit ml-3" class="w-50 btn btn-outline-primary ms-1" title="Guardar">
                     <a class="text-sm text-gray-600 underline" href="{{ route('storeNewTeacher') }}">
                     </a>
                     Guardar Cambios

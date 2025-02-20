@@ -29,13 +29,14 @@
                         <span class="px-2">Hola, {{ Auth::user()->first_name }}!</span>
                         <button class="btn usr-menu-btn btn-primary dropdown-toggle" type="button"
                             data-bs-toggle="dropdown" aria-expanded="false"
-                            style="background-color:rgb(50, 146, 255); color: white;">
+                            style="background-color:rgb(50, 146, 255); color: white;"
+                            aria-label="Abrir menú de usuario">
                             <!-- Contenido del botón -->
                             <i class="fa-solid fa-user"></i>
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="{{ route('profile.edit') }}" class="text-decoration-none py-2 px-3 d-block">
+                                <a href="{{ route('profile.edit') }}"  class="text-decoration-none py-2 px-3 d-block">
                                     {{ __('Perfil') }}
                                 </a>
                             </li>
@@ -56,10 +57,10 @@
                     <!-- Buttons no logueado -->
                     <!-- Buttons no logueado -->
                     <div class="gap-2 d-grid d-md-flex justify-content-md-end">
-                        <a type="button" class=" mb-md-0 btn btn-outline-primary btn-sm" href="{{ route('login') }}">
+                        <a type="button" class=" mb-md-0 btn btn-outline-primary btn-sm" title="Ingresar" href="{{ route('login') }}">
                             {{ __('Ingresar') }}
                         </a>
-                        <a type="button" class="mb-2 mb-md-0 btn btn-outline-primary btn-sm"
+                        <a type="button" class="mb-2 mb-md-0 btn btn-outline-primary btn-sm" title="Registrarse"
                             href="{{ route('register') }}">
                             {{ __('Registrarse') }}
                         </a>

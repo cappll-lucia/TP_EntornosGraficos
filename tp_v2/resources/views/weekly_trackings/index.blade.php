@@ -40,7 +40,7 @@
                                             <span class="text-danger">No se ha subido el archivo</span>
                                         @else
                                             <a href="{{ route('downloadWeeklyTracking', ['id' => $wt->id]) }}"
-                                                class="btn btn-success btn-sm">
+                                                class="btn btn-success btn-sm" title="Ver archivo">
                                                 Ver archivo
                                             </a>
                                         @endif
@@ -49,7 +49,7 @@
                                         @if (auth()->user()->role_id == '2' && $pps->is_finished == true && $pps->is_approved == false)
                                             <button class="btn btn-sm waves-effect waves-light" type="button"
                                                 data-bs-toggle="modal" data-bs-target="#modalObservation">
-                                                <i class="bi bi-pencil-square"></i> Escribir observación
+                                                <i class="bi bi-pencil-square" aria-hidden="true"></i> Escribir observación
                                             </button>
                                         @endif
                                     </td>
@@ -84,14 +84,14 @@
             @if (!$existsFR)
                 <form id="generate-fr-form" action="{{ route('fr.generate', $pps->id) }}" method="POST">
                     @csrf
-                    <button id="btnSeguimiento" class="btn btn-primary">
+                    <button id="btnSeguimiento" class="btn btn-primary" title="Acta de finalización">
                         Ir a acta de finalización
                     </button>
                 </form>
             @else
                 <form id="generate-fr-form" action="{{ route('fr.details', $pps->id) }}" method="GET">
                     @csrf
-                    <button id="btnSeguimiento" class="btn btn-primary">
+                    <button id="btnSeguimiento" class="btn btn-primary" title="Acta de finalización">
                         Ir a acta de finalización
                     </button>
                 </form>

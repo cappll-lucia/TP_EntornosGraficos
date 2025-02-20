@@ -72,7 +72,7 @@
             </a>
             </div>
 
-            <button type="submit ml-3" class="btn btn-primary">
+            <button type="submit ml-3" title="Registrar" class="btn btn-primary">
                 {{ __('Registrar') }}
             </button>
         </div>

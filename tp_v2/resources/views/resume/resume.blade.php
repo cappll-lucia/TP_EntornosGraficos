@@ -35,7 +35,7 @@
                             <td>{{ \Carbon\Carbon::parse($pps->created_at)->format('d/m/Y') }}</td>
                             <td>
                                 <a href="{{ route('wp.download', $pps->id) }}"
-                                    class="btn btn-success btn-sm">Descargar</a>
+                                    class="btn btn-success btn-sm" title="Descargar">Descargar</a>
                         </tr>
                     </tbody>
                 </table>
@@ -72,7 +72,7 @@
                     <tr>
                         <td>{{ \Carbon\Carbon::parse($pps->FinalReport->created_at)->format('d/m/Y') }}</td>
                         <td>
-                            <a href="{{ route('fr.download', $pps->id) }}" class="btn btn-success btn-sm">Descargar</a>
+                            <a href="{{ route('fr.download', $pps->id) }}" class="btn btn-success btn-sm" title="Descargar">Descargar</a>
                         </td>
                     </tr>
                 </tbody>

@@ -46,7 +46,7 @@
                                         <td>
                                             @if ($fr->file_path != null && $fr->is_editable == false)
                                                 <a href="{{ url('/finalReport/downloadFinalReport/' . $fr->id) }}"
-                                                    class="btn btn-success btn-sm">
+                                                    class="btn btn-success btn-sm" title="Ver archivo">
                                                     Ver archivo
                                                 </a>
                                             @else
@@ -64,7 +64,8 @@
                                                         <input type="file" class="form-control" id="fileInput"
                                                             name="file" accept=".pdf" data-max-file-size="2M" required>
                                                     </div>
-                                                    <button id="btnConfirmar" type="submit" class="btn btn-primary">
+                                                    <button id="btnConfirmar" title="Confirmar PDF"
+                                                            type="submit" class="btn btn-primary">
                                                         Confirmar PDF
                                                     </button>
                                                 </form>
@@ -77,8 +78,8 @@
                                         </td>
                                         <td>{{ $fr->observation != null ? $fr->observation : '-' }}
                                             @if (auth()->user()->role_id == '2' && $fr->is_accepted === 0 && $fr->is_editable === 0)
-                                                <button class="btn btn-sm waves-effect waves-light" type="button"
-                                                    data-bs-toggle="modal" data-bs-target="#modalObservation">
+                                                <button class="btn btn-sm waves-effect waves-light" 
+                                                        type="button" title="Observacion data-bs-target="#modalObservation">
                                                     <i class="bi bi-pencil-square"></i> Escribir observación
                                                 </button>
                                             @else
@@ -96,9 +97,9 @@
                                 @if ($fr->file_path && $fr->is_editable == false)
                                     <div class="d-flex justify-content-end">
                                         <button id="btnAprobar" class="mb-2 btn btn-success waves-effect waves-light me-2"
-                                            data-id="{{ $fr->id }}">Aprobar solicitud</button>
+                                            data-id="{{ $fr->id }}" title="Aprobar">Aprobar solicitud</button>
                                         <button id="btnRechazar" class="mb-2 btn btn-danger waves-effect waves-light me-2"
-                                            data-id="{{ $fr->id }}">Rechazar solicitud</button>
+                                            data-id="{{ $fr->id }}" title="Rechazar">Rechazar solicitud</button>
                                         <hr class="m-t-0 m-b-20">
                                     </div>
                                 @else
@@ -119,12 +120,12 @@
                             </div>
                         @endif
                         @if (isset($fr) && $fr->is_accepted)
-                            <button id="btnResumen" class="btn btn-success">Ir a resumen</button>
+                            <button id="btnResumen" class="btn btn-success" title="Resumen">Ir a resumen</button>
                         @endif
                         @if (isset($fr) && $fr->is_accepted && !$fr->is_checked && auth()->user()->role_id == '3')
                             <hr class="m-t-0 m-b-20">
                             <button id="btnChecked" class="btn btn-success waves-effect waves-light"
-                                data-id="{{ $pps->id }}">Finalizar PPS</button>
+                                data-id="{{ $pps->id }}" title="Finalizar PPS">Finalizar PPS</button>
                         @endif
                     </div>
 
@@ -150,8 +151,8 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Cerrar</button>
-                                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                                    data-bs-dismiss="modal" title="Cerrar">Cerrar</button>
+                                                <button type="submit" class="btn btn-primary" title="Guardar">Guardar</button>
                                             </div>
                                         </form>
                                     </div>
