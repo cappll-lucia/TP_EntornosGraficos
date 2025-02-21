@@ -78,7 +78,7 @@
                                         </td>
                                         <td>{{ $fr->observation != null ? $fr->observation : '-' }}
                                             @if (auth()->user()->role_id == '2' && $fr->is_accepted === 0 && $fr->is_editable === 0)
-                                                <button class="btn btn-sm waves-effect waves-light" 
+                                                <button class="btn btn-sm waves-effect waves-light" data-bs-toggle="modal"
                                                         type="button" title="Observacion" data-bs-target="#modalObservation">
                                                     <i class="bi bi-pencil-square"></i> Escribir observación
                                                 </button>
