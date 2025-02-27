@@ -176,8 +176,10 @@ class ResponsiblesController extends Controller
                 )
             );
 
+            // 
+
             Mail::to($teacher->email)->send(
-                new AssignTeacherEmail(
+                new NotifyTeacherEmail(
                     $teacher->first_name,
                     $pps->Student->last_name . ', ' . $pps->Student->first_name,
                     $pps->Responsible->email

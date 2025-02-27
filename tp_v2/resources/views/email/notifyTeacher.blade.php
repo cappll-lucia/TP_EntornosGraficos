@@ -262,7 +262,7 @@
                                                                 <p style="line-height: 140%;"> </p>
                                                                 <p style="line-height: 140%;">
                                                                     <span style="line-height: 19.6px;">
-                                                                        Se le ha asignado a una solicitud de inicio de PPS, a nombre de {{$student_name}}.
+                                                                        Se le ha asignado a una solicitud de inicio de PPS, a nombre del estudiante {{$student_name}}.
                                                                     </span>
                                                                 </p>
                                                                 <p style="line-height: 140%;">
