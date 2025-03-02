@@ -33,9 +33,14 @@
 
                                 <!-- Password -->
                                 <div class="mt-3 mb-3">
-                                    <x-input-label for="password" :value="__('Password')" />
-                                    <x-text-input id="password" class="form-control" type="password" name="password"
-                                        required autocomplete="current-password" />
+                                    <x-input-label for="password" :value="__('Contraseña')" />
+                                    <div class="input-group">
+                                        <x-text-input id="password" class="form-control" type="password" name="password"
+                                            required autocomplete="current-password" />
+                                        <button type="button" id="togglePassword" class="btn btn-outline-secondary">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
                                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                                 </div>
 
@@ -70,4 +75,30 @@
         </div>
 
     </form>
+
+
+    <style>
+        /* Ocultar el ojo predeterminado en Edge */
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear {
+            display: none;
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const passwordInput = document.getElementById("password");
+            const togglePasswordButton = document.getElementById("togglePassword");
+
+            togglePasswordButton.addEventListener("click", function () {
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    this.innerHTML = '<i class="fas fa-eye-slash"></i>'; // Cambia el ícono
+                } else {
+                    passwordInput.type = "password";
+                    this.innerHTML = '<i class="fas fa-eye"></i>';
+                }
+            });
+        });
+    </script>
 @endsection
